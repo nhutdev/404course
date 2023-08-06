@@ -40,8 +40,7 @@ app.use((req, res, next) => {
 });
 
 
-const { routerUser } = require('./routes/userRouter');
-const {routerMessage}= require('./routes/messageRouter')
+
 // Thiết lập body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -52,7 +51,7 @@ app.use(cors({
 app.use(express.json());
 
 // Định tuyến
-app.use(routerUser,routerMessage);
+
 // Serve các tệp tĩnh trong thư mục "uploads"
 app.use(express.static("uploads"));
 
