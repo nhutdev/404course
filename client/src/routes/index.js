@@ -12,7 +12,19 @@ import {
       {
         path: '/register',
         name: 'register',
-        component: () => import('../views/register.vue')
+        component: () => import('../views/register.vue'),
+        children:[
+          {
+            path: 'updateimg',
+            name: 'updateimg',
+            component: () => import('../page/register/imgupdate.vue'),
+          },
+          {
+            path: '',
+            name: 'register',
+            component: () => import('../page/register/register.vue'),
+          },
+        ]
       },  
       {
         path: '/home',
