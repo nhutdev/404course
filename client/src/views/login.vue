@@ -1,67 +1,205 @@
 <template>
-  <section class="h-screen">
-    <div class="h-full">
-      <!-- Left column container with background-->
-      <div class="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
-        <div class="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
-          <img src="https://img.freepik.com/premium-vector/social-media-marketing-mobile-phone-concept_23-2148424880.jpg"
-            class="w-full" alt="Sample image" />
-        </div>
 
-        <!-- Right column container -->
-        <div class="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12 py-2 px-8">
-          <!-- Separator between social media sign in and email/password sign in -->
-          <div
-            class="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
-            <p class="mx-4 mb-0 text-center font-semibold dark:text-white">
-              Đăng nhập
-            </p>
+<div class="relative min-h-screen flex ">
+    <div class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-white">
+      <div class="sm:w-1/2 xl:w-3/5 h-full hidden md:flex flex-auto items-center justify-center p-10 overflow-hidden bg-purple-900 text-white bg-no-repeat bg-cover relative"
+        style="background-image: url(https://media.discordapp.net/attachments/1137648162677456956/1137650789121278042/01212022-1047259374-coding-classes_scanrail.png?width=1078&height=566);">
+        <div class="absolute bg-gradient-to-b from-indigo-600 to-violet-500 opacity-75 inset-0 z-0"></div>
+        <div class="w-full  max-w-md z-10">
+          <div class="sm:text-4xl xl:text-5xl font-bold leading-tight mb-6">Nơi chia sẽ tài liệu giữa mọi người với nhau</div>
+          <div class="sm:text-sm xl:text-md text-gray-200 font-normal">Code mãi code hoài code chán cũng phải code. Mãi mãi là coder.</div>
+        </div>
+        <!---remove custom style-->
+       <ul class="circles">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+   </ul>
+      </div>
+      <div class="md:flex md:items-center md:justify-center  sm:w-auto md:h-full w-2/5 xl:w-2/5 p-8  md:p-10 lg:p-14 sm:rounded-lg md:rounded-none bg-white">
+        <div class="max-w-md w-full space-y-8">
+          <div class="text-center">
+            <h2 class="mt-6 text-3xl font-bold text-gray-900">
+              Chào mừng bạn đến với chúng tôi
+            </h2>
+            <p class="mt-2 text-sm text-gray-500">Đăng nhập vào 404Learn</p>
           </div>
-          <div class="divide-y divide-gray-200">
-            <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-              <div class="relative">
-                <input autocomplete="off" id="email" name="email" type="text"
-                  class="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
-                  placeholder="Nhập địa chỉ email" v-model="email" />
-                <label for="email"
-                  class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Địa
-                  chỉ email</label>
+         
+          <div class="flex items-center justify-center space-x-2">
+            <span class="h-px w-16 bg-gray-200"></span>
+            <span class="text-gray-300 font-normal">Tận hưởng mọi thứ</span>
+            <span class="h-px w-16 bg-gray-200"></span>
+          </div>
+          <div class="mt-8 space-y-6" action="#" method="POST">
+            <input type="hidden" name="remember" value="true">
+            <div class="relative">
+              <div class="absolute right-3 mt-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
               </div>
-              <div class="relative">
-                <input autocomplete="off" id="password" name="password" type="password"
-                  class="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
-                  placeholder="Nhập mật khẩu" v-model="password" />
-                <label for="password"
-                  class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Mật
-                  khẩu</label>
+              <label class="ml-3 text-sm font-bold text-gray-700 tracking-wide">Email</label>
+              <input
+                class=" w-full text-base px-4 py-2 border-b border-gray-300 focus:outline-none rounded-2xl focus:border-indigo-500"
+                type="email" placeholder="mail@gmail.com"  v-model="email" >
+            </div>
+            <div class="mt-8 content-center">
+              <label class="ml-3 text-sm font-bold text-gray-700 tracking-wide">
+                Mật khẩu
+              </label>
+              <input
+                class="w-full content-center text-base px-4 py-2 border-b rounded-2xl border-gray-300 focus:outline-none focus:border-indigo-500"
+                type="password" placeholder="*****" v-model="password">
+            </div>
+            <div class="flex items-center justify-between">
+             
+              <div class="text-sm">
+                <a href="#" class="text-indigo-400 hover:text-blue-500">
+                  Quên mật khẩu?
+                </a>
               </div>
             </div>
-          </div>
-          <!-- Login button -->
-          <div class="text-center lg:text-left">
-
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="login">
-              Đăng nhập
-            </button>
-
-            <!-- Register link -->
-            <p class="mb-0 mt-2 pt-1 text-sm font-semibold">
-              Chưa có tài khoản
-              <router-link
-                class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700"
-                to="/register">Đăng
-                ký</router-link>
+            <div>
+              <button @click="login"
+                class="w-full flex justify-center bg-gradient-to-r from-indigo-500 to-blue-600  hover:bg-gradient-to-l hover:from-blue-500 hover:to-indigo-600 text-gray-100 p-4  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500">
+                Đăng nhập
+              </button>
+            </div>
+            <p class="flex flex-col items-center justify-center mt-10 text-center text-md text-gray-500">
+              <span>Chưa có tài khoản, tạo tại khoản</span>
+              <router-link to="/register" 
+                class="text-indigo-400 hover:text-blue-500 no-underline hover:underline cursor-pointer transition ease-in duration-300">Đăng ký</router-link>
             </p>
           </div>
-
         </div>
       </div>
     </div>
-  </section>
+  </div>
+  <toast ref="toast"></toast>
+
 </template>
 
-
+<style>
+/*remove custom style*/
+  .circles{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+  .circles li{
+    position: absolute;
+    display: block;
+    list-style: none;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    animation: animate 25s linear infinite;
+    bottom: -150px;  
+}
+.circles li:nth-child(1){
+    left: 25%;
+    width: 80px;
+    height: 80px;
+    animation-delay: 0s;
+}
+ 
+ 
+.circles li:nth-child(2){
+    left: 10%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 2s;
+    animation-duration: 12s;
+}
+ 
+.circles li:nth-child(3){
+    left: 70%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 4s;
+}
+ 
+.circles li:nth-child(4){
+    left: 40%;
+    width: 60px;
+    height: 60px;
+    animation-delay: 0s;
+    animation-duration: 18s;
+}
+ 
+.circles li:nth-child(5){
+    left: 65%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 0s;
+}
+ 
+.circles li:nth-child(6){
+    left: 75%;
+    width: 110px;
+    height: 110px;
+    animation-delay: 3s;
+}
+ 
+.circles li:nth-child(7){
+    left: 35%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 7s;
+}
+ 
+.circles li:nth-child(8){
+    left: 50%;
+    width: 25px;
+    height: 25px;
+    animation-delay: 15s;
+    animation-duration: 45s;
+}
+ 
+.circles li:nth-child(9){
+    left: 20%;
+    width: 15px;
+    height: 15px;
+    animation-delay: 2s;
+    animation-duration: 35s;
+}
+ 
+.circles li:nth-child(10){
+    left: 85%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 0s;
+    animation-duration: 11s;
+}
+  @keyframes animate {
+ 
+    0%{
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+        border-radius: 0;
+    }
+ 
+    100%{
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+        border-radius: 50%;
+    }
+ 
+}
+</style>
 <script>
+import toast from '../components/toast/toast.vue'
 export default {
   data() {
     return {
@@ -69,6 +207,7 @@ export default {
       password: ''
     }
   },
+  components:{toast},
   methods: {
    
     async login() {
@@ -78,17 +217,25 @@ export default {
           password: this.password,
         });
 
-        if (login.status === 201) {
-          console.log(login.data.message)
+        if (login.status == 202) {
+          this.$refs.toast.showToast(login.data.message)
         }
-        if (login.status === 200) {
+        else if (login.status == 200) {
           console.log('đăng nhập thành công')
           // Lưu thông tin người dùng vào localStorage hoặc sessionStorage
           localStorage.setItem('user', JSON.stringify(login.data));
           localStorage.setItem('token', login.data.token);
           // Chuyển hướng đến trang chính của ứng dụng
+          this.$refs.toast.showToast('Đăng nhập thành công')
           setTimeout(() => {
+            if(login.data.role === 'admin')
+            {
+              window.location.href = `http://localhost:5173/admin`;
+            }
+            else
+            {
             window.location.href = `http://localhost:5173/home`;
+            }
           }, 1000)
 
         }

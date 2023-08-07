@@ -21,6 +21,9 @@ module.exports = {
       avatar: {
         type: Sequelize.STRING
       },
+      avatar_name: {
+        type: Sequelize.STRING
+      },
       role: {
         type: Sequelize.ENUM('creator','learner','admin')
       },

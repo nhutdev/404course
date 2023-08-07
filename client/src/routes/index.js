@@ -19,6 +19,11 @@ import {
         name: 'home',
         component: () => import('../views/home.vue')
       },  
+      {
+        path: '/admin',
+        name: 'admin',
+        component: () => import('../views/admin.vue')
+      }, 
     ]
   })
   export default router;
