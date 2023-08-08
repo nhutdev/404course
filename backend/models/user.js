@@ -16,17 +16,15 @@ module.exports = (sequelize, DataTypes) => {
       user.hasMany(models.question_course, { foreignKey: 'id_user' });
       user.hasMany(models.like_blog, { foreignKey: 'id_user' });
       user.hasMany(models.comment_blog, { foreignKey: 'id_user' });
-
-
     }
   }
   user.init({
     username: DataTypes.STRING,
+    fullname: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     avatar: DataTypes.STRING,
     avatar_name: DataTypes.STRING,
-    role: DataTypes.ENUM('creator','learner','admin')
   }, {
     sequelize,
     modelName: 'user',

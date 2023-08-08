@@ -12,6 +12,9 @@ module.exports = {
       username: {
         type: Sequelize.STRING
       },
+      fullname: {
+        type: Sequelize.STRING
+      },
       email: {
         type: Sequelize.STRING
       },
@@ -23,9 +26,6 @@ module.exports = {
       },
       avatar_name: {
         type: Sequelize.STRING
-      },
-      role: {
-        type: Sequelize.ENUM('creator','learner','admin')
       },
       createdAt: {
         allowNull: false,
