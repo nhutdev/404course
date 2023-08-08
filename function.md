@@ -2,11 +2,11 @@
 + Đăng nhập: đăng nhập vào trang chính "learnerpage"
 + Đăng ký: đăng ký tài khoản -> role "learner"
 + CRUD: Quên mật khẩu, cập nhập mật khẩu, đổi ảnh nền và fullname
-+ BLOG: CRUD + tương tác (like,comment,save) - Luân
-+ Xem + lưu + Comment khóa học - Luân
++ BLOG: CRUD + tương tác (like,comment,save) 
++ Xem + lưu + Comment khóa học 
 + Nhận thông báo bài đăng - tổng - Xóa 
 + Tìm kiếm course - blog
-+ Follow user để xem blog - Luân
++ Follow user để xem blog 
 
 # Creatorpage
 + Đăng nhập: learnerpage -> chuyển qua creatorpage
@@ -23,3 +23,18 @@
 
 => 40 hàm được viết ở BE
 => FE không rõ 
+
+# Kịch bản - sắp xếp controller
+1. AuthController.js 
+- Xử lý đăng nhập - đăng ký - Quên mật khẩu 
+2. UserController 
+- Update (fullname + avatar + mật khẩu) - GET(getall - getbyid) - deleteUser - NotificationUser - CRUD followuser
+3. CourseController
+- CRUD course - CRUD course_index - CRUD course_index_content - CommentCourse (comment - reply) - Notifications Course
+4. BlogController
+- CRUD blog - like - comment (comment - reply) - save 
+5. SearchController
+- searchUserbyemail - search course_blog
+6. AdminController
+- CRUD Tags - Duyện blogs - Duyệt tags - Duyệt course - CRUD banner - Các function Thống kê - CRUD role - user role
+

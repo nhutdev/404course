@@ -42,6 +42,9 @@ app.use((req, res, next) => {
 });
 
 const { routerUser } = require('./routes/userRouter');
+const {routetSearch} = require('./routes/searchRouter');
+const {routerAuth}=require('./routes/authRouter')
+const {routerBlog}=require('./routes/blogRouter')
 
 // Thiết lập body-parser
 app.use(bodyParser.json());
@@ -52,7 +55,7 @@ app.use(cors({
 }));
 // Định tuyến
 app.use(express.json());
-app.use(routerUser);
+app.use(routerUser,routetSearch,routerBlog,routerAuth);
 
 // Serve các tệp tĩnh trong thư mục "uploads"
 app.use(express.static("uploads"));
