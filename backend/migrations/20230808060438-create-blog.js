@@ -10,7 +10,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       id_user: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id'
+        }
       },
       title_blog: {
         type: Sequelize.STRING
@@ -19,7 +24,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       id_tag: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'tags',
+          key: 'id'
+        }
       },
       status: {
         type: Sequelize.BOOLEAN

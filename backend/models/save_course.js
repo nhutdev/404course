@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      save_course.belongsTo(models.user, { foreignKey: 'id_user' });
+      save_course.belongsTo(models.course, { foreignKey: 'id_course' });
     }
   }
   save_course.init({

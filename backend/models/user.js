@@ -12,10 +12,25 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       user.hasMany(models.reset_password, { foreignKey: 'id_user' });
+
       user.hasMany(models.course, { foreignKey: 'id_user' });
       user.hasMany(models.question_course, { foreignKey: 'id_user' });
+      user.hasMany(models.save_course,{foreignKey: 'id_user'});
+     
+      user.hasMany(models.follow_user, { foreignKey: 'to_user' });
+      user.hasMany(models.follow_user, { foreignKey: 'from_user' });
+
+      user.hasMany(models.blog, { foreignKey: 'id_user' });
       user.hasMany(models.like_blog, { foreignKey: 'id_user' });
       user.hasMany(models.comment_blog, { foreignKey: 'id_user' });
+
+      user.hasMany(models.notification_course, { foreignKey: 'id_user' });
+
+      user.hasMany(models.notification_user, { foreignKey: 'id_user' });
+
+      user.hasMany(models.user_role, { foreignKey: 'id_user' });
+
+      
     }
   }
   user.init({

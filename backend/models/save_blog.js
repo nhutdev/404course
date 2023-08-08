@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      save_blog.belongsTo(models.user, { foreignKey: 'id_user' });
+      save_blog.belongsTo(models.blog, { foreignKey: 'id_blog' });
     }
   }
   save_blog.init({

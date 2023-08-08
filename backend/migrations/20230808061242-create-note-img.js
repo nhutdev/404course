@@ -16,7 +16,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       id_note: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'notes',
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,
