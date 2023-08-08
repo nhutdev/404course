@@ -10,18 +10,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       id_user: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'users',
-          key: 'id'
-        }
+        type: Sequelize.INTEGER
       },
       title_blog: {
         type: Sequelize.STRING
       },
       content_blog: {
         type: Sequelize.STRING
+      },
+      id_tag: {
+        type: Sequelize.INTEGER
+      },
+      status: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,

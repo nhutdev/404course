@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     id_user: DataTypes.INTEGER,
     title_course: DataTypes.STRING,
     description_course: DataTypes.STRING,
-    color_course: DataTypes.STRING
+    color_course: DataTypes.STRING,
+    status:DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'course',

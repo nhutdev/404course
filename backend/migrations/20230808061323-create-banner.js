@@ -2,28 +2,21 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('like_blogs', {
+    await queryInterface.createTable('banners', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_user: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'users',
-          key: 'id'
-        }
+      img_url: {
+        type: Sequelize.STRING
       },
-      id_blog: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'blogs',
-          key: 'id'
-        }
+      img_name: {
+        type: Sequelize.STRING
+      },
+      title_banner: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -36,6 +29,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('like_blogs');
+    await queryInterface.dropTable('banners');
   }
 };
