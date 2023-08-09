@@ -2,16 +2,17 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const db = require("../models");
+const { Op } = require("sequelize");
 const User = db.user;
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 const Role_User = db.user_role
-const role = db.role
+const Role = db.role
 
 const register = async (req, res) => {
   try {
-    const { username, email, password,fullname } = req.body
+    const { username, email, password, fullname } = req.body
     const exitsEmail = await User.findOne({ where: { email } });
     const exitsUsername = await User.findOne({ where: { username } });
 
@@ -26,14 +27,14 @@ const register = async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, salt);
       const user = await User.create({
         username: username,
-        fullname:fullname,
+        fullname: fullname,
         email: email,
         password: hashedPassword,
       })
-      if (user) { 
-        const search = await role.findOne({where:{name_role:"Learner"}})
-        await Role_User.create({id_user:user.id,id_role:search.id})
-        res.status(200).json({ message: "Đăng ký thành công" ,user});
+      if (user) {
+        const search = await role.findOne({ where: { name_role: "Learner" } })
+        await Role_User.create({ id_user: user.id, id_role: search.id })
+        res.status(200).json({ message: "Đăng ký thành công", user });
       }
     }
   } catch (error) {
@@ -42,31 +43,39 @@ const register = async (req, res) => {
 }
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  
+  const { password, itemlogin } = req.body;
   try {
     // Tìm kiếm khách hàng với email cung cấp
     const user = await User.findOne({
       where: {
-        email,
-      }
+        [Op.or]: [
+          { email: itemlogin },
+          { username: itemlogin }
+        ]
+      },
     });
-    
-    const isMatch = await bcrypt.compare(password, user.password);
     if (!user) {
       return res.status(202).json({
         message: "Tài khoản hoặc mật khẩu không đúng",
       });
     }
 
+    const isMatch = await bcrypt.compare(password, user.password);
+
     // So sánh mật khẩu được cung cấp với mật khẩu đã được mã hóa
-    else if (!isMatch) {
+    if (!isMatch) {
       return res.status(202).json({
-        message: "Tài khoản hoặc mật khẩu không đúng",
+        message: "Mật khẩu không đúng",
       });
     }
     else {
       // Tạo JWT
+      const searchrole = await Role_User.findOne(
+        {
+          where: { id_user: user.id }
+        },
+      );
+      const rolename = await Role.findOne({ where: { id: searchrole.id_role } });
       const token = jwt.sign(
         {
           userId: user.id,
@@ -79,20 +88,19 @@ const login = async (req, res) => {
       res.json({
         id: user.id,
         username: user.username,
+        fullname: user.fullname,
+        role: rolename.name_role,
+        id_role: rolename.id,
         email: user.email,
-        role: user.role,
         avatar: user.avatar,
         createdAt: user.createdAt,
         token,
       });
     }
-
-    // Trả về JWT và thông tin người dùng
-
   } catch (error) {
     console.log(error);
     res.status(202).json({
-      message: "Đăng nhập thất sssss",
+      message: "Đăng nhập thất bại",
     });
   }
 };

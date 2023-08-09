@@ -46,10 +46,10 @@
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
-              <label class="ml-3 text-sm font-bold text-gray-700 tracking-wide">Email</label>
+              <label class="ml-3 text-sm font-bold text-gray-700 tracking-wide">Tên đăng nhập / Email</label>
               <input
                 class=" w-full text-base px-4 py-2 border-b border-gray-300 focus:outline-none rounded-2xl focus:border-indigo-500"
-                type="email" placeholder="mail@gmail.com"  v-model="email" >
+                type="text" placeholder="mail@gmail.com"  v-model="itemlogin" >
             </div>
             <div class="mt-8 content-center">
               <label class="ml-3 text-sm font-bold text-gray-700 tracking-wide">
@@ -203,17 +203,16 @@ import toast from '../components/toast/toast.vue'
 export default {
   data() {
     return {
-      email: '',
+      itemlogin: '',
       password: ''
     }
   },
   components:{toast},
   methods: {
-   
     async login() {
       try {
-        const login = await this.$axios.post(`user/login`, {
-          email: this.email,
+        const login = await this.$axios.post(`auth/login`, {
+          itemlogin: this.itemlogin,
           password: this.password,
         });
 
@@ -228,16 +227,15 @@ export default {
           // Chuyển hướng đến trang chính của ứng dụng
           this.$refs.toast.showToast('Đăng nhập thành công')
           setTimeout(() => {
-            if(login.data.role === 'admin')
+            if(login.data.role === 'Admin')
             {
-              window.location.href = `http://localhost:5173/admin`;
+              window.location.href = `${import.meta.env.VITE_API_BASE_FE}/admin`;
             }
-            else
+            else 
             {
-            window.location.href = `http://localhost:5173/home`;
+            window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home`;
             }
           }, 1000)
-
         }
       } catch (error) {
         // Xử lý lỗi nếu có
