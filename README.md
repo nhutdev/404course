@@ -15,3 +15,7 @@ https://dbdiagram.io/d/64cefb5602bd1c4a5e4da952
 # backend
 + B1: cd backend
 + B2: npm i
+
+# DB
++ Roles - setdefault
+- 1:Learner 2:Admin 3:Creator

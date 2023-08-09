@@ -7,6 +7,7 @@
 + Nhận thông báo bài đăng - tổng - Xóa 
 + Tìm kiếm course - blog
 + Follow user để xem blog 
++ CRUD note
 
 # Creatorpage
 + Đăng nhập: learnerpage -> chuyển qua creatorpage
@@ -37,4 +38,5 @@
 - searchUserbyemail - search course_blog
 6. AdminController
 - CRUD Tags - Duyện blogs - Duyệt tags - Duyệt course - CRUD banner - Các function Thống kê - CRUD role - user role
-
+7. NoteController
+- CRUD Note - CRUD Note_img

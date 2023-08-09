@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       blog.belongsTo(models.user, { foreignKey: 'id_user' });
       blog.belongsTo(models.tag, { foreignKey: 'id_tag' });
       
-      blog.hasMany(like_blog, { foreignKey: 'id_blog' });
-      blog.hasMany(comment_blog, { foreignKey: 'id_blog' });
-      blog.hasMany(save_blog, { foreignKey: 'id_blog' });
+      blog.hasMany(models.like_blog, { foreignKey: 'id_blog' });
+      blog.hasMany(models.comment_blog, { foreignKey: 'id_blog' });
+      blog.hasMany(models.save_blog, { foreignKey: 'id_blog' });
     
     }
   }

@@ -16,37 +16,38 @@ const io = new Server(server,
     transports: ["polling", "websocket"],
   });
 
-  const users = {};
+const users = {};
 
-  io.on('connection', (socket) => {
-    socket.on('userConnected', (userId) => {
-      users[userId] = socket.id;
-      io.emit('UpdateUserStatus',users)
-      console.log('User connected:', userId);
-      console.log('Online users:', users);
-    });
-  
-    socket.on('userDisconnect', (userId) => {
-        delete users[userId];
-        io.emit('Updatedisconnect',users)
-        console.log('User disconnected:', userId);
-        console.log('Online users:', users);
-      
-    });
+io.on('connection', (socket) => {
+  socket.on('userConnected', (userId) => {
+    users[userId] = socket.id;
+    io.emit('UpdateUserStatus', users)
+    console.log('User connected:', userId);
+    console.log('Online users:', users);
   });
-  
-  
+
+  socket.on('userDisconnect', (userId) => {
+    delete users[userId];
+    io.emit('Updatedisconnect', users)
+    console.log('User disconnected:', userId);
+    console.log('Online users:', users);
+
+  });
+});
+
+
 app.use((req, res, next) => {
   res.io = io
   next()
 });
 
 const { routerUser } = require('./routes/userRouter');
-const {routetSearch} = require('./routes/searchRouter');
-const {routerAuth}=require('./routes/authRouter')
-const {routerBlog}=require('./routes/blogRouter')
-const {routerAdmin}=require('./routes/adminRouter')
-const {routerNote}=require('./routes/noteRouter')
+const { routerSearch } = require('./routes/searchRouter');
+const { routerAuth } = require('./routes/authRouter')
+const { routerBlog } = require('./routes/blogRouter')
+const { routerAdmin } = require('./routes/adminRouter')
+const { routerNote } = require('./routes/noteRouter')
+const { routerCourse } = require('./routes/courseRouter')
 // Thiết lập body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -56,7 +57,8 @@ app.use(cors({
 }));
 // Định tuyến
 app.use(express.json());
-app.use(routerUser,routetSearch,routerBlog,routerAuth);
+app.use(routerUser, routerSearch, routerBlog,
+  routerAuth, routerAdmin, routerNote, routerCourse);
 
 // Serve các tệp tĩnh trong thư mục "uploads"
 app.use(express.static("uploads"));
