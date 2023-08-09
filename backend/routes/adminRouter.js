@@ -2,7 +2,8 @@ const express = require("express");
 const { getTag, addTag, check_tag, updateTag, deleteTag,
     check_blog, check_course,
     getRole, addRole, updateRole, deleteRole,
-    changeRole, getUR ,deleteUR} = require("../Controller/adminController")
+    changeRole, getUR ,deleteUR,
+    getBanner, addBanner, updateBanner, deleteBanner} = require("../Controller/adminController")
 const routerAdmin = express.Router();
 
 routerAdmin.get('/api/tag/get', getTag);
@@ -23,6 +24,11 @@ routerAdmin.delete('/api/role/delete/:id',deleteRole)
 routerAdmin.get('/api/roleuser/get',getUR);
 routerAdmin.put('/api/roleuser/change',changeRole);
 routerAdmin.delete('/api/roleuser/delete/:id',deleteUR)
+
+routerAdmin.get('/api/banner/get',getBanner);
+routerAdmin.post('/api/banner/add',addBanner);
+routerAdmin.put('/api/banner/update/:id',updateBanner);
+routerAdmin.delete('/api/banner/delete/:id',deleteBanner)
 
 module.exports = {
     routerAdmin

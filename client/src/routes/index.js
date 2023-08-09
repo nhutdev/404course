@@ -34,7 +34,14 @@ import {
       {
         path: '/admin',
         name: 'admin',
-        component: () => import('../views/admin.vue')
+        component: () => import('../views/admin.vue'),
+        children:[
+          {
+            path:'',
+            name:'admin',
+            component:()=>import('../page/admin/home.vue')
+          }
+        ]
       }, 
     ]
   })

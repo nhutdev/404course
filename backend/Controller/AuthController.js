@@ -32,7 +32,7 @@ const register = async (req, res) => {
         password: hashedPassword,
       })
       if (user) {
-        const search = await role.findOne({ where: { name_role: "Learner" } })
+        const search = await Role.findOne({ where: { name_role: "Learner" } })
         await Role_User.create({ id_user: user.id, id_role: search.id })
         res.status(200).json({ message: "Đăng ký thành công", user });
       }

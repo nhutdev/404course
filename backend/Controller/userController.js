@@ -3,7 +3,6 @@ const User = db.user; // gọi ra model user đặt tên là User
 const bcrypt = require("bcryptjs"); // package bcrypt sử dụng trong việc mã hóa password
 const fs = require("fs"); // package thao tác vs file 
 const multer = require("multer"); // package sử dụng để thao tác upload file
-const { exit } = require("process");
 // Được sử dụng để lưu trữ các tệp được tải lên trong thư mục uploads.
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

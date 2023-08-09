@@ -40,3 +40,4 @@
 - CRUD Tags - Duyện blogs - Duyệt tags - Duyệt course - CRUD banner - Các function Thống kê - CRUD role - user role
 7. NoteController
 - CRUD Note - CRUD Note_img
+
