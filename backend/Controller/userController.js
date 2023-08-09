@@ -3,6 +3,7 @@ const User = db.user; // gọi ra model user đặt tên là User
 const bcrypt = require("bcryptjs"); // package bcrypt sử dụng trong việc mã hóa password
 const fs = require("fs"); // package thao tác vs file 
 const multer = require("multer"); // package sử dụng để thao tác upload file
+const { exit } = require("process");
 // Được sử dụng để lưu trữ các tệp được tải lên trong thư mục uploads.
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -74,6 +75,37 @@ const updatePassword = async (req, res) => {
   }
 }
 
+
+// Thực hiện thêm mới ảnh avatar
+const newAvatar = async (req,res)=>{
+  try {
+    // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
+    const id = req.params.id;
+    // Thực hiện kiểm tra xem user có không
+    const exists = await User.findByPk(id)
+    if(exists)
+    {
+      upload.single("avatar")(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+          return res.status(400).json({ message: err.message });
+        } else if (err) {
+          return res.status(400).json({ message: err.message });
+        }
+        // Kiểm tra nếu có file ảnh mới được chọn
+        if (req.file) {
+          const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename
+            }`;
+          exists.avatar_name = req.file.filename
+          exists.avatar = imageUrl;
+          await exists.save();
+          res.status(200).json({message:"Cập nhập ảnh thành công"})
+        }});
+    }
+  } catch (error) {
+     // xuất lỗi ra trên console
+     console.log(error)
+  }
+}
 // Thực hiện việc xóa 1 user khỏi DB
 const deleteUser = async (req, res) => {
   try {
@@ -132,5 +164,6 @@ module.exports = {
   getFollow,
   handleFollow,
   createNotification,
-  deleteNotification
+  deleteNotification,
+  newAvatar
 }

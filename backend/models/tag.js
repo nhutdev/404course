@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      tag.hasMany(models.user, { foreignKey: 'id_tag' });
+      tag.hasMany(models.blog, { foreignKey: 'id_tag' });
     }
   }
   tag.init({

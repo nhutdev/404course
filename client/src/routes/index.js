@@ -15,7 +15,7 @@ import {
         component: () => import('../views/register.vue'),
         children:[
           {
-            path: 'updateimg',
+            path: 'updateimg/:id',
             name: 'updateimg',
             component: () => import('../page/register/imgupdate.vue'),
           },

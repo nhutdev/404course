@@ -37,6 +37,14 @@
                 </div>
                 <div class="mt-8 content-center">
                   <label class="ml-3 text-sm font-bold text-gray-700 tracking-wide">
+                   Họ và tên
+                  </label>
+                  <input
+                    class="w-full content-center text-base px-4 py-2 border-b rounded-2xl border-gray-300 focus:outline-none focus:border-indigo-500"
+                    type="text" placeholder="Nguyễn Văn A" v-model="fullname">
+                </div>
+                <div class="mt-8 content-center">
+                  <label class="ml-3 text-sm font-bold text-gray-700 tracking-wide">
                     Mật khẩu
                   </label>
                   <input
@@ -78,26 +86,28 @@
         email: '',
         password: '',
         username: '',
+        fullname:''
       }
     },
     components:{toast},
     methods: {   
       async register() {
         try {
-          const login = await this.$axios.post(`user/register`,
+          const register = await this.$axios.post(`auth/register`,
           {
-            email:this.email,username:this.username,password:this.password
+            email:this.email,username:this.username,password:this.password,fullname:this.fullname
           });
-          if(login.status == 202)
+          if(register.status == 202)
           {
-            this.$refs.toast.showToast(login.data.message)
+            this.$refs.toast.showToast(register.data.message)
           }
           
   
-          if (login.status === 200) {
+          if (register.status === 200) {
             this.$refs.toast.showToast('Đăng ký thành công')
+          
             setTimeout(() => {
-              window.location.href = `http://localhost:5173/register/updateimg`;
+              window.location.href = `${import.meta.env.VITE_API_BASE_FE}/register/updateimg/${register.data.user.id}`;
             }, 1000)
           }
         } catch (error) {

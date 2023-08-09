@@ -8,6 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 const Role_User = db.user_role
 const role = db.role
+
 const register = async (req, res) => {
   try {
     const { username, email, password,fullname } = req.body
@@ -29,10 +30,10 @@ const register = async (req, res) => {
         email: email,
         password: hashedPassword,
       })
-      if (user) {
-        const search = await role.findOne({where:{name_role:"Leaner"}})
+      if (user) { 
+        const search = await role.findOne({where:{name_role:"Learner"}})
         await Role_User.create({id_user:user.id,id_role:search.id})
-        res.status(200).json({ message: "Đăng ký thành công" });
+        res.status(200).json({ message: "Đăng ký thành công" ,user});
       }
     }
   } catch (error) {
@@ -95,7 +96,6 @@ const login = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   register,
