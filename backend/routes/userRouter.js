@@ -18,7 +18,7 @@ routerUser.put('/api/user/updateInfo/:id',updateInfo);
 routerUser.put('/api/user/updatePassword/:id',updatePassword);
 routerUser.put('/api/user/newAvatar/:id',newAvatar)
 routerUser.delete('/api/user/delete',deleteUser)
-routerUser.get('/api/follow/get',getFollow);
+routerUser.post('/api/follow/get',getFollow);
 routerUser.post('/api/follow/handle',handleFollow);
 routerUser.post('/api/user/noti/create',createNotification);
 routerUser.delete('/api/user/noti/delete',deleteNotification);

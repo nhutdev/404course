@@ -6,6 +6,7 @@ const Course = db.course
 const Role = db.role
 const User_role = db.user_role
 const Banner = db.banner
+const User = db.user
 const fs = require("fs"); // package thao tác vs file 
 const multer = require("multer"); // package sử dụng để thao tác upload file
 // Được sử dụng để lưu trữ các tệp được tải lên trong thư mục uploads.
@@ -245,7 +246,7 @@ const changeRole = async (req, res) => {
 
 const getUR = async (req, res) => {
     try {
-        const UR = User_role.findAll({
+        const UR = await User_role.findAll({
             include: [
                 {
                     model: Role,
@@ -257,6 +258,7 @@ const getUR = async (req, res) => {
                 }
             ]
         });
+    
         res.json(UR)
     } catch (error) {
         console.log(error)
@@ -276,6 +278,22 @@ const deleteUR = async (req, res) => {
     } catch (error) {
         console.log(error)
     }
+}
+const getUByRole = async(req,res)=>
+{
+try {
+    const id = req.params.id;
+    const get = await User.findAll({
+        include: [{
+          model: User_role,
+          where: { id_role: id }
+        }]
+      });
+     
+    res.json(get);
+} catch (error) {
+    console.log(error)
+}
 }
 const getBanner = async (req, res) => {
     try {
@@ -362,6 +380,6 @@ const deleteBanner = async (req, res) => {
 module.exports = {
     getTag, addTag, check_tag, updateTag, deleteTag,
     check_blog, check_course, getRole, addRole, updateRole,
-    deleteRole, changeRole, getUR, deleteUR,
+    deleteRole, changeRole, getUR, deleteUR,getUByRole,
     getBanner, addBanner, updateBanner, deleteBanner
 }

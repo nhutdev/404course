@@ -34,7 +34,8 @@ const deleteFile = (filePath) => {
 // hàm lấy tất cả user 
 const get_allUser = async (req, res) => {
   try {
-
+    const user = await User.findAll();
+    res.json(user)
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)
