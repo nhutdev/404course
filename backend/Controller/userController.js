@@ -1,8 +1,13 @@
 const db = require("../models"); // gọi về model
 const User = db.user; // gọi ra model user đặt tên là User
+const FollowUser = db.follow_user; // gọi ra model follow_user đặt tên là FollowUser
+const Noti = db.notification_user; // gọi ra model notification_user đặt tên là Noti
+const Role = db.role; // gọi ra model role đặt tên là Role
+const User_role = db.user_role; // gọi ra model user_role đặt tên là User_role
 const bcrypt = require("bcryptjs"); // package bcrypt sử dụng trong việc mã hóa password
 const fs = require("fs"); // package thao tác vs file 
 const multer = require("multer"); // package sử dụng để thao tác upload file
+
 // Được sử dụng để lưu trữ các tệp được tải lên trong thư mục uploads.
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -34,7 +39,8 @@ const deleteFile = (filePath) => {
 // hàm lấy tất cả user 
 const get_allUser = async (req, res) => {
   try {
-
+    const user = await User.findAll();
+    res.json(user)
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)
@@ -46,6 +52,11 @@ const get_byID = async (req, res) => {
   try {
     // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
     const id = req.params.id;
+    const exitID = await User.findByPk(id);
+    if(exitID)
+    {
+      return res.status(200).json(exitID);
+    }
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)
@@ -57,6 +68,7 @@ const updateInfo = async (req, res) => {
   try {
     // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
     const id = req.params.id;
+    
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)
@@ -67,7 +79,20 @@ const updateInfo = async (req, res) => {
 const updatePassword = async (req, res) => {
   try {
     // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
-    const id = req.params.id;
+    const {id,password,newpassword} = req.body;
+        const existUser = await User.findByPk(id)
+        if (existUser){
+            const isMatch = await bcrypt.compare(password, existUser.password)
+            if (!isMatch) {
+                return res.status(201).json({ message: "Không thành công" })
+            }
+            else{
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(newpassword, salt);
+                await existUser.update({password:hashedPassword})
+                return res.status(200).json({ message: "Thành công" })
+            }
+        }
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)
@@ -110,6 +135,11 @@ const deleteUser = async (req, res) => {
   try {
     // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
     const id = req.params.id;
+    const existUser = await User.findByPk(id)
+    if(existUser)
+    {
+
+    }
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)
@@ -118,7 +148,9 @@ const deleteUser = async (req, res) => {
 // GET danh sách follow 
 const getFollow = async (req, res) => {
   try {
-
+    const { from_user } = req.body
+    const getList = FollowUser.findAll({where:{from_user}});
+    return res.status(200).json(getList);
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)
@@ -127,7 +159,20 @@ const getFollow = async (req, res) => {
 // Thêm hoặc xóa 1 follow
 const handleFollow = async (req, res) => {
   try {
+    const {to_user,from_user} = req.body
+    const UserFollow = await FollowUser.findOne({where:{to_user:to_user,from_user:from_user}})
+    console.log(UserFollow)
+    if(UserFollow)
+    {
+      const followed = await FollowUser.destroy({where:{to_user,from_user}})
+      return res.status(200).json({message:"Huỷ follow thành công"})
 
+    }
+    else
+    {
+      const followent = await FollowUser.create({to_user,from_user})
+      return res.status(200).json({message:"Follow thành công"})
+    }
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)
@@ -138,7 +183,21 @@ const handleFollow = async (req, res) => {
 // Thực hiện việc thêm thông báo cho user
 const createNotification = async (req, res) => {
   try {
-
+    const {title_notification,content_notification,id_role} = req.body
+    const existRole = await Role.findByPk(id_role)
+    if(existRole)
+    {
+      //join user vs user_role
+      const getUser = await User.findAll({attribute:["id"],
+        include: [{
+        model: User_role, 
+        where: { id_role: id_role }
+      }]})
+      getUser.forEach(async element => {
+      const noti = await Noti.create({id_user:element.id,title_notification:title_notification,content_notification:content_notification,status_seen:false})
+    });
+    return res.status(200).json({message:"Gửi thành công!"})
+    }
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)
@@ -148,7 +207,13 @@ const createNotification = async (req, res) => {
 // Thực hiện xóa 1 thông báo
 const deleteNotification = async (req, res) => {
   try {
-
+    const id = req.params.id // goi. ve`
+    const existNoti = await Noti.findByPk(id)
+    if(existNoti)
+    {
+      await existNoti.destroy()
+      return res.status(200).json({message:"Xoá thành công!"})
+    }
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)

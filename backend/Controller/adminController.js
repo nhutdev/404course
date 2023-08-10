@@ -236,7 +236,7 @@ const changeRole = async (req, res) => {
             res.status(200).json({ message: 'Cập nhập thành công' })
         }
         else {
-            res.status(202).json({ message: 'Không tồn tại userrole này trong hệ thống' })
+            res.status(202).json({ message: 'Không tồn tại user role này trong hệ thống' })
         }
     } catch (error) {
         console.log(error)

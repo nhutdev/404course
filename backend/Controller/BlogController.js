@@ -1,6 +1,7 @@
 const db = require("../models"); // gọi về model
 const User = db.user; // gọi ra model user đặt tên là User
-const Blog = db.blog // gọi ra model blog
+const Blog = db.blog; // gọi ra model blog
+const Tag = db.tag; // gọi ra model tag
 const Comment = db.comment_blog // gọi ra model comment blog
 const Like = db.like_blog // gọi ra model like blog
 const Save = db.save_blog // gọi ra model save blog
@@ -8,7 +9,8 @@ const Save = db.save_blog // gọi ra model save blog
 // hàm xử lý lấy ra danh sách blog
 const getBlog = async (req, res) => {
     try {
-
+        const getAllBlog = await Blog.findAll();
+        res.json(getAllBlog)
     } catch (error) {
         // trả thông báo lỗi về console
         console.log(error)
@@ -18,7 +20,21 @@ const getBlog = async (req, res) => {
 // hàm xử lý thêm blog
 const addBlog = async (req, res) => {
     try {
-
+        const {id_user,id_tag,title_blog,content_blog} = req.body
+        const existUser = await User.findByPk(id_user)
+        const existTag = await Tag.findByPk(id_tag)
+        if(existUser)
+        {
+            if(existTag)
+            {
+                const blog = await Blog.create({id_user:id_user,id_tag:id_tag,title_blog:title_blog,content_blog:content_blog,status:false})
+                return res.status(200).json({message:"Tạo blog thành công!"})
+            }
+            else
+            {
+                return res.status(202).json({message:"Chưa có tag!"})
+            }
+        };
     } catch (error) {
         // trả thông báo lỗi về console
         console.log(error)
@@ -28,7 +44,18 @@ const addBlog = async (req, res) => {
 // hàm xử lý update blog
 const updateBlog = async (req, res) => {
     try {
-
+        const id = req.params.id
+        const {id_tag,content_blog,title_blog} = req.body
+        const existBlog = await Blog.findByPk(id)
+        const existTag = await Tag.findByPk(id_tag)
+        if(existBlog)
+        {
+            if(existTag)
+            {
+                const blog = await existBlog.update({id_tag:id_tag,title_blog:title_blog,content_blog:content_blog})
+                return res.status(200).json({message:"Cập nhật blog thành công!"})
+            }
+        };
     } catch (error) {
         // trả thông báo lỗi về console
         console.log(error)
@@ -36,7 +63,16 @@ const updateBlog = async (req, res) => {
 }
 const deleteBlog = async (req, res) => {
     try {
-
+        const id = req.params.id
+        const existBlog = await Blog.findByPk(id)
+        if (existBlog)
+        {
+            await Comment.destroy({where:{id_blog:id}})
+            await Like.destroy({where:{id_blog:id}})
+            await Save.destroy({where:{id_blog:id}})
+            await existBlog.destroy()
+            return res.status(200).json({message:"Xoá blog thành công!"})
+        }
     } catch (error) {
         // trả thông báo lỗi về console
         console.log(error)
