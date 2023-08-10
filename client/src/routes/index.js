@@ -40,9 +40,24 @@ import {
             path:'',
             name:'admin',
             component:()=>import('../page/admin/home.vue')
+          },
+          {
+            path:'user',
+            name:'user',
+            component:()=>import('../page/admin/user.vue')
+          },
+          {
+            path:'course',
+            name:'course',
+            component:()=>import('../page/admin/course.vue')
           }
         ]
       }, 
+      {
+        path: '/creator',
+        name: 'creator',
+        component: () => import('../views/creator.vue'),
+      }
     ]
   })
   export default router;
