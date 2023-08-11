@@ -14,8 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       course.belongsTo(models.user, { foreignKey: 'id_user' });
       course.hasMany(models.index_course, { foreignKey: 'id_course' });
       course.hasMany(models.question_course, { foreignKey: 'id_course' });
-      course.hasMany(models.like_blog, { foreignKey: 'id_course' });
-      course.hasMany(models.comment_blog, { foreignKey: 'id_course' });
+      course.hasMany(models.save_course, { foreignKey: 'id_course' });
     }
   }
   course.init({

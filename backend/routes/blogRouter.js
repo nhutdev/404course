@@ -33,7 +33,7 @@ routerBlog.post('/api/blog/comment/add',addComment)
 routerBlog.put('/api/blog/comment/update/:id',updateComment)
 routerBlog.post('/api/blog/comment/delete/:id',deleteComment)
 
-routerBlog.post('/api/blog/replycomment/add',add_replyComment)
+routerBlog.post('/api/blog/replycomment/add/:id',add_replyComment)
 routerBlog.put('/api/blog/replycomment/update/:id',update_replyComment)
 routerBlog.post('/api/blog/replycomment/delete/:id',delete_replyComment)
 

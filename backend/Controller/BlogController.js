@@ -177,7 +177,7 @@ const handlelike = async (req, res) => {
       const exsitBlog = await Blog.findByPk(id_blog);
       const exsitUser = await User.findByPk(id_user);
       if (exsitBlog && exsitUser) {
-        await Comment.create({ comment: comment, id_reply: null });
+        await Comment.create({ id_blog:id_blog,id_user:id_user, comment: comment, id_reply: null });
         res.status(200).json({ message: "Thêm bình luận thành công" });
       } else {
         res.status(202).json({ message: "Thêm bình luận thất bại" });
@@ -193,7 +193,11 @@ const handlelike = async (req, res) => {
       // nhận vào id của  comment
       const id = req.params.id;
       const exitCmt = await Comment.findByPk(id);
+      const exitReply = await Comment.findAll({id_reply:id})
       if (exitCmt) {
+        exitReply.forEach(element => {
+            element.destroy()
+        });
         await exitCmt.destroy();
         res.status(200).json({ message: "Xóa bình luận thành công" });
       } else {
@@ -226,6 +230,19 @@ const handlelike = async (req, res) => {
   // Thực hiện reply comment
   const add_replyComment = async (req, res) => {
     try {
+        const id = req.params.id; // id comment cap 1
+        const{comment,id_user} = req.body
+        const exits = await Comment.findByPk(id)
+        if(exits)
+        {
+            await Comment.create({comment:comment,id_user:id_user,id_reply:id})
+            res.status(200).json({message:"Bình luận thành công"})
+        }
+        else
+        {
+            res.status(202).json({message:"Bình luận không tồn tại"})
+        }
+
     } catch (error) {
       // trả thông báo lỗi về console
       console.log(error);
