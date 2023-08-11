@@ -19,6 +19,24 @@ class courseService {
             console.log(error)
         }
     }
+    async getCourse_Index(id)
+    {
+        try {
+            const result = await axios.get(`${this.url}course/index/get/`+id);
+            return result.data;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async getContent()
+    {
+        try {
+            const result = await axios.get(`${this.url}course/index/content/get`);
+            return result.data;
+        } catch (error) {
+            console.log(error)
+        }
+    }
    
 }
 export default new courseService();

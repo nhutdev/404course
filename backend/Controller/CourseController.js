@@ -20,12 +20,12 @@ const addCourse = async (req, res) => {
         const { id_user, title_course, description_course, color_course } = req.body;
         const exitst = await User.findByPk(id_user);
         if (exitst) {
-            const create = await Course.create({
+            const course = await Course.create({
                 id_user: id_user, title_course: title_course,
                 description_course: description_course, color_course: color_course, status: false
             });
-            if (create) {
-                res.status(200).json({ message: "Thêm thành công khóa học" })
+            if (course) {
+                res.status(200).json({ message: "Thêm thành công khóa học" ,course})
             }
         }
         else {
@@ -78,7 +78,7 @@ const getIndex = async(req,res)=>{
         const id = req.params.id
         const exits = await Course.findByPk(id)
         if (exits) {
-            const get = await Index.getAll({where:{id_course:id}})
+            const get = await Index.findAll({where:{id_course:id}})
             res.json(get)
         } else {
             res.status(202).json({ message: "Không tồn tại chỉ mục này" })
@@ -94,8 +94,8 @@ const addIndex = async(req,res)=>{
         const{title_index,description_index} =req.body
         const exits = await Course.findByPk(id)
         if (exits) {
-            await Index.create({id_course:id,title_index:title_index,description_index:description_index})
-            res.status(200).json({ message: "Thêm thành công chỉ mục" })
+          const index=  await Index.create({id_course:id,title_index:title_index,description_index:description_index})
+            res.status(200).json({ message: "Thêm thành công chỉ mục" ,index})
         } else {
             res.status(202).json({ message: "Không tồn tại chỉ mục này" })
         }
@@ -143,15 +143,11 @@ const deleteIndex = async(req,res)=>{
 
 //content crud
 const getContent = async(req,res)=>{
-    try {
-        const id = req.params.id
-        const exits = await Index.findByPk(id)
-        if (exits) {
-            const get = await Index_Content.getAll({where:{id_index:id}})
+    try {    
+       
+          const get = await Index_Content.findAll()
             res.json(get)
-        } else {
-            res.status(202).json({ message: "Không tồn tại chỉ mục này" })
-        }
+       
     } catch (error) {
         console.log(error)
     }
