@@ -78,6 +78,7 @@
                                             đề</th>
                                         <th class="px-6 py-3 text-gray-500 font-bold tracking-wider uppercase text-xs">Giới
                                             thiệu</th>
+                                        <th class="px-6 py-3 text-gray-500 font-bold tracking-wider uppercase text-xs"></th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm">
@@ -95,6 +96,13 @@
                                         <td class="border-t">
                                             <span class="text-gray-700 px-6 py-4 flex items-center">
                                                 {{ index_course.description_index }}
+                                            </span>
+                                        </td>
+                                        <td class="border-t">
+                                            <span class="text-rose-700 px-6 py-4 flex items-center">
+                                                <button type="button"
+                                                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 "
+                                                    @click="deleteIndex(index_course.id)">X</button>
                                             </span>
                                         </td>
                                     </tr>
@@ -136,13 +144,22 @@
                 <div class="modal-footer">
                     <div class="py-4 px-4">
                         <div v-for="index in index_courses">
-                        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white" >{{ index.title_index }}</h2>
-                        <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400" v-for="content in index_contents.filter(item => item.id_index == index.id)">
-                            <li>
-                                {{ content.title_content }}
-                            </li>
-                        </ul>
-</div>
+                            <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">{{ index.title_index }}
+                            </h2>
+                            <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400"
+                                v-for="content in index_contents.filter(item => item.id_index == index.id)">
+                                <li class="flex">
+                                    {{ content.title_content }}   - {{ content.description_content }} - {{ content.link_video }} - 
+                                    <div class="flex">
+                                    <button type="button"
+                                        class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 "
+                                        @click="deleteContent(content.id)">X</button>
+                                </div>
+                                </li>
+                               
+                            </ul>
+                    
+                        </div>
                     </div>
                 </div>
 
@@ -289,22 +306,27 @@ export default {
         },
         async addCourse() {
             try {
-                const result = await this.$axios.post(`course/add`, {
-                    "id_user": this.user.id,
-                    "title_course": this.course_title,
-                    "description_course": this.course_description,
-                    "color_course": this.course_color,
-                });
-                if (result.status == 200) {
-                    this.id_course = result.data.course.id
-                    this.$refs.toast.showToast(result.data.message)
-                    this.isShowCourse = false
-                    this.isShowIndex = true
-                    this.title_course = ''
-                    this.description_course = ' '
+                if (this.course_title == '' || this.course_description == '') {
+                    this.$refs.toast.showToast('Vui lòng nhập dữ liệu')
                 }
                 else {
-                    this.$refs.toast.showToast(result.data.message)
+                    const result = await this.$axios.post(`course/add`, {
+                        "id_user": this.user.id,
+                        "title_course": this.course_title,
+                        "description_course": this.course_description,
+                        "color_course": this.course_color,
+                    });
+                    if (result.status == 200) {
+                        this.id_course = result.data.course.id
+                        this.$refs.toast.showToast(result.data.message)
+                        this.isShowCourse = false
+                        this.isShowIndex = true
+                        this.title_course = ''
+                        this.description_course = ' '
+                    }
+                    else {
+                        this.$refs.toast.showToast(result.data.message)
+                    }
                 }
             } catch (error) {
                 console.log(error)
@@ -328,16 +350,35 @@ export default {
 
         async addIndex() {
             try {
-                const result = await this.$axios.post(`course/index/add/` + this.id_course, {
-                    "title_index": this.index_title,
-                    "description_index": this.index_description,
-                });
+                if (this.index_title == '' || this.index_description == '') {
+                    this.$refs.toast.showToast('Vui lòng nhập dữ liệu')
+                }
+                else {
+                    const result = await this.$axios.post(`course/index/add/` + this.id_course, {
+                        "title_index": this.index_title,
+                        "description_index": this.index_description,
+                    });
+                    if (result.status == 200) {
+                        this.$refs.toast.showToast(result.data.message)
+                        this.isShowAddIndex = false
+                        courseService.getCourse_Index(this.id_course).then((data) => { this.index_courses = data });
+                        this.index_title = ''
+                        this.index_description = ' '
+                    }
+                    else {
+                        this.$refs.toast.showToast(result.data.message)
+                    }
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async deleteIndex(id) {
+            try {
+                const result = await this.$axios.delete(`course/index/delete/` + id);
                 if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message)
-                    this.isShowAddIndex = false
                     courseService.getCourse_Index(this.id_course).then((data) => { this.index_courses = data });
-                    this.index_title = ''
-                    this.index_description = ' '
                 }
                 else {
                     this.$refs.toast.showToast(result.data.message)
@@ -374,6 +415,20 @@ export default {
                     this.content_description = ''
                     this.content_link = ''
                     this.content_type = ''
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async deleteContent(id) {
+            try {
+                const result = await this.$axios.delete(`course/index/content/delete/` + id);
+                if (result.status == 200) {
+                    this.$refs.toast.showToast(result.data.message)
+                    courseService.getContent().then((data) => { this.index_contents = data })
                 }
                 else {
                     this.$refs.toast.showToast(result.data.message)
