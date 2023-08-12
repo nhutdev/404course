@@ -10,6 +10,8 @@ const User = db.user
 const fs = require("fs"); // package thao tác vs file 
 const multer = require("multer"); // package sử dụng để thao tác upload file
 // Được sử dụng để lưu trữ các tệp được tải lên trong thư mục uploads.
+const ITEMS_PER_PAGE = 5; // Số lượng mục trên mỗi trang
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "./uploads/");
@@ -246,20 +248,33 @@ const changeRole = async (req, res) => {
 
 const getUR = async (req, res) => {
     try {
-        const UR = await User_role.findAll({
+        const page = parseInt(req.query.page) || 1; // Trang hiện tại từ query string, mặc định là trang 1
+
+        const offset = (page - 1) * ITEMS_PER_PAGE;
+        const UR = await User_role.findAndCountAll({
             include: [
                 {
                     model: Role,
-                    required: true
+                    attributes:['name_role','id'],
+                    
                 },
                 {
                     model: User,
-                    required: true
+                    attributes: ['id', 'fullname']
                 }
-            ]
+            ],
+            offset: offset,
+            limit: ITEMS_PER_PAGE,
         });
     
-        res.json(UR)
+        const totalItems = UR.count;
+        const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+        res.json({
+            UR: UR.rows,
+            currentPage: page,
+            totalPages: totalPages
+        });
     } catch (error) {
         console.log(error)
     }

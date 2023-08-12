@@ -3,8 +3,8 @@ const Course = db.course
 const User = db.user
 const Index = db.index_course
 const Index_Content = db.content_index_course
-const ITEMS_PER_PAGE = 1; // Số lượng mục trên mỗi trang
-
+const ITEMS_PER_PAGE = 5; // Số lượng mục trên mỗi trang
+// 1 2 3 4 5 6 7 8 9 10
 const getAll = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1; // Trang hiện tại từ query string, mặc định là trang 1

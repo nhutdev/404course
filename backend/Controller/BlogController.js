@@ -5,12 +5,35 @@ const Tag = db.tag; // gọi ra model tag
 const Comment = db.comment_blog; // gọi ra model comment blog
 const Like = db.like_blog; // gọi ra model like blog
 const Save = db.save_blog; // gọi ra model save blog
+const ITEMS_PER_PAGE = 5; // Số lượng mục trên mỗi trang
 
 // hàm xử lý lấy ra danh sách blog
 const getBlog = async (req, res) => {
   try {
-    const getAllBlog = await Blog.findAll();
-    res.json(getAllBlog);
+    const page = parseInt(req.query.page) || 1; // Trang hiện tại từ query string, mặc định là trang 1
+
+    const offset = (page - 1) * ITEMS_PER_PAGE;
+
+    const blogs = await Blog.findAndCountAll({
+        attributes: ['id', 'title_blog', 'content_blog', 'status', 'createdAt', 'updatedAt'],
+        order: [["id", "DESC"]],
+        include: [
+            { model: User, attributes: ['id', 'fullname'] },
+            { model: Tag, attributes: ['id', 'nametag','status'] },
+        ],
+        offset: offset,
+        limit: ITEMS_PER_PAGE,
+
+    });
+
+    const totalItems = blogs.count;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+    res.json({
+        blogs: blogs.rows,
+        currentPage: page,
+        totalPages: totalPages
+    });
   } catch (error) {
     // trả thông báo lỗi về console
     console.log(error);
