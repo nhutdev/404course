@@ -1,12 +1,36 @@
 const db = require("../models"); // gọi về model
 const Note = db.note;
 const User = db.user;
+const Note_img = db.note_img;
+const ITEMS_PER_PAGE = 1; // Số lượng mục trên mỗi trang
 
 // hàm xử lý lấy ra danh sách note
 const getNote = async (req, res) => {
   try {
-    const note = await Note.findAll();
-    res.status(200).json(note);
+    // const note = await Note.findAll();
+    // res.status(200).json(note);
+    const page = parseInt(req.query.page) || 1; // Trang hiện tại từ query string, mặc định là trang 1
+
+    const offset = (page - 1) * ITEMS_PER_PAGE;
+
+    const note = await Note.findAndCountAll({
+      attributes: ["id", "title_note", "content_note"],
+      order: [["id", "DESC"]],
+      include: [
+        { model: User, attributes: ["id", "fullname"] },
+        { model: Note_img, attributes: ["id", "img_url", "img_name"] },
+      ],
+      offset: offset,
+      limit: ITEMS_PER_PAGE,
+    });
+    const totalItems = note.count;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+    res.json({
+      note: note.rows,
+      currentPage: page,
+      totalPages: totalPages,
+    });
   } catch (error) {
     // trả thông báo lỗi về console
     console.log(error);
