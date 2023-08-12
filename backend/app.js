@@ -48,6 +48,7 @@ const { routerBlog } = require('./routes/blogRouter')
 const { routerAdmin } = require('./routes/adminRouter')
 const { routerNote } = require('./routes/noteRouter')
 const { routerCourse } = require('./routes/courseRouter')
+const {routerStatistcal}=require('./routes/statisticalRouter')
 // Thiết lập body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -58,7 +59,8 @@ app.use(cors({
 // Định tuyến
 app.use(express.json());
 app.use(routerUser, routerSearch, routerBlog,
-  routerAuth, routerAdmin, routerNote, routerCourse);
+  routerAuth, routerAdmin, routerNote, routerCourse,
+  routerStatistcal);
 
 // Serve các tệp tĩnh trong thư mục "uploads"
 app.use(express.static("uploads"));
