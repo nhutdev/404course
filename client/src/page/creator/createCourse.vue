@@ -143,23 +143,37 @@
                 </div>
                 <div class="modal-footer">
                     <div class="py-4 px-4">
-                        <div v-for="index in index_courses">
-                            <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">{{ index.title_index }}
-                            </h2>
-                            <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400"
-                                v-for="content in index_contents.filter(item => item.id_index == index.id)">
-                                <li class="flex">
-                                    {{ content.title_content }}   - {{ content.description_content }} - {{ content.link_video }} - 
-                                    <div class="flex">
-                                    <button type="button"
+                        
+                        <div class="mt-8 bg-white p-4 shadow rounded-lg" v-for="index in index_courses">
+                <h2 class="text-gray-500 text-lg font-semibold pb-4">{{ index.title_index }}</h2>
+                <div class="my-1"></div> 
+                <div class="bg-gradient-to-r from-cyan-300 to-cyan-500 h-px mb-6"></div> 
+                <table class="w-full table-auto text-sm">
+                    <thead>
+                        <tr class="text-sm leading-normal">
+                            <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Tiêu đề</th>
+                            <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Kiểu tài liệu</th>
+                            <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Nội dung</th>
+                            <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-rose-300 border-b border-grey-light">X</th>                       
+                        </tr>
+                    </thead>
+                    <tbody v-for="content in index_contents.filter(item => item.id_index == index.id)">
+                        <tr class="hover:bg-grey-lighter">
+                            <td class="py-2 px-4 border-b border-grey-light">{{ content.title_content }}</td>
+                            <td class="py-2 px-4 border-b border-grey-light">{{ content.type }}</td>
+                            <td class="py-2 px-4 border-b border-grey-light" v-if="content.type == 'video'">{{ content.link_video }}</td>
+                            <td class="py-2 px-4 border-b border-grey-light" v-if="content.type == 'document'">{{ content.description_content }}</td>
+                             <td class="py-2 px-4 border-b border-grey-light">
+                                <button type="button"
                                         class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 "
                                         @click="deleteContent(content.id)">X</button>
-                                </div>
-                                </li>
-                               
-                            </ul>
-                    
-                        </div>
+                             </td>
+                        </tr>
+                    </tbody>
+                </table>
+               
+                
+            </div>
                     </div>
                 </div>
 
@@ -373,6 +387,7 @@ export default {
                 console.log(error)
             }
         },
+
         async deleteIndex(id) {
             try {
                 const result = await this.$axios.delete(`course/index/delete/` + id);
@@ -423,6 +438,7 @@ export default {
                 console.log(error)
             }
         },
+
         async deleteContent(id) {
             try {
                 const result = await this.$axios.delete(`course/index/content/delete/` + id);
@@ -437,12 +453,14 @@ export default {
                 console.log(error)
             }
         },
+
         oncloseAddIndex() {
             this.isShowAddIndex = !this.isShowAddIndex
         },
         oncloseAddContent() {
             this.isShowAddContent = !this.isShowAddContent
         }
+        
     },
 };
 </script>

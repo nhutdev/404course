@@ -50,6 +50,11 @@ import {
             path:'course',
             name:'course',
             component:()=>import('../page/admin/course.vue')
+          },
+          {
+            path:'role',
+            name:'role',
+            component:()=>import('../page/admin/role.vue')
           }
         ]
       }, 
