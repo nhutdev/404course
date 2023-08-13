@@ -3,7 +3,7 @@ const Course = db.course
 const User = db.user
 const Index = db.index_course
 const Index_Content = db.content_index_course
-const ITEMS_PER_PAGE = 1; // Số lượng mục trên mỗi trang
+const ITEMS_PER_PAGE = 5; // Số lượng mục trên mỗi trang
 
 const getAll = async (req, res) => {
     try {
@@ -36,7 +36,6 @@ const getAll = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Internal server error" });
     }
 }
 

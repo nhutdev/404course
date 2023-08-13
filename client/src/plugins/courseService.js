@@ -2,9 +2,9 @@ import axios from 'axios'
 
 class courseService {
     url = `${import.meta.env.VITE_API_BASE_URL}`;
-    async getCourse() {
+    async getCourse(query) {
         try {
-            const result = await axios.get(`${this.url}course/get`);
+            const result = await axios.get(`${this.url}course/get?page=${query}`);
             return result.data;
         } catch (error) {
             console.log(error)

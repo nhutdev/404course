@@ -64,9 +64,7 @@
                         <span class="text-gray-700 px-6 py-4 flex items-center">{{ index + 1 }}</span>
                     </td>
                     <td class="border-t">
-                        <span class="text-gray-700 px-6 py-4 flex items-center">
-                            {{ course.user.fullname }}
-                        </span>
+
                     </td>
                     <td class="border-t">
                         <span class="text-gray-700 px-6 py-4 flex items-center">
@@ -92,11 +90,25 @@
                 </tr>
 
             </tbody>
+
         </table>
         <div>
             <p class="sr-only mt-2">aaa</p>
         </div>
-
+        <div class="grid sm:grid-cols-3 gap-4 grid-cols-2  mb-10">
+            <nav aria-label="Page navigation ">
+                <ul class="inline-flex -space-x-px">
+                    <li>
+                        <a
+                            class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 ml-0 rounded-l-lg leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" @click="revpage">&lt&lt</a>
+                    </li>
+                    <li>
+                        <a
+                            class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 rounded-r-lg leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" @click="nextpage">&gt&gt</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
     <toast ref="toast"></toast>
 </template>
@@ -109,7 +121,8 @@ export default {
     data() {
         return {
             courses: [],
-            status: ''
+            status: '',
+            query: 1
         }
     },
     components:
@@ -117,27 +130,43 @@ export default {
         toast
     },
     mounted() {
-
+        courseService.getCourse(this.query).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
     },
     methods:
-    {
+    {   
+        nextpage()
+        {
+            this.query ++ 
+            courseService.getCourse(this.query).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
+
+        },
+        revpage()
+        {
+            if(this.query == 0)
+            {
+                this.query = 1
+            }
+            else
+            {
+                this.query--
+            }
+            courseService.getCourse(this.query).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
+        },
         formattedDate(time) {
             return dayjs(time).format('DD-MM-YYYY HH:mm:ss');
         },
         getCourse() {
-            courseService.getCourse().then((data) => { this.courses = data.filter(item => item.status == this.status) });
+            courseService.getCourse(this.query).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
         },
         async checkCourse(id) {
             const result = await courseService.check_course(id);
-            if(result.status == 200)
-            {
-             this.$refs.toast.showToast(result.data.message)
-             this.status = 1
-             this.getCourse()
+            if (result.status == 200) {
+                this.$refs.toast.showToast(result.data.message)
+                this.status = 1
+                this.getCourse()
             }
-            else
-            {
-             this.$refs.toast.showToast(result.data.message)
+            else {
+                this.$refs.toast.showToast(result.data.message)
             }
         }
 
