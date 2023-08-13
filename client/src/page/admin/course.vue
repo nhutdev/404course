@@ -121,7 +121,7 @@ export default {
     data() {
         return {
             courses: [],
-            status: '',
+            status: 0,
             query: 1
         }
     },
@@ -130,19 +130,19 @@ export default {
         toast
     },
     mounted() {
-        courseService.getCourse(this.query).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
+        courseService.getCourse(this.query,this.status).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
     },
     methods:
     {   
         nextpage()
         {
             this.query ++ 
-            courseService.getCourse(this.query).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
+            courseService.getCourse(this.query,this.status).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
 
         },
         revpage()
         {
-            if(this.query == 0)
+            if(this.query == 1 )
             {
                 this.query = 1
             }
@@ -156,7 +156,8 @@ export default {
             return dayjs(time).format('DD-MM-YYYY HH:mm:ss');
         },
         getCourse() {
-            courseService.getCourse(this.query).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
+            alert(this.query)
+            courseService.getCourse(this.query,this.status).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
         },
         async checkCourse(id) {
             const result = await courseService.check_course(id);

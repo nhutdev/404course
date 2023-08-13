@@ -7,6 +7,7 @@ const ITEMS_PER_PAGE = 5; // Số lượng mục trên mỗi trang
 
 const getAll = async (req, res) => {
   try {
+    const status = req.query.status
     const page = parseInt(req.query.page) || 1; // Trang hiện tại từ query string, mặc định là trang 1
 
     const offset = (page - 1) * ITEMS_PER_PAGE;
@@ -21,6 +22,7 @@ const getAll = async (req, res) => {
         "createdAt",
         "updatedAt",
       ],
+      where:{status:status},
       order: [["id", "DESC"]],
       include: [
         { model: User, attributes: ["id", "fullname"] },
@@ -53,7 +55,6 @@ const getAll = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Internal server error" });
     }
 }
 
