@@ -323,8 +323,8 @@ const getBanner = async (req, res) => {
 const addBanner = async (req, res) => {
     try {
         try {
-            const { title_banner } = req.body
             upload.single("avatar")(req, res, async function (err) {
+                const { title_banner } = req.body
                 if (err instanceof multer.MulterError) {
                     return res.status(400).json({ message: err.message });
                 } else if (err) {
@@ -334,7 +334,7 @@ const addBanner = async (req, res) => {
                 if (req.file) {
                     const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename
                         }`;
-                    await Banner.create({ img_url: imageUrl, img_name: req.file.filename, title_banner: title_banner })
+                    await Banner.create({title_banner: title_banner ,img_url: imageUrl, img_name: req.file.filename})
                     res.status(200).json({ message: "Thêm thành công" })
                 }
             });
@@ -349,9 +349,9 @@ const addBanner = async (req, res) => {
 }
 
 const updateBanner = async (req, res) => {
-    try {
-        const { title_banner } = req.body
+    try {  
         upload.single("avatar")(req, res, async function (err) {
+            const { title_banner } = req.body
             const id = req.params.id;
             if (err instanceof multer.MulterError) {
                 return res.status(400).json({ message: err.message });
@@ -359,22 +359,24 @@ const updateBanner = async (req, res) => {
                 return res.status(400).json({ message: err.message });
             }
 
-            const banner = await Banner.findByPk(id);
+            const Ubanner = await Banner.findByPk(id);
             // Kiểm tra nếu có file ảnh mới được chọn
             if (req.file) {
-                const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename
-                    }`;
-                const imagePath = `./uploads/${banner.img_name}`;
+                const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename}`;
+                const imagePath = `./uploads/${Ubanner.img_name}`;
                 deleteFile(imagePath);
-                await banner.update({ img_url: imageUrl, img_name: req.file.filename, title_banner: title_banner })
+                await Ubanner.update({ title_banner: title_banner, img_url: imageUrl, img_name: req.file.filename })
+            } else {
+                await Ubanner.update({ title_banner: title_banner });
             }
-            return res.status(200).json({ message: 'Cập nhập thành công' });
+            return res.status(200).json({ message: `Cập nhật thành công ` });
         });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Lỗi server" });
     }
 }
+
 const deleteBanner = async (req, res) => {
     try {
         const id = req.params.id;

@@ -10,11 +10,12 @@ const getNote = async (req, res) => {
     // const note = await Note.findAll();
     // res.status(200).json(note);
     const page = parseInt(req.query.page) || 1; // Trang hiện tại từ query string, mặc định là trang 1
-
+    const iduser = req.query.id;
     const offset = (page - 1) * ITEMS_PER_PAGE;
 
     const note = await Note.findAndCountAll({
       attributes: ["id", "title_note", "content_note",'createdAt'],
+      where:{id_user:iduser},
       order: [["id", "DESC"]],
       include: [
         { model: User, attributes: ["id", "fullname"] },
@@ -98,7 +99,6 @@ const deleteNote = async (req, res) => {
   try {
     const id = req.params.id;
     const existNote = await Note.findByPk(id);
-
     if (existNote) {
       await existNote.destroy();
       res.status(200).json({ message: "Xóa ghi chú thành công" });
