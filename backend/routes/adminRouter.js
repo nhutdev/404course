@@ -8,7 +8,7 @@ const routerAdmin = express.Router();
 
 routerAdmin.get('/api/tag/get', getTag);
 routerAdmin.put('/api/tag/check/:id', check_tag);
-routerAdmin.post('/api/tag/add/:id', addTag);
+routerAdmin.post('/api/tag/add', addTag);
 routerAdmin.put('/api/tag/update/:id', updateTag);
 routerAdmin.delete('/api/tag/delete/:id', deleteTag);
 

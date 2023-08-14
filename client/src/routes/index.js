@@ -55,6 +55,16 @@ import {
             path:'role',
             name:'role',
             component:()=>import('../page/admin/role.vue')
+          },
+          {
+            path:'blog',
+            name:'blog',
+            component:()=>import('../page/admin/blog.vue')
+          },
+          {
+            path:'tag',
+            name:'tag',
+            component:()=>import('../page/admin/tag.vue')
           }
         ]
       }, 

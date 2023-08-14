@@ -14,7 +14,7 @@
                 </div>
                 <div class="flex-none w-auto max-w-full px-3 my-auto">
                     <div class="h-full">
-                        <h5 class="mb-1">Quản lý khóa học</h5>
+                        <h5 class="mb-1">Quản lý bài viết</h5>
                     </div>
                 </div>
                 <div class="w-full max-w-full px-3 mx-auto mt-4 sm:my-auto sm:mr-0 md:w-1/2 md:flex-none lg:w-4/12">
@@ -29,7 +29,7 @@
     </div>
 
     <div class="flex items-center justify-between mb-4 m-5">
-        <h2 class="text-xl font-bold text-gray-800">Quản lý khóa học</h2>
+        <h2 class="text-xl font-bold text-gray-800">Quản lý bài viết</h2>
         <div class="flex">
             <input type="search" id="default-search"
                 class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 "
@@ -38,7 +38,7 @@
     </div>
     <div class=" md:mr-2 mt-5 py-2 px-2">
         <label class="block text-gray-700 font-bold mb-2 ml-2">Chọn loại trạng thái:</label>
-        <select id="select" name="select" v-model="status" @change="getCourse()"
+        <select id="select" name="select" v-model="status" @change="getblog()"
             class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none">
             <option value="1">Đã duyệt</option>
             <option value="0">Chưa duyệt</option>
@@ -59,28 +59,27 @@
             </thead>
             <tbody class="text-sm">
 
-                <tr class="focus-within:bg-gray-200 overflow-hidden" v-for="(course, index) in courses" :key="index">
+                <tr class="focus-within:bg-gray-200 overflow-hidden" v-for="(blog, index) in blogs" :key="index">
                     <td class="border-t">
                         <span class="text-gray-700 px-6 py-4 flex items-center">{{ index + 1 }}</span>
                     </td>
                     <td class="border-t">
-                        <span class="text-gray-700 px-6 py-4 flex items-center">{{course.user.fullname }}</span>
-
+                        <span class="text-gray-700 px-6 py-4 flex items-center">{{blog.user.fullname }}</span>
                     </td>
                     <td class="border-t">
                         <span class="text-gray-700 px-6 py-4 flex items-center">
-                            {{ course.title_course }}
+                            {{ blog.title_blog }}
                         </span>
                     </td>
 
                     <td class="border-t">
                         <span class="text-gray-700 px-6 py-4 flex items-center">
-                            {{ course.description_course }}
+                            {{ blog.content_blog }}
                         </span>
                     </td>
 
                     <td class="border-t">
-                        <span class="text-gray-700 px-6 py-4 flex items-center">{{ formattedDate(course.createdAt) }}</span>
+                        <span class="text-gray-700 px-6 py-4 flex items-center">{{ formatDate(blog.createdAt) }}</span>
                     </td>
                     <td class="border-t flex">
                         <span
@@ -117,11 +116,11 @@
 <script>
 import dayjs from 'dayjs';
 import toast from '../../components/toast/toast.vue';
-import courseService from '../../plugins/courseService'
+import blogService from '../../plugins/blogService'
 export default {
     data() {
         return {
-            courses: [],
+            blogs: [],
             status: 0,
             query: 1
         }
@@ -131,14 +130,14 @@ export default {
         toast
     },
     mounted() {
-        courseService.getCourse(this.query,this.status).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
+        blogService.getblog(this.query,this.status).then((data) => { this.blogs = data.blogs.filter(item => item.status == this.status) });
     },
     methods:
     {   
         nextpage()
         {
             this.query ++ 
-            courseService.getCourse(this.query,this.status).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
+            blogService.getblog(this.query,this.status).then((data) => { this.blogs = data.blogs.filter(item => item.status == this.status) });
 
         },
         revpage()
@@ -151,21 +150,20 @@ export default {
             {
                 this.query--
             }
-            courseService.getCourse(this.query).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
+            blogService.getblog(this.query).then((data) => { this.blogs = data.blogs.filter(item => item.status == this.status) });
         },
-        formattedDate(time) {
+        formatDate(time) {
             return dayjs(time).format('DD-MM-YYYY HH:mm:ss');
         },
-        getCourse() {
-            alert(this.query)
-            courseService.getCourse(this.query,this.status).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
+        getblog() {
+            blogService.getblog(this.query,this.status).then((data) => { this.blogs = data.blogs.filter(item => item.status == this.status) });
         },
-        async checkCourse(id) {
-            const result = await courseService.check_course(id);
+        async checkblog(id) {
+            const result = await blogService.check_blog(id);
             if (result.status == 200) {
                 this.$refs.toast.showToast(result.data.message)
                 this.status = 1
-                this.getCourse()
+                this.getblog()
             }
             else {
                 this.$refs.toast.showToast(result.data.message)

@@ -11,11 +11,12 @@ const ITEMS_PER_PAGE = 5; // Số lượng mục trên mỗi trang
 const getBlog = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1; // Trang hiện tại từ query string, mặc định là trang 1
-
+    const status = req.query.status || 1
     const offset = (page - 1) * ITEMS_PER_PAGE;
 
     const blogs = await Blog.findAndCountAll({
         attributes: ['id', 'title_blog', 'content_blog', 'status', 'createdAt', 'updatedAt'],
+        where:{status:status},
         order: [["id", "DESC"]],
         include: [
             { model: User, attributes: ['id', 'fullname'] },

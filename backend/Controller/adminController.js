@@ -51,7 +51,7 @@ const getTag = async (req, res) => {
 const addTag = async (req, res) => {
     try {
         const { nametag } = req.body
-        const exits = await Tag.findAll({ where: { nametag } });
+        const exits = await Tag.findOne({ where: { nametag } });
         if (exits) {
             res.status(202).json({ message: 'Tồn tại tag này trong hệ thống' })
         }
