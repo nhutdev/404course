@@ -1,78 +1,88 @@
 import {
-    createRouter,
-    createWebHistory
-  } from 'vue-router';
-  const router = createRouter({
-    history: createWebHistory(),
-    routes: [{
-        path: '/',
-        name: 'login',
-        component: () => import('../views/login.vue')
+  createRouter,
+  createWebHistory
+} from 'vue-router';
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [{
+    path: '/',
+    name: 'login',
+    component: () => import('../views/login.vue')
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('../views/register.vue'),
+    children: [
+      {
+        path: 'updateimg/:id',
+        name: 'updateimg',
+        component: () => import('../page/register/imgupdate.vue'),
       },
       {
-        path: '/register',
+        path: '',
         name: 'register',
-        component: () => import('../views/register.vue'),
-        children:[
-          {
-            path: 'updateimg/:id',
-            name: 'updateimg',
-            component: () => import('../page/register/imgupdate.vue'),
-          },
-          {
-            path: '',
-            name: 'register',
-            component: () => import('../page/register/register.vue'),
-          },
-        ]
-      },  
+        component: () => import('../page/register/register.vue'),
+      },
+    ]
+  },
+  {
+    path: '/home',
+    name: 'home',
+    component: () => import('../views/home.vue')
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: () => import('../views/admin.vue'),
+    children: [
       {
-        path: '/home',
-        name: 'home',
-        component: () => import('../views/home.vue')
-      },  
-      {
-        path: '/admin',
+        path: '',
         name: 'admin',
-        component: () => import('../views/admin.vue'),
-        children:[
-          {
-            path:'',
-            name:'admin',
-            component:()=>import('../page/admin/home.vue')
-          },
-          {
-            path:'user',
-            name:'user',
-            component:()=>import('../page/admin/user.vue')
-          },
-          {
-            path:'course',
-            name:'course',
-            component:()=>import('../page/admin/course.vue')
-          },
-          {
-            path:'role',
-            name:'role',
-            component:()=>import('../page/admin/role.vue')
-          },
-          {
-            path:'blog',
-            name:'blog',
-            component:()=>import('../page/admin/blog.vue')
-          },
-          {
-            path:'tag',
-            name:'tag',
-            component:()=>import('../page/admin/tag.vue')
-          }
-        ]
-      }, 
+        component: () => import('../page/admin/home.vue')
+      },
       {
-        path: '/creator',
-        name: 'creator',
-        component: () => import('../views/creator.vue'),
+        path: 'user',
+        name: 'user',
+        component: () => import('../page/admin/user.vue')
+      },
+      {
+        path: 'course',
+        name: 'course',
+        component: () => import('../page/admin/course.vue')
+      },
+      {
+        path: 'role',
+        name: 'role',
+        component: () => import('../page/admin/role.vue')
+      },
+      {
+        path: 'blog',
+        name: 'blog',
+        component: () => import('../page/admin/blog.vue')
+      },
+      {
+        path: 'tag',
+        name: 'tag',
+        component: () => import('../page/admin/tag.vue')
+      },
+      {
+        path: 'banner',
+        name: 'banner',
+        component: () => import('../page/admin/banner.vue')
+      },
+      {
+        path: 'demo',
+        name: 'demo',
+        component: () => import('../page/admin/demo.vue')
       }
     ]
-  })
-  export default router;
+  },
+  {
+    path: '/creator',
+    name: 'creator',
+    component: () => import('../views/creator.vue'),
+  }
+  ]
+})
+export default router;
