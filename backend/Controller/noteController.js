@@ -2,7 +2,7 @@ const db = require("../models"); // gọi về model
 const Note = db.note;
 const User = db.user;
 const Note_img = db.note_img;
-const ITEMS_PER_PAGE = 1; // Số lượng mục trên mỗi trang
+const ITEMS_PER_PAGE = 10; // Số lượng mục trên mỗi trang
 
 // hàm xử lý lấy ra danh sách note
 const getNote = async (req, res) => {
@@ -14,7 +14,7 @@ const getNote = async (req, res) => {
     const offset = (page - 1) * ITEMS_PER_PAGE;
 
     const note = await Note.findAndCountAll({
-      attributes: ["id", "title_note", "content_note"],
+      attributes: ["id", "title_note", "content_note",'createdAt'],
       order: [["id", "DESC"]],
       include: [
         { model: User, attributes: ["id", "fullname"] },

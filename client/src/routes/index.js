@@ -29,7 +29,14 @@ const router = createRouter({
   {
     path: '/home',
     name: 'home',
-    component: () => import('../views/home.vue')
+    component: () => import('../views/home.vue'),
+    children:[
+      {
+        path: '/home/note',
+        name: 'note',
+        component: () => import('../views/note.vue'),
+      }
+    ]
   },
   {
     path: '/admin',
