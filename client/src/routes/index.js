@@ -40,7 +40,12 @@ const router = createRouter({
         path: 'note',
         name: 'note',
         component: () => import('../page/home/note.vue'),
-      }
+      },
+      {
+        path: 'blogs',
+        name: 'blogs',
+        component: () => import('../page/home/blogs.vue'),
+      },
     ]
   },
   {

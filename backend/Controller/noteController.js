@@ -2,7 +2,7 @@ const db = require("../models"); // gọi về model
 const Note = db.note;
 const User = db.user;
 const Note_img = db.note_img;
-const ITEMS_PER_PAGE = 10; // Số lượng mục trên mỗi trang
+const ITEMS_PER_PAGE = 20; // Số lượng mục trên mỗi trang
 
 // hàm xử lý lấy ra danh sách note
 const getNote = async (req, res) => {

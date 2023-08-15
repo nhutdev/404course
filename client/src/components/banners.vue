@@ -1,8 +1,8 @@
 <template>
-    <swiper :pagination="true" :modules="modules" class="mySwiper" :autoplay="{ delay: 1000 }">
+    <div class="mx-auto container">
+        <swiper :pagination="true" :modules="modules" class="mySwiper" :autoplay="{ delay: 1000 }">
         <swiper-slide v-for="banner in banners">
-            
-        <div class="mx-auto container py-12 px-6 xl:px-0 flex justify-center items-center flex-col">
+        <div class=" py-8 px-6 xl:px-0 flex  flex-col">
             <div class="flex justify-between bg-gray-50  items-stretch flex-row">
                 <div class="flex items-center bg-gray-800 dark:bg-white justify-center">
                     <p class="transform flex flex-shrink-0 -rotate-90 text-2xl font-semibold tracking-wide leading-normal text-white dark:text-gray-800">404Learn</p>
@@ -25,10 +25,9 @@
                 <img :src="banner.img_url" alt="pexels-dmitry-zvolskiy-2082090-1" class="w-full" />
             </div>
         </div>
-       
-
         </swiper-slide>
     </swiper>
+    </div>
 </template>
 
 <script>

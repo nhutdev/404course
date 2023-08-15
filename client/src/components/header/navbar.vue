@@ -13,8 +13,8 @@
              <li  v-for="route in routes" :key="route.name"  class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-gray-600 border border-white bg-gray-50 cursor-pointer px-3 py-2.5 font-normal text-base leading-3 shadow-md rounded">
                <router-link :to="route.path">{{ route.name }}</router-link>
              </li>
-             <li   class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-gray-600 border border-white bg-gray-50 cursor-pointer px-3 py-2.5 font-normal text-base leading-3 shadow-md rounded">
-               <router-link to="/creator" v-if="showCreator">Quản lý khóa học</router-link>
+             <li  v-if="showCreator" class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-gray-600 border border-white bg-gray-50 cursor-pointer px-3 py-2.5 font-normal text-base leading-3 shadow-md rounded">
+               <router-link to="/creator" >Quản lý khóa học</router-link>
              </li>
            </ul>
  
@@ -41,8 +41,8 @@
                <li   v-for="route in routes" :key="route.name"  class="px-4 py-3 text-gray-600 bg-gray-50 border border-gray-50 focus:outline-none focus:bg-gray-100 hover:bg-gray-100 duration-100 cursor-pointer text-xs leading-3 font-normal focus:text-black">
                  <router-link :to="route.path">{{ route.name }}</router-link>
                </li>
-               <li     class="px-4 py-3 text-gray-600 bg-gray-50 border border-gray-50 focus:outline-none focus:bg-gray-100 hover:bg-gray-100 duration-100 cursor-pointer text-xs leading-3 font-normal focus:text-black">
-                <router-link to="/creator" v-if="showCreator">Quản lý khóa học</router-link>
+               <li class="px-4 py-3 text-gray-600 bg-gray-50 border border-gray-50 focus:outline-none focus:bg-gray-100 hover:bg-gray-100 duration-100 cursor-pointer text-xs leading-3 font-normal focus:text-black" v-if="showCreator">
+                <router-link to="/creator" >Quản lý khóa học</router-link>
                </li>
              </ul>
            </div>
@@ -99,7 +99,7 @@
        routes: [
          { path: "/home", name: "Trang chủ" },
          { path: "/home/note", name: "Ghi chú" },
-         { path: "/home", name: "Blog" }
+         { path: "/home/blogs", name: "Blog" }
        ]
      }
    },

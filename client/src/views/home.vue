@@ -1,12 +1,14 @@
 <template>
 <navbar/>
  <router-view />
+ <footervue />
 </template>
 
 <script>
-import { onMounted } from 'vue';
+
 import navbar from '../components/header/navbar.vue'
 import userService from '../plugins/userService';
+import footervue from '../components/footer.vue';
 export default {
   data() {
     return {
@@ -21,7 +23,7 @@ export default {
       this.$router.push({ name: 'login' });
     }
   },
-components:{navbar},
+components:{navbar,footervue},
   }
   
   
