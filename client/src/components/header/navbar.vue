@@ -13,6 +13,9 @@
              <li  v-for="route in routes" :key="route.name"  class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-gray-600 border border-white bg-gray-50 cursor-pointer px-3 py-2.5 font-normal text-base leading-3 shadow-md rounded">
                <router-link :to="route.path">{{ route.name }}</router-link>
              </li>
+             <li   class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-gray-600 border border-white bg-gray-50 cursor-pointer px-3 py-2.5 font-normal text-base leading-3 shadow-md rounded">
+               <router-link to="/creator" v-if="showCreator">Quản lý khóa học</router-link>
+             </li>
            </ul>
  
            <div class="flex space-x-5 justify-center items-center pl-2">
@@ -37,6 +40,9 @@
              <ul id="list" class=" font-normal text-base leading-4 absolute top-2 w-full rounded shadow-md z-20" v-if="hidden">
                <li   v-for="route in routes" :key="route.name"  class="px-4 py-3 text-gray-600 bg-gray-50 border border-gray-50 focus:outline-none focus:bg-gray-100 hover:bg-gray-100 duration-100 cursor-pointer text-xs leading-3 font-normal focus:text-black">
                  <router-link :to="route.path">{{ route.name }}</router-link>
+               </li>
+               <li     class="px-4 py-3 text-gray-600 bg-gray-50 border border-gray-50 focus:outline-none focus:bg-gray-100 hover:bg-gray-100 duration-100 cursor-pointer text-xs leading-3 font-normal focus:text-black">
+                <router-link to="/creator" v-if="showCreator">Quản lý khóa học</router-link>
                </li>
              </ul>
            </div>
@@ -87,6 +93,7 @@
    data() {
      return {
        showdropdown: false,
+       showCreator:false,
        user: '',
        hidden: false,
        routes: [
@@ -98,6 +105,10 @@
    },
    mounted() {
      this.user = userService.getUserToken()
+     if(this.user.role == 'Creator')
+     {
+      this.showCreator = true
+     }
    },
    methods:
    {

@@ -16,10 +16,9 @@ export default {
   mounted()
   {
     this.user = userService.getUserToken()
-    if(this.user.role != 'Learner')
+    if(this.user.role == 'Admin' )
     {
       this.$router.push({ name: 'login' });
-      
     }
   },
 components:{navbar},

@@ -17,7 +17,7 @@ const getAll = async (req, res) => {
         "id",
         "title_course",
         "description_course",
-        "color_course",
+        "img_course",
         "status",
         "createdAt",
         "updatedAt",
@@ -60,7 +60,7 @@ const getAll = async (req, res) => {
 
 const addCourse = async (req, res) => {
   try {
-    const { id_user, title_course, description_course, color_course } =
+    const { id_user, title_course, description_course, img_course } =
       req.body;
     const exitst = await User.findByPk(id_user);
     if (exitst) {
@@ -68,7 +68,7 @@ const addCourse = async (req, res) => {
         id_user: id_user,
         title_course: title_course,
         description_course: description_course,
-        color_course: color_course,
+        img_course: img_course,
         status: false,
       });
       if (course) {
@@ -85,10 +85,10 @@ const addCourse = async (req, res) => {
 const updateCourse = async (req, res) => {
   try {
     const id = req.params.id;
-    const { title_course, description_course, color_course } = req.body;
+    const { title_course, description_course, img_course } = req.body;
     const exits = await Course.findByPk(id);
     if (exits) {
-      await exits.update({ title_course, description_course, color_course });
+      await exits.update({ title_course, description_course, img_course });
     } else {
       res.status(202).json({ message: "Không tồn tại khóa học này" });
     }

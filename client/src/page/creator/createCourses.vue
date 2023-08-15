@@ -31,9 +31,8 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Nhập mô tả" required>
 
-                        <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Màu mô
-                            tả</label>
-                        <input type="color" id="head" name="head" v-model="course_color" />
+                        <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Đường dẫn ảnh mạng:</label>
+                        <input type="text" id="head" name="head" v-model="img_course" />
                     </div>
                 </div>
 
@@ -302,7 +301,7 @@ export default {
             isShowCourse: true, isShowIndex: false, isShowContent: false,
             course: [], index_courses: [], index_contents: [],
             id_course: "", id_index: "",
-            course_title: '', course_description: '', course_color: '#e66465',
+            course_title: '', course_description: '', img_course: '',
             index_title: '', index_description: '',
             content_title: '', content_description: '', content_link: '', content_type: '',
             show_Video: false, show_Content: false,
@@ -328,7 +327,7 @@ export default {
                         "id_user": this.user.id,
                         "title_course": this.course_title,
                         "description_course": this.course_description,
-                        "color_course": this.course_color,
+                        "img_course": this.img_course,
                     });
                     if (result.status == 200) {
                         this.id_course = result.data.course.id
@@ -359,7 +358,15 @@ export default {
         },
 
         addAllContent() {
-            this.onclose()
+            if(this.index_contents.length >0)
+            {
+                this.onclose()
+            }
+            else
+            {
+                this.$refs.toast.showToast('Vui lòng nhập ít nhất 1 nội dung để hoàn thành.')
+
+            }
         },
 
         async addIndex() {

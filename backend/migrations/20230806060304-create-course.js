@@ -23,7 +23,7 @@ module.exports = {
       description_course: {
         type: Sequelize.STRING
       },
-      color_course: {
+      img_course: {
         type: Sequelize.STRING
       },
       status: {
