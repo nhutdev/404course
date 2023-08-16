@@ -7,14 +7,16 @@
             <label class="block mb-2 text-sm font-medium text-gray-900 ">Chọn thể loại</label>
             <select id="select" name="select" v-model="id_tag"
                 class="block appearance-none w-full bg-white border px-4 py-2 pr-8 mb-2 leading-tight focus:outline-none">
-                <option v-for="tag in tags" :key="tag.id" :value="tag.id">{{ tag.nametag }}
+                <option v-for="tag in tags.filter(items => items.status == 1)" :key="tag.id" :value="tag.id"> {{ tag.nametag
+                }}
                 </option>
             </select>
         </div>
         <input class="title border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" v-model="title"
             placeholder="Tiêu đề blog" type="text">
-        <QuillEditor v-model="content" />
-        <p>{{ content }}</p>
+        <input class="title border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" v-model="img_blog"
+            placeholder="Đường dẫn ảnh" type="text">
+        <QuillEditor theme="snow" ref="myEditor" />
         <!-- buttons -->
         <div class="buttons flex mt-2">
             <div class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
@@ -25,29 +27,44 @@
                 Hủy</div>
         </div>
     </div>
+
     <div id="blog" class=" px-4 xl:px-4 py-14">
         <button @click="openAdd()" v-if="!showAdd" type="button"
             class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 ">Thêm</button>
-        <div class="mx-auto container">
-            <div aria-label="Group of cards" class="focus:outline-none ">
-                <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
-                    <div class="focus:outline-none " aria-label="card 2">
-                        <img role="img" aria-label="gaming" class="focus:outline-none w-full"
-                            src="https://cdn.tuk.dev/assets/components/111220/Blg-6/blog(2).png" alt="games" />
-                        <div class="py-2 px-4 w-full flex justify-between bg-indigo-700">
-                            <p class="focus:outline-none  text-sm text-white font-semibold tracking-wide">Bruce Wayne</p>
-                            <p class="focus:outline-none text-sm text-white font-semibold tracking-wide">13TH Oct, 2020</p>
-                        </div>
-                        <div class="bg-white dark:bg-gray-800 px-3 lg:px-6 py-4 rounded-bl-3xl rounded-br-3xl">
-                            <h1
-                                class="focus:outline-none text-lg text-gray-900 dark:text-white font-semibold tracking-wider">
-                                Transactions</h1>
-                            <p
-                                class="focus:outline-none text-gray-700 dark:text-gray-200 text-sm lg:text-base lg:leading-8 pr-4 tracking-wide mt-2">
-                                Find the latest events updates or create events, concerts, conferences, workshops...</p>
-                        </div>
+        <div class="container mx-auto px-6 md:px-0">
+            <div class=" grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-8 ">
+                <!-- chi tiet -->
+                <div v-for="blog in blogs"
+                    class="relative w-full h-64 bg-cover bg-center group rounded-lg overflow-hidden shadow-lg hover:shadow-3xl  transition duration-300 ease-in-out "
+                    v-bind:style="{ 'background-image': 'url(' + blog.img_blog + ')' }">
+
+                    <div class=" w-full flex justify-between px-4 py-2  ">
+                        <p tabindex="0" class="focus:outline-none text-sm text-white font-semibold tracking-wide">{{
+                            blog.user.fullname }}</p>
+                        <p tabindex="0" class="focus:outline-none text-sm text-white font-semibold tracking-wide">{{
+                            formatDate(blog.createdAt) }}</p>
                     </div>
+
+                    <div
+                        class="absolute inset-0 bg-black bg-opacity-50 group-hover:opacity-75 transition duration-300 ease-in-out">
+                    </div>
+                    <div class="relative w-full h-full flex flex-col justify-center items-center">
+                        <h3 class="text-center">
+                            <a class="text-white text-2xl font-bold text-center">
+                                {{ blog.title_blog }}
+                            </a>
+                        </h3>
+                        <button type="button" @click="openEdit(), sendData(blog)" v-if="user.id == blog.user.id"
+                            class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Chỉnh
+                            sửa</button>
+                        <button type="button"
+                            class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Xem
+                            bài</button>
+                    </div>
+
+
                 </div>
+
             </div>
         </div>
     </div>
@@ -60,6 +77,8 @@ import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import userServices from '../../plugins/userServices';
 import toast from '../../components/toast/toast.vue';
+import dayjs from 'dayjs';
+
 export default {
 
     data() {
@@ -71,8 +90,11 @@ export default {
             blogs: [],
             user: '',
             tags: [],
-            id_tag: ''}
-           
+            id_tag: '',
+            imgs: [],
+            img_blog: ''
+        }
+
     },
     components: {
         QuillEditor, toast
@@ -80,20 +102,28 @@ export default {
     mounted() {
         this.getblog()
         this.gettag()
+        this.getImages()
         this.user = userServices.getUserToken()
     },
     methods: {
         openAdd() {
             this.showAdd = !this.showAdd
         },
+        formatDate(time) {
+            return dayjs(time).format('DD-MM-YYYY');
+        },
         clearText() {
             this.title = ''
             this.content = ''
+            this.img_blog = ''
+        },
+        async getImages() {
+            userServices.getImages().then((data => { this.imgs = data }))
         },
         async getblog() {
             try {
-                const result = await this.$axios.get(`blog/get?page=${this.query}&&status=1`);
-                this.blogs = result.data.blog
+                const result = await this.$axios.get(`blog/get?page=${this.query}&&status=0`);
+                this.blogs = result.data.blogs
             } catch (error) {
                 console.log(error)
             }
@@ -102,24 +132,24 @@ export default {
             this.content = newContent;
         },
         async addBlog() {
-            alert(this.content)
-            // try {
-            //     const result = await this.$axios.post(`blog/add`,
-            //         {
-            //             title_blog: this.title, content_blog: this.content, id_user: this.user.id, id_tag: this.id_tag
-            //         });
-            //     if (result.status == 200) {
-            //         this.$refs.toast.showToast(result.data.message)
-            //         this.getblog()
-            //         this.clearText()
-            //         this.showAdd = false
-            //     }
-            //     else {
-            //         this.$refs.toast.showToast(result.data.message)
-            //     }
-            // } catch (error) {
-            //     console.log(error)
-            // }
+
+            try {
+                const result = await this.$axios.post(`blog/add`,
+                    {
+                        title_blog: this.title, content_blog: this.$refs.myEditor.getHTML(), id_user: this.user.id, id_tag: this.id_tag, img_blog: this.img_blog
+                    });
+                if (result.status == 200) {
+                    this.$refs.toast.showToast(result.data.message)
+                    this.getblog()
+                    this.clearText()
+                    this.showAdd = false
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
+            } catch (error) {
+                console.log(error)
+            }
         },
         async gettag() {
             try {

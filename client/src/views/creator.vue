@@ -60,7 +60,7 @@
                                 class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Chỉnh
                                 sửa</button>
                         </div>
-                    </div>
+                    </div>   
                 </div>
 
                 <!--chi muc-->
@@ -127,6 +127,7 @@
             </div>
 
         </main>
+        
     </body>
     <createCourse v-if="is_showcreate" @cancel="Showcreate()" />
 </template>

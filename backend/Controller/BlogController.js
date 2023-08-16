@@ -5,7 +5,7 @@ const Tag = db.tag; // gọi ra model tag
 const Comment = db.comment_blog; // gọi ra model comment blog
 const Like = db.like_blog; // gọi ra model like blog
 const Save = db.save_blog; // gọi ra model save blog
-const ITEMS_PER_PAGE = 5; // Số lượng mục trên mỗi trang
+const ITEMS_PER_PAGE = 10; // Số lượng mục trên mỗi trang
 
 // hàm xử lý lấy ra danh sách blog
 const getBlog = async (req, res) => {
@@ -15,7 +15,7 @@ const getBlog = async (req, res) => {
     const offset = (page - 1) * ITEMS_PER_PAGE;
 
     const blogs = await Blog.findAndCountAll({
-        attributes: ['id', 'title_blog', 'content_blog', 'status', 'createdAt', 'updatedAt'],
+        attributes: ['id', 'title_blog', 'content_blog', 'status', 'img_blog', 'createdAt', 'updatedAt'],
         where:{status:status},
         order: [["id", "DESC"]],
         include: [
@@ -44,7 +44,7 @@ const getBlog = async (req, res) => {
 // hàm xử lý thêm blog
 const addBlog = async (req, res) => {
   try {
-    const { id_user, id_tag, title_blog, content_blog } = req.body;
+    const { id_user, id_tag, title_blog, content_blog,img_blog} = req.body;
     const existUser = await User.findByPk(id_user);
     const existTag = await Tag.findByPk(id_tag);
     if (existUser) {
@@ -54,6 +54,7 @@ const addBlog = async (req, res) => {
           id_tag: id_tag,
           title_blog: title_blog,
           content_blog: content_blog,
+          img_blog:img_blog,
           status: false,
         });
         return res.status(200).json({ message: "Tạo blog thành công!" });
@@ -71,7 +72,7 @@ const addBlog = async (req, res) => {
 const updateBlog = async (req, res) => {
   try {
     const id = req.params.id;
-    const { id_tag, content_blog, title_blog } = req.body;
+    const { id_tag, content_blog, title_blog,img_blog } = req.body;
     const existBlog = await Blog.findByPk(id);
     const existTag = await Tag.findByPk(id_tag);
     if (existBlog) {
@@ -79,6 +80,7 @@ const updateBlog = async (req, res) => {
         const blog = await existBlog.update({
           id_tag: id_tag,
           title_blog: title_blog,
+          img_blog:img_blog,
           content_blog: content_blog,
         });
         return res.status(200).json({ message: "Cập nhật blog thành công!" });

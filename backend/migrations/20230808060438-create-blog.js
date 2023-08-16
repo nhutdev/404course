@@ -23,6 +23,9 @@ module.exports = {
       content_blog: {
         type: Sequelize.STRING
       },
+      img_blog: {
+        type: Sequelize.STRING
+      },
       id_tag: {
         type: Sequelize.INTEGER,
         allowNull: false,

@@ -290,7 +290,7 @@
 </template>
   
 <script>
-import userService from '../../plugins/userService'
+import userService from '../../plugins/userServices'
 import courseService from '../../plugins/courseService'
 import toast from '../../components/toast/toast.vue'
 export default {

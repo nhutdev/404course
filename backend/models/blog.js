@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     id_user: DataTypes.INTEGER,
     title_blog: DataTypes.STRING,
     content_blog: DataTypes.STRING,
+    img_blog: DataTypes.STRING,
     id_tag: DataTypes.INTEGER,
     status:DataTypes.BOOLEAN
   }, {
