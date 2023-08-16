@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import userService from '../plugins/userService';
+import userService from '../plugins/userServices';
 import createCourse from '../page/creator/createCourses.vue';
 import courseService from '../plugins/courseService';
 export default {

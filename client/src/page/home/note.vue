@@ -88,9 +88,9 @@
 
 <script>
 import dayjs from 'dayjs';
-import userService from '../../plugins/userService';
+import userService from '../../plugins/userServices.js';
 import toast from '../../components/toast/toast.vue';
-import axios from 'axios'
+
 export default {
     data() {
         return {
@@ -110,31 +110,20 @@ export default {
     components: { toast },
     mounted() {
         this.user = userService.getUserToken()
+        this.getImages()   
         this.getNote();
-        this.getImages()
     },
     methods: {
         formatDate(time) {
             return dayjs(time).format('DD-MM-YYYY');
         },
         async getImages() {
-            try {
-                const result = await axios.get('https://api.pexels.com/v1/search?query=lofi', {
-                    headers: {
-                        'Authorization': 'LhgB2bMiWCDZXDNH5uRSCtcEoshj9nSoF3Qzpk2VEfp7PED26WTbMunY',
-                        'Accept': 'application/json' // Thêm tiêu đề Accept
-                    }
-                });
-                this.imgs = result.data.photos
-            } catch (error) {
-                console.log(error)
-            }
+            userService.getImages().then((data=>{this.imgs=data}))
         },
 
         async getNote() {
             try {
-
-                const result = await this.$axios.get(`note/get?page=${this.query}&id=${this.user.id}`);
+                const result = await this.$axios.get(`note/get?page=${this.query}&&id=${this.user.id}`);
                 this.notes = result.data.note
             } catch (error) {
                 console.log(error)

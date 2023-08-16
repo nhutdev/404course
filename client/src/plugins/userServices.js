@@ -84,6 +84,20 @@ class userService {
     }
 
   }
+  async getImages() {
+    try {
+        const result = await axios.get('https://api.pexels.com/v1/search?query=lofi', {
+            headers: {
+                'Authorization': 'LhgB2bMiWCDZXDNH5uRSCtcEoshj9nSoF3Qzpk2VEfp7PED26WTbMunY',
+                'Accept': 'application/json' // Thêm tiêu đề Accept
+            }
+        });
+       return result.data.photos
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
  
 
 }

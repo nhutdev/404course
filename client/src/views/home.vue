@@ -1,30 +1,28 @@
 <template>
-<navbar/>
- <router-view />
- <footervue />
+  <navbar />
+  <router-view/>
+  <footervue />
 </template>
 
 <script>
 
 import navbar from '../components/header/navbar.vue'
-import userService from '../plugins/userService';
+import userService from '../plugins/userServices';
 import footervue from '../components/footer.vue';
 export default {
   data() {
     return {
-     user:''
+      user: ''
     }
   },
-  mounted()
-  {
+  mounted() {
     this.user = userService.getUserToken()
-    if(this.user.role == 'Admin' )
-    {
+    if (this.user.role == 'Admin') {
       this.$router.push({ name: 'login' });
     }
   },
-components:{navbar,footervue},
-  }
-  
-  
+  components: { navbar, footervue },
+}
+
+
 </script>

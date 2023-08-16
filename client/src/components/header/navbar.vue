@@ -88,7 +88,7 @@
  </template>
  
  <script>
- import userService from '../../plugins/userService'
+ import userService from '../../plugins/userServices'
  export default {
    data() {
      return {
