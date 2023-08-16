@@ -16,10 +16,12 @@ const {
   add_replyComment,
   delete_replyComment,
   update_replyComment,
+  getBlogByID
 } = require("../Controller/BlogController");
 const routerBlog = express.Router();
 
 routerBlog.get("/api/blog/get", getBlog);
+routerBlog.get("/api/blog/get/:id", getBlogByID);
 routerBlog.post("/api/blog/add", addBlog);
 routerBlog.put("/api/blog/update/:id", updateBlog);
 routerBlog.delete("/api/blog/delete/:id", deleteBlog);

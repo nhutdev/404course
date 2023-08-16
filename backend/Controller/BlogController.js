@@ -41,6 +41,22 @@ const getBlog = async (req, res) => {
   }
 };
 
+const getBlogByID = async (req,res)=>{
+ try {
+  const blogs = await Blog.findAll({
+    attributes: ['id', 'title_blog', 'content_blog', 'status', 'img_blog', 'createdAt', 'updatedAt'],
+    where:{id:req.params.id},
+    order: [["id", "DESC"]],
+    include: [
+        { model: User, attributes: ['id', 'fullname'] },
+        { model: Tag, attributes: ['id', 'nametag','status'] },
+    ],
+});
+res.json(blogs)
+ } catch (error) {
+  console.log(error)
+ }
+}
 // hàm xử lý thêm blog
 const addBlog = async (req, res) => {
   try {
@@ -339,4 +355,5 @@ module.exports = {
   add_replyComment,
   delete_replyComment,
   update_replyComment,
+  getBlogByID
 };

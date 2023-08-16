@@ -76,14 +76,14 @@ const updateNote = async (req, res) => {
     const exist = await Note.findOne({
       where: { title_note: title_note },
     });
-    if (exist) {
+    if (exist && exist.id !== existNote.id) {
       res.status(202).json({ message: "Tiêu đề ghi chú bị trùng lặp" });
     } else {
       if (existNote) {
         (existNote.title_note = title_note),
           (existNote.content_note = content_note);
         await existNote.save();
-        res.status(200).json({ message: "cập nhật ghi chú thành công" });
+        res.status(200).json({ message: "Cập nhật ghi chú thành công" });
       } else {
         res.status(202).json({ message: "Ghi chú không tồn tại" });
       }
