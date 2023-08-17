@@ -116,7 +116,7 @@ class blogService {
             console.log(error)
         }
     }
-    async commentBlog( comment, id_blog, id_user)
+    async commentBlog (comment,id_blog,id_user)
     {
         try {
             const result = await axios.post(`${this.url}blog/comment/add`,

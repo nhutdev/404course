@@ -178,7 +178,7 @@ const  getlikebyId = async (req, res) => {
 const get_saveBlog = async (req, res) => {
   try {
     const save = await Save.findAll();
-    res.status(400).json(save);
+    res.json(save);
   } catch (error) {
     // trả thông báo lỗi về console
     console.log(error);
@@ -188,7 +188,7 @@ const get_saveBlogByID = async (req, res) => {
   try {
     const id =req.params.id
     const save = await Save.findAll({where:{id_blog:id}});
-    res.status(400).json(save);
+    res.json(save);
   } catch (error) {
     // trả thông báo lỗi về console
     console.log(error);
@@ -249,8 +249,8 @@ const addComment = async (req, res) => {
   try {
     const { comment, id_blog, id_user } = req.body;
     const exsitBlog = await Blog.findByPk(id_blog);
-    const exsitUser = await User.findByPk(id_user);
-    if (exsitBlog && exsitUser) {
+    const existUser = await User.findByPk(id_user)
+    if (exsitBlog && existUser ) {
       await Comment.create({
         id_blog: id_blog,
         id_user: id_user,

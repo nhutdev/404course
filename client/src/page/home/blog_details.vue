@@ -54,7 +54,7 @@
                         <!-- Sử dụng v-for để lặp lại các sản phẩm trong danh sách thích -->
                         <span v-for="save in saves.filter(item => item.id_blog === blog.id && item.id_user === user.id)">
                             <!-- Kiểm tra trạng thái của sản phẩm và sử dụng màu đỏ hoặc #ccc tương ứng -->
-                            <i class="fa-solid fa-bookmark" :style="{ color: save.id ? 'red' : '#ccc' }"
+                            <i class="fa-solid fa-bookmark" :style="{ color: save.id ? 'black' : '#ccc' }"
                                 @click="saveBlog(blog.id)"></i>
                         </span>
                     </span>
@@ -76,7 +76,7 @@
                 <div class="flex items-center mt-2">
                     <img class="w-6 h-6 rounded-full mr-2" :src="user.avatar" alt="Avatar">
                     <textarea class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none text-sm"
-                        type="text" v-model="comment" placeholder="Thêm bình luận..." ></textarea>
+                        type="text" v-model="comment"  v-on:keyup.enter="addcomment(blog.id)" placeholder="Thêm bình luận..." ></textarea>
                 </div>
 
             </div>
@@ -178,7 +178,7 @@ export default {
             const result = await blogService.saveBlog(id,this.user.id)
             if (result.status == 200) {
                 this.$refs.toast.showToast(result.data.message)
-                this.getsave()
+                this.getSave()
             }
             else {
                 this.$refs.toast.showToast(result.data.message)
@@ -189,7 +189,19 @@ export default {
             blogService.getSave(this.$route.params.id).then((data)=>{this.saves = data})
             
         },
-
+        async addcomment(id)
+        {
+            const result = await blogService.commentBlog(this.comment,id,this.user.id);
+            if(result.status ==200)
+            {
+                this.$refs.toast.showToast(result.data.message)
+                this.comment = ''
+            }
+            else
+            {
+                this.$refs.toast.showToast(result.data.message)
+            }
+        }
     }
 
 }
