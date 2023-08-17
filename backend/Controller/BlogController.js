@@ -19,7 +19,7 @@ const getBlog = async (req, res) => {
         where:{status:status},
         order: [["id", "DESC"]],
         include: [
-            { model: User, attributes: ['id', 'fullname'] },
+            { model: User, attributes: ['id', 'fullname','avatar'] },
             { model: Tag, attributes: ['id', 'nametag','status'] },
         ],
         offset: offset,
@@ -48,7 +48,7 @@ const getBlogByID = async (req,res)=>{
     where:{id:req.params.id},
     order: [["id", "DESC"]],
     include: [
-        { model: User, attributes: ['id', 'fullname'] },
+        { model: User, attributes: ['id', 'fullname','avatar'] },
         { model: Tag, attributes: ['id', 'nametag','status'] },
     ],
 });

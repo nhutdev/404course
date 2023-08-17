@@ -28,6 +28,7 @@
         </div>
     </div>
 
+    <!--view-->
     <div id="blog" class=" px-4 xl:px-4 py-14">
         <button @click="openAdd()" v-if="!showAdd" type="button"
             class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 ">Thêm</button>
@@ -50,24 +51,92 @@
                     </div>
                     <div class="relative w-full h-full flex flex-col justify-center items-center">
                         <h3 class="text-center">
-                            <a class="text-white text-2xl font-bold text-center">
+                            <a class="text-white text-sm md:text-base font-bold text-center">
                                 {{ blog.title_blog }}
                             </a>
                         </h3>
-                        <button type="button" @click="openEdit(), sendData(blog)" v-if="user.id == blog.user.id"
-                            class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Chỉnh
-                            sửa</button>
+                        <div class="flex">
+                            <button type="button" @click="openUpdate(), sendData(blog)" v-if="user.id == blog.user.id"
+                                class=" mr-2 cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Chỉnh
+                                sửa</button>
+                            <button type="button" v-if="user.id == blog.user.id" @click="deleteBlog(blog.id)"
+                                class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Xóa
+                                bài</button>
+                        </div>
                         <button type="button"
-                            class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 " @click="goToBlog(blog.id)">Xem
+                            class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block"
+                            @click="goToBlog(blog.id)">Xem
                             bài</button>
+
                     </div>
-
-
                 </div>
 
             </div>
         </div>
     </div>
+
+
+    <!-- Chinh sua -->
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-x-hidden overflow-y-auto"
+        v-show="showUpdate">
+
+        <div class="relative w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Cập nhập bài đăng
+                    </h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
+                        @click="openUpdate">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-900 ">Chọn thể loại</label>
+            <select id="select" name="select" v-model="id_tag"
+                class="block appearance-none w-full bg-white border px-4 py-2 pr-8 mb-2 leading-tight focus:outline-none">
+                <option v-for="tag in tags.filter(items => items.status == 1)" :key="tag.id" :value="tag.id"> {{ tag.nametag
+                }}
+                </option>
+            </select>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 ">Tiêu đề</label>
+                        <input type="text"
+                            class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
+                            v-model="title" required>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 ">Đường dẫn ảnh</label>
+                        <input type="text"
+                            class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
+                            v-model="img_blog" required>
+                        <img :src="img_blog" alt="">
+                    </div>
+
+                    <QuillEditor theme="snow" ref="myEditorUpdate" />
+                </div>
+                <!-- Modal footer -->
+                <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button data-modal-hide="staticModal" type="button"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center " @click="updateBlog">Cập
+                        nhập</button>
+                    <button data-modal-hide="staticModal" type="button"
+                        class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 "
+                        @click="showUpdate">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <toast ref="toast"></toast>
 </template>
 
@@ -92,7 +161,10 @@ export default {
             tags: [],
             id_tag: '',
             imgs: [],
-            img_blog: ''
+            img_blog: '',
+            blog: '',
+            showUpdate: false,
+            id: ''
         }
 
     },
@@ -151,6 +223,20 @@ export default {
                 console.log(error)
             }
         },
+        async deleteBlog(id) {
+            try {
+                const result = await this.$axios.delete(`blog/delete/` + id);
+                if (result.status == 200) {
+                    this.$refs.toast.showToast(result.data.message)
+                    this.getblog()
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
         async gettag() {
             try {
                 const result = await this.$axios.get(
@@ -161,10 +247,44 @@ export default {
                 console.log(e);
             }
         },
-        goToBlog(id)
-        {
-            
+        goToBlog(id) {
+
             window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/blogs/detail/${id}`;
+        },
+        sendData(blog) {
+            this.blog = blog
+            this.img_blog = blog.img_blog
+            this.title = blog.title_blog
+            this.$refs.myEditorUpdate.setHTML(blog.content_blog)
+            this.id = blog.id
+            this.id_tag = blog.tag.id
+        },
+        openUpdate() {
+            this.showUpdate = !this.showUpdate
+        },
+        async updateBlog()
+        {
+            try {
+                const result = await this.$axios.put(`blog/update/${this.id}`,
+                    {
+                        title_blog: this.title,
+                        content_blog:  this.$refs.myEditorUpdate.getHTML(),
+                        id_user: this.user.id,
+                        img_blog:this.img_blog,
+                        id_tag:this.id_tag
+                    });
+                if (result.status == 200) {
+                    this.$refs.toast.showToast(result.data.message)
+                    this.getblog()
+                    this.clearText()
+                    this.showUpdate = false
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 

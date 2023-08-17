@@ -4,14 +4,13 @@
         v-if="showAdd">
         <input class="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" v-model="title"
             placeholder="Tiêu đề note" type="text">
-        <textarea class="mb-2 description bg-gray-100 sec p-3 h-20 border border-gray-300 outline-none" spellcheck="false"
-            v-model="content" placeholder="Nhập nội dung note"></textarea>
+        <QuillEditor theme="snow" ref="myEditor" />
         <!-- buttons -->
         <div class="buttons flex">
-            <div  class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
+            <div class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
                 @click="addNote()">
                 Thêm</div>
-            <div  class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
+            <div class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
                 @click="openAdd()">
                 Hủy</div>
         </div>
@@ -25,11 +24,11 @@
             <div class="rounded" v-for="(note, index) in notes" :key="index">
                 <div class="card mt-5 ml-10 ">
                     <div class="max-w-sm rounded overflow-hidden shadow-2xl bg-gray-100">
-                        <img class="w-full h-32 object-cover" :src="imgs[index % imgs.length].src.medium" alt="Mountain">
+                        <img class="w-full h-32 object-cover" :src="imgs[index % imgs.length]" alt="Mountain">
                         <div class="px-6 py-4">
                             <div class="font-bold text-xl mb-2"> {{ note.title_note }}</div>
                             <p class="text-gray-700 text-base">
-                                {{ note.content_note }}
+                                <span v-html="note.content_note"></span>
                             </p>
                         </div>
                         <div class="px-6 pt-4 pb-2">
@@ -67,8 +66,7 @@
                 </div>
                 <div>
                     <label class="block mb-2 text-sm font-medium text-gray-900 ">Nội dung</label>
-                    <textarea class="description bg-gray-100 sec p-3 h-20 border border-gray-300 outline-none"
-                        spellcheck="false" v-model="content" placeholder="Nhập nội dung note"></textarea>
+                    <QuillEditor theme="snow" ref="myEditorUpdate" />
                 </div>
             </div>
 
@@ -90,7 +88,8 @@
 import dayjs from 'dayjs';
 import userService from '../../plugins/userServices.js';
 import toast from '../../components/toast/toast.vue';
-
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 export default {
     data() {
         return {
@@ -104,21 +103,25 @@ export default {
             isShowUpdate: false,
             note: '',
             id: '',
-            imgs: []
+            imgs: ['https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2022/01/Hinh-nen-4K-1.jpg?fit=3840%2C2160&ssl=1',
+                   'https://thuthuatnhanh.com/wp-content/uploads/2023/06/hinh-nen-4k-cuc-dep-sieu-net-cho-may-tinh.jpg',
+                   'https://thuthuatnhanh.com/wp-content/uploads/2023/06/hinh-nen-4k-cho-may-tinh.jpg',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0QC8OuDTtHc6hPJbG8j09_V2G8jmvisd_E27Y_ugPDXdeCUctd4MrNvvJV-ez4EfZ46k&usqp=CAU',
+                   'https://mekoong.com/wp-content/uploads/2022/12/Hinh-nen-linh-ho-tro-thoi-chien-4k.png',
+                   'https://demoda.vn/wp-content/uploads/2022/01/hinh-nen-4k-laptop-va-pc-800x500.jpg', 
+                   'https://a-static.besthdwallpaper.com/landscape-scenery-genshin-impact-anime-video-game-wallpaper-2560x1440-72977_51.jpg', 
+                   'https://inkythuatso.com/uploads/thumbnails/800/2022/03/anh-genshin-impact-4k-ngoi-lang-qingce-17-10-31-27.jpg']
         }
     },
-    components: { toast },
+    components: { toast, QuillEditor },
     mounted() {
         this.user = userService.getUserToken()
-        this.getImages()   
+
         this.getNote();
     },
     methods: {
         formatDate(time) {
             return dayjs(time).format('DD-MM-YYYY');
-        },
-        async getImages() {
-            userService.getImages().then((data=>{this.imgs=data}))
         },
 
         async getNote() {
@@ -147,7 +150,7 @@ export default {
             try {
                 const result = await this.$axios.post(`note/add`,
                     {
-                        title_note: this.title, content_note: this.content, id_user: this.user.id
+                        title_note: this.title, content_note: this.$refs.myEditor.getHTML(), id_user: this.user.id
                     });
                 if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message)
@@ -166,7 +169,7 @@ export default {
             try {
                 const result = await this.$axios.put(`note/update/${this.id}`,
                     {
-                        title_note: this.title, content_note: this.content, id_user: this.user.id
+                        title_note: this.title, content_note: this.$refs.myEditorUpdate.getHTML(), id_user: this.user.id
                     });
                 if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message)
@@ -183,7 +186,7 @@ export default {
         },
         getText(note) {
             this.title = note.title_note;
-            this.content = note.content_note;
+            this.$refs.myEditorUpdate.setHTML(note.content_note)
             this.id = note.id
         },
         clearText() {
