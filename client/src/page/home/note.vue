@@ -130,7 +130,7 @@ export default {
                 }
         },
         async addNote() {
-            const result = await userService.addNote(this.title,this.$refs.myEditor.getHTML(),this.user.id)
+            const result = await noteService.addNotes(this.title,this.$refs.myEditor.getHTML(),this.user.id)
             if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message)
                     this.getNote()

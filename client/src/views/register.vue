@@ -1,34 +1,15 @@
 <template>
-  <div class="relative min-h-screen flex ">
-    <div
-      class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-white">
-      <div
-        class="sm:w-1/2 xl:w-3/5 h-full hidden md:flex flex-auto items-center justify-center p-10 overflow-hidden bg-purple-900 text-white bg-no-repeat bg-cover relative"
-        style="background-image: url(https://media.discordapp.net/attachments/1137648162677456956/1137650789121278042/01212022-1047259374-coding-classes_scanrail.png?width=1078&height=566);">
-        <div class="absolute bg-gradient-to-b from-indigo-600 to-violet-500 opacity-75 inset-0 z-0"></div>
-        <div class="w-full  max-w-md z-10">
-          <div class="sm:text-4xl xl:text-5xl font-bold leading-tight mb-6">Nơi chia sẽ tài liệu giữa mọi người với nhau
-          </div>
-          <div class="sm:text-sm xl:text-md text-gray-200 font-normal">Code mãi code hoài code chán cũng phải code. Mãi
-            mãi là coder.</div>
+  <div class="min-h-screen py-20 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200">
+    <div class="container mx-auto">
+
+      <div class="flex flex-col lg:flex-row w-10/12 lg:w-8/12 bg-white rounded-xl mx-auto shadow-lg overflow-hidden">
+        <div class="w-full lg:w-1/2 flex flex-col items-center justify-center p-12 drop-shadow-2xl">
+          <img src="https://e0.pxfuel.com/wallpapers/575/577/desktop-wallpaper-mobile-on-coding-programming-thumbnail.jpg" alt="" class="w-full h-full object-cover">
         </div>
-        <!---remove custom style-->
-        <ul class="circles">
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-        </ul>
-      </div>
-      <div
-        class="md:flex md:items-center md:justify-center  sm:w-auto md:h-full w-2/5 xl:w-2/5 p-8  md:p-10 lg:p-14 sm:rounded-lg md:rounded-none bg-white">
-        <router-view></router-view>
+
+        <div class="w-full lg:w-1/2 py-16 px-12">
+          <router-view></router-view>
+        </div>
       </div>
     </div>
   </div>
