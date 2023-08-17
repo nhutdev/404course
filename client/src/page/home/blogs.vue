@@ -102,12 +102,13 @@
                 <!-- Modal body -->
                 <div class="p-6 space-y-6">
                     <label class="block mb-2 text-sm font-medium text-gray-900 ">Chọn thể loại</label>
-            <select id="select" name="select" v-model="id_tag"
-                class="block appearance-none w-full bg-white border px-4 py-2 pr-8 mb-2 leading-tight focus:outline-none">
-                <option v-for="tag in tags.filter(items => items.status == 1)" :key="tag.id" :value="tag.id"> {{ tag.nametag
-                }}
-                </option>
-            </select>
+                    <select id="select" name="select" v-model="id_tag"
+                        class="block appearance-none w-full bg-white border px-4 py-2 pr-8 mb-2 leading-tight focus:outline-none">
+                        <option v-for="tag in tags.filter(items => items.status == 1)" :key="tag.id" :value="tag.id"> {{
+                            tag.nametag
+                        }}
+                        </option>
+                    </select>
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 ">Tiêu đề</label>
                         <input type="text"
@@ -127,7 +128,8 @@
                 <!-- Modal footer -->
                 <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                     <button data-modal-hide="staticModal" type="button"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center " @click="updateBlog">Cập
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                        @click="updateBlog">Cập
                         nhập</button>
                     <button data-modal-hide="staticModal" type="button"
                         class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 "
@@ -145,28 +147,18 @@
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import userServices from '../../plugins/userServices';
+import functionService from '../../plugins/functionService';
+import blogService from '../../plugins/blogService'
 import toast from '../../components/toast/toast.vue';
-import dayjs from 'dayjs';
-
 export default {
 
     data() {
         return {
-            showAdd: false,
-            title: '',
-            content: '',
-            query: 1,
-            blogs: [],
-            user: '',
-            tags: [],
-            id_tag: '',
-            imgs: [],
-            img_blog: '',
-            blog: '',
-            showUpdate: false,
-            id: ''
+            showAdd: false, showUpdate: false,
+            title: '', content: '', query: 1,
+            blogs: [], tags: [], imgs: [], status: 1,
+            user: '', id_tag: '', img_blog: '', blog: '', id: ''
         }
-
     },
     components: {
         QuillEditor, toast
@@ -174,7 +166,6 @@ export default {
     mounted() {
         this.getblog()
         this.gettag()
-        this.getImages()
         this.user = userServices.getUserToken()
     },
     methods: {
@@ -182,59 +173,40 @@ export default {
             this.showAdd = !this.showAdd
         },
         formatDate(time) {
-            return dayjs(time).format('DD-MM-YYYY');
+            functionService.formatDate(time)
         },
         clearText() {
             this.title = ''
             this.content = ''
             this.img_blog = ''
         },
-        async getImages() {
-            userServices.getImages().then((data => { this.imgs = data }))
-        },
+
         async getblog() {
-            try {
-                const result = await this.$axios.get(`blog/get?page=${this.query}&&status=0`);
-                this.blogs = result.data.blogs
-            } catch (error) {
-                console.log(error)
-            }
+            blogService.getblog(this.query, this.status).then((data) => { this.blogs = data.blogs })
         },
         updateContent(newContent) {
             this.content = newContent;
         },
         async addBlog() {
-
-            try {
-                const result = await this.$axios.post(`blog/add`,
-                    {
-                        title_blog: this.title, content_blog: this.$refs.myEditor.getHTML(), id_user: this.user.id, id_tag: this.id_tag, img_blog: this.img_blog
-                    });
-                if (result.status == 200) {
-                    this.$refs.toast.showToast(result.data.message)
-                    this.getblog()
-                    this.clearText()
-                    this.showAdd = false
-                }
-                else {
-                    this.$refs.toast.showToast(result.data.message)
-                }
-            } catch (error) {
-                console.log(error)
+            const result = await blogService.addBlog(this.title, this.$refs.myEditor.getHTML(), this.user.id, this.id_tag, this.img_blog)
+            if (result.status == 200) {
+                this.$refs.toast.showToast(result.data.message)
+                this.getblog()
+                this.clearText()
+                this.showAdd = false
+            }
+            else {
+                this.$refs.toast.showToast(result.data.message)
             }
         },
         async deleteBlog(id) {
-            try {
-                const result = await this.$axios.delete(`blog/delete/` + id);
-                if (result.status == 200) {
-                    this.$refs.toast.showToast(result.data.message)
-                    this.getblog()
-                }
-                else {
-                    this.$refs.toast.showToast(result.data.message)
-                }
-            } catch (error) {
-                console.log(error)
+            const result = await blogService.deleteBlog(id)
+            if (result.status == 200) {
+                this.$refs.toast.showToast(result.data.message)
+                this.getblog()
+            }
+            else {
+                this.$refs.toast.showToast(result.data.message)
             }
         },
         async gettag() {
@@ -262,28 +234,16 @@ export default {
         openUpdate() {
             this.showUpdate = !this.showUpdate
         },
-        async updateBlog()
-        {
-            try {
-                const result = await this.$axios.put(`blog/update/${this.id}`,
-                    {
-                        title_blog: this.title,
-                        content_blog:  this.$refs.myEditorUpdate.getHTML(),
-                        id_user: this.user.id,
-                        img_blog:this.img_blog,
-                        id_tag:this.id_tag
-                    });
-                if (result.status == 200) {
-                    this.$refs.toast.showToast(result.data.message)
-                    this.getblog()
-                    this.clearText()
-                    this.showUpdate = false
-                }
-                else {
-                    this.$refs.toast.showToast(result.data.message)
-                }
-            } catch (error) {
-                console.log(error)
+        async updateBlog() {
+            const result = await blogService.updateBlog(this.title, this.$refs.myEditorUpdate.getHTML(), this.user.id, this.id_tag, this.img_blog, this.id)
+            if (result.status == 200) {
+                this.$refs.toast.showToast(result.data.message)
+                this.getblog()
+                this.clearText()
+                this.showUpdate = false
+            }
+            else {
+                this.$refs.toast.showToast(result.data.message)
             }
         }
     }

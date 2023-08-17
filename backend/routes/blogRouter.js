@@ -6,10 +6,13 @@ const {
   updateBlog,
   deleteBlog,
   getlike,
+  getlikebyId,
   handlelike,
   get_saveBlog,
+  get_saveBlogByID,
   handle_saveBlog,
   getComment,
+  getCommentbyid,
   addComment,
   updateComment,
   deleteComment,
@@ -27,12 +30,15 @@ routerBlog.put("/api/blog/update/:id", updateBlog);
 routerBlog.delete("/api/blog/delete/:id", deleteBlog);
 
 routerBlog.get("/api/blog/like/get", getlike);
+routerBlog.get("/api/blog/like/getbyid/:id", getlikebyId);
 routerBlog.post("/api/blog/like/handle", handlelike);
 
 routerBlog.get("/api/blog/save/get", get_saveBlog);
 routerBlog.post("/api/blog/save/handle", handle_saveBlog);
+routerBlog.get('/api/blog/save/getbyid/:id',get_saveBlogByID);
 
 routerBlog.get("/api/blog/comment/get", getComment);
+routerBlog.get("/api/blog/comment/getbyid/:id", getCommentbyid);
 routerBlog.post("/api/blog/comment/add", addComment);
 routerBlog.put("/api/blog/comment/update/:id", updateComment);
 routerBlog.post("/api/blog/comment/delete/:id", deleteComment);

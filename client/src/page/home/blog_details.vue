@@ -29,18 +29,41 @@
                 <div class="flex items-center mb-2">
                     <!--like handle-->
                     <div class="action mr-3">
-                        <!-- Sử dụng v-if để kiểm tra xem sản phẩm có trong danh sách thích hay không -->
-                        <i class="fa fa-heart"></i>
-                        <!-- Nếu không có sản phẩm nào trong danh sách thích, hiển thị chữ màu #ccc -->
-                        <!-- {{ resultLike(post.id) }} -->
-                    </div>
-                    <!--post comment-->
-                    <button>
-                        <span><i class="uil uil-share" @click="share(post)"></i></span>
-                    </button>
+                    <!-- Sử dụng v-if để kiểm tra xem sản phẩm có trong danh sách thích hay không -->
+                    <span v-if="likes.some(item => item.id_blog === blog.id && item.id_user === user.id)">
+                        <!-- Sử dụng v-for để lặp lại các sản phẩm trong danh sách thích -->
+                        <span v-for="like in likes.filter(item => item.id_blog === blog.id && item.id_user === user.id)">
+                            <!-- Kiểm tra trạng thái của sản phẩm và sử dụng màu đỏ hoặc #ccc tương ứng -->
+                            <i class="fa fa-heart" :style="{ color: like.id ? 'red' : '#ccc' }"
+                                @click="likeBlog(blog.id)"></i>
+                        </span>
+                    </span>
+                    <!-- Nếu không có sản phẩm nào trong danh sách thích, hiển thị chữ màu #ccc -->
+                    <span v-else>
+                        <i class="fa fa-heart" style="color: #ccc" @click="likeBlog(blog.id)"></i>
+                    </span>
+                    {{ likes.length }}
+                </div>
+                    
 
                     <div class="ml-auto" :class="checkUser(blog.user.id)">
-                        <i class="fa-solid fa-bookmark text-xl"></i>
+                        
+                        <div class="action mr-3">
+                    <!-- Sử dụng v-if để kiểm tra xem sản phẩm có trong danh sách thích hay không -->
+                    <span v-if="saves.some(item => item.id_blog === blog.id && item.id_user === user.id)">
+                        <!-- Sử dụng v-for để lặp lại các sản phẩm trong danh sách thích -->
+                        <span v-for="save in saves.filter(item => item.id_blog === blog.id && item.id_user === user.id)">
+                            <!-- Kiểm tra trạng thái của sản phẩm và sử dụng màu đỏ hoặc #ccc tương ứng -->
+                            <i class="fa-solid fa-bookmark" :style="{ color: save.id ? 'red' : '#ccc' }"
+                                @click="saveBlog(blog.id)"></i>
+                        </span>
+                    </span>
+                    <!-- Nếu không có sản phẩm nào trong danh sách thích, hiển thị chữ màu #ccc -->
+                    <span v-else>
+                        <i class="fa-solid fa-bookmark" style="color: #ccc" @click="saveBlog(blog.id)"></i>
+                    </span>
+                   
+                </div>
                     </div>
                 </div>
 
@@ -53,7 +76,7 @@
                 <div class="flex items-center mt-2">
                     <img class="w-6 h-6 rounded-full mr-2" :src="user.avatar" alt="Avatar">
                     <textarea class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none text-sm"
-                        type="text" v-model="comments" placeholder="Thêm bình luận..." ></textarea>
+                        type="text" v-model="comment" placeholder="Thêm bình luận..." ></textarea>
                 </div>
 
             </div>
@@ -96,32 +119,34 @@
             </div>
         </div>
     </div>
-</div></template>
+</div>
+<toast ref="toast"></toast>
+</template>
 
 <script>
 import dayjs from 'dayjs';
+import toast from '../../components/toast/toast.vue';
 import userServices from '../../plugins/userServices';
+import blogService from '../../plugins/blogService';
 export default {
 
     data() {
         return {
-            blogs: [],
-            user: '',
+            blogs: [],likes:[],saves:[],
+            user: '',comment:'',
             showComment: false
         }
     },
+    components:{toast},
     mounted() {
         this.getBlog()
         this.user = userServices.getUserToken()
+        this.getLike()
+        this.getSave()
     },
     methods: {
         async getBlog() {
-            try {
-                const result = await this.$axios.get(`blog/get/${this.$route.params.id}`)
-                this.blogs = result.data
-            } catch (error) {
-                console.log(error)
-            }
+            blogService.getBlogById(this.$route.params.id).then((data)=>{this.blogs = data})
         },
         formatDate(time) {
             return dayjs(time).format('DD-MM-YYYY');
@@ -131,7 +156,39 @@ export default {
         },
         openComment() {
             this.showComment = !this.showComment
-        }
+        },
+        async likeBlog(id)
+        {
+            const result = await blogService.likeBlog(id,this.user.id)
+            if (result.status == 200) {
+                this.$refs.toast.showToast(result.data.message)
+                this.getLike()
+            }
+            else {
+                this.$refs.toast.showToast(result.data.message)
+            }
+        },
+         getLike()
+        {
+            blogService.getLike(this.$route.params.id).then((data)=>{this.likes = data})
+            
+        },
+        async saveBlog(id)
+        {
+            const result = await blogService.saveBlog(id,this.user.id)
+            if (result.status == 200) {
+                this.$refs.toast.showToast(result.data.message)
+                this.getsave()
+            }
+            else {
+                this.$refs.toast.showToast(result.data.message)
+            }
+        },
+        getSave()
+        {
+            blogService.getSave(this.$route.params.id).then((data)=>{this.saves = data})
+            
+        },
 
     }
 

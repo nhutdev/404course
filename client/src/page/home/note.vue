@@ -85,24 +85,18 @@
 </template>
 
 <script>
-import dayjs from 'dayjs';
 import userService from '../../plugins/userServices.js';
+import noteService from '../../plugins/noteService';
+import functionService from '../../plugins/functionService'
 import toast from '../../components/toast/toast.vue';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 export default {
     data() {
         return {
-            notes: [],
-            query: 1,
-            user: '',
-            showAdd: false,
-            showdropdown: false,
-            title: '',
-            content: '',
-            isShowUpdate: false,
-            note: '',
-            id: '',
+            notes: [],query: 1,user: '',
+            showAdd: false,showdropdown: false, isShowUpdate: false,
+            title: '',content: '', note: '',id: '',
             imgs: ['https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2022/01/Hinh-nen-4K-1.jpg?fit=3840%2C2160&ssl=1',
                    'https://thuthuatnhanh.com/wp-content/uploads/2023/06/hinh-nen-4k-cuc-dep-sieu-net-cho-may-tinh.jpg',
                    'https://thuthuatnhanh.com/wp-content/uploads/2023/06/hinh-nen-4k-cho-may-tinh.jpg',
@@ -116,43 +110,28 @@ export default {
     components: { toast, QuillEditor },
     mounted() {
         this.user = userService.getUserToken()
-
         this.getNote();
     },
     methods: {
         formatDate(time) {
-            return dayjs(time).format('DD-MM-YYYY');
+           functionService.formatDate(time)
         },
-
         async getNote() {
-            try {
-                const result = await this.$axios.get(`note/get?page=${this.query}&&id=${this.user.id}`);
-                this.notes = result.data.note
-            } catch (error) {
-                console.log(error)
-            }
+            noteService.getNote(this.user.id).then((data)=>{this.notes=data})
         },
         async deleteNote(id) {
-            try {
-                const result = await this.$axios.delete(`note/delete/` + id);
-                if (result.status == 200) {
+            const result =await noteService.deleteNote(id);
+            if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message)
                     this.getNote()
                 }
                 else {
                     this.$refs.toast.showToast(result.data.message)
                 }
-            } catch (error) {
-                console.log(error)
-            }
         },
         async addNote() {
-            try {
-                const result = await this.$axios.post(`note/add`,
-                    {
-                        title_note: this.title, content_note: this.$refs.myEditor.getHTML(), id_user: this.user.id
-                    });
-                if (result.status == 200) {
+            const result = await userService.addNote(this.title,this.$refs.myEditor.getHTML(),this.user.id)
+            if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message)
                     this.getNote()
                     this.clearText()
@@ -161,17 +140,10 @@ export default {
                 else {
                     this.$refs.toast.showToast(result.data.message)
                 }
-            } catch (error) {
-                console.log(error)
-            }
         },
         async updateNote() {
-            try {
-                const result = await this.$axios.put(`note/update/${this.id}`,
-                    {
-                        title_note: this.title, content_note: this.$refs.myEditorUpdate.getHTML(), id_user: this.user.id
-                    });
-                if (result.status == 200) {
+            const result = await noteService.updateNote(this.title,this.$refs.myEditorUpdate.getHTML(),this.user.id,this.id)
+            if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message)
                     this.getNote()
                     this.clearText()
@@ -180,9 +152,6 @@ export default {
                 else {
                     this.$refs.toast.showToast(result.data.message)
                 }
-            } catch (error) {
-                console.log(error)
-            }
         },
         getText(note) {
             this.title = note.title_note;

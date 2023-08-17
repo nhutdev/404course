@@ -71,7 +71,7 @@ const addBlog = async (req, res) => {
           title_blog: title_blog,
           content_blog: content_blog,
           img_blog:img_blog,
-          status: false,
+          status: true,
         });
         return res.status(200).json({ message: "Tạo blog thành công!" });
       } else {
@@ -165,10 +165,29 @@ const getlike = async (req, res) => {
     console.log(error);
   }
 };
-
+const  getlikebyId = async (req, res) => {
+  try {
+    const id =req.params.id
+    const like = await Like.findAll({where:{id_blog:id}});
+    res.status(200).json(like);
+  } catch (error) {
+    // trả thông báo lỗi về console
+    console.log(error);
+  }
+};
 const get_saveBlog = async (req, res) => {
   try {
     const save = await Save.findAll();
+    res.status(400).json(save);
+  } catch (error) {
+    // trả thông báo lỗi về console
+    console.log(error);
+  }
+};
+const get_saveBlogByID = async (req, res) => {
+  try {
+    const id =req.params.id
+    const save = await Save.findAll({where:{id_blog:id}});
     res.status(400).json(save);
   } catch (error) {
     // trả thông báo lỗi về console
@@ -209,6 +228,16 @@ const handle_saveBlog = async (req, res) => {
 const getComment = async (req, res) => {
   try {
     const cmt = await Comment.findAll();
+    res.status(200).json(cmt);
+  } catch (error) {
+    // trả thông báo lỗi về console
+    console.log(error);
+  }
+};
+const getCommentbyid= async (req, res) => {
+  try {
+    const id = req.params.id
+    const cmt = await Comment.findAll({where:{id_blog:id}});
     res.status(200).json(cmt);
   } catch (error) {
     // trả thông báo lỗi về console
@@ -355,5 +384,8 @@ module.exports = {
   add_replyComment,
   delete_replyComment,
   update_replyComment,
-  getBlogByID
+  getBlogByID,
+  getlikebyId,
+  get_saveBlogByID,
+  getCommentbyid
 };
