@@ -43,16 +43,29 @@
             <li class="mr-2 cursor-pointer ">
                 <a @click="isRoleBtn"
                     :class="['inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300', { 'text-blue-600 border-blue-600 rounded-t-lg font-bold': activeTab === 'role' }]"
-                    class=" active inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">Vai trò</a>
+                    class=" active inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">Vai
+                    trò</a>
             </li>
             <li class="mr-2 cursor-pointer ">
                 <a @click="isUserRoleBtn"
                     :class="['inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300', { 'text-blue-600 border-blue-600 rounded-t-lg font-bold': activeTab === 'roleuser' }]"
-                    class=" active inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">Danh sách vai trò</a>
+                    class=" active inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">Danh
+                    sách vai trò</a>
             </li>
         </ul>
     </div>
-
+    <div class="m-2" v-if="showRole">
+        <button @click="onclose()"
+            class="shadow inline-flex items-center bg-blue-500 hover:bg-blue-600 focus:outline-none focus:shadow-outline text-white font-semibold py-2 px-4 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 w-5 h-5" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="0" y="0" width="24" height="24" stroke="none"></rect>
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Thêm
+        </button>
+    </div>
     <!-- role view-->
     <div class="overflow-x-auto bg-white rounded-lg shadow cursor-pointer" v-if="showRole">
         <table class="w-full whitespace-no-wrap bg-white overflow-hidden table-striped ">
@@ -76,9 +89,11 @@
                     </td>
                     <td class="border-t flex">
                         <span
-                            class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Xóa</span>
+                            class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                            @click="deleteRole(role.id)">Xóa</span>
                         <span
-                            class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cập
+                            class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                            @click="sendRole(role); showURole()">Cập
                             nhập</span>
                     </td>
                 </tr>
@@ -89,18 +104,18 @@
 
 
     </div>
-<!--user role view-->
-<!--bộ lọc-->
-<div class=" md:mr-2 mt-5 py-2 px-2" v-if="showUserRole">
+    <!--user role view-->
+    <!--bộ lọc-->
+    <div class=" md:mr-2 mt-5 py-2 px-2" v-if="showUserRole">
         <select id="select" name="select" v-model="roleid" @change="getUserRole()"
             class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none">
             <option v-for="role in roles" :key="role.id" :value="role.id">
-                    {{ role.name_role }}
-                </option>
+                {{ role.name_role }}
+            </option>
         </select>
     </div>
-<div class="overflow-x-auto bg-white rounded-lg shadow cursor-pointer" v-if="showUserRole">
-    
+    <div class="overflow-x-auto bg-white rounded-lg shadow cursor-pointer" v-if="showUserRole">
+
         <table class="w-full whitespace-no-wrap bg-white overflow-hidden table-striped ">
             <thead>
                 <tr class="text-left ">
@@ -128,9 +143,10 @@
                     </td>
                     <td class="border-t flex">
                         <span
-                            class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Xóa</span>
+                            class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" @click="deleteUR(roleuser.id)">Xóa</span>
                         <span
-                            class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cập
+                            class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                            @click="onshowUserRole(); sendUR(roleuser)">Cập
                             nhập</span>
                     </td>
                 </tr>
@@ -141,26 +157,129 @@
 
 
     </div>
-    
-       <!--chi muc-->
-       <div class="grid sm:grid-cols-3 gap-4 grid-cols-2  mb-10 mt-5">
-                    <nav aria-label="Page navigation ">
-                        <ul class="inline-flex -space-x-px">
-                            <li>
-                                <a
-                                    class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 ml-0 rounded-l-lg leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">&lt&lt</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                            </li>
-                            <li>
-                                <a
-                                    class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 rounded-r-lg leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">&gt&gt</a>
-                            </li>
-                        </ul>
-                    </nav>
+
+    <!--chi muc-->
+    <div class="grid sm:grid-cols-3 gap-4 grid-cols-2  mb-10 mt-5">
+        <nav aria-label="Page navigation ">
+            <ul class="inline-flex -space-x-px">
+                <li>
+                    <a
+                        class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 ml-0 rounded-l-lg leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">&lt&lt</a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                </li>
+                <li>
+                    <a
+                        class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 rounded-r-lg leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">&gt&gt</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!--modal add role-->
+    <div class=" fixed w-full h-full top-0 left-0 flex items-center justify-center z-50 " v-if="isShowAdd">
+        <div class="absolute w-full h-full bg-gray-900 opacity-50" @click="onclose"></div>
+
+        <div class=" bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto ">
+            <div class="flex flex-row py-3 px-4">
+                <h5 class="text-lg font-semibold flex-grow">Thêm phân quyền</h5>
+                <i class="uil-multiply flex-none cursor-pointer bg-gray-400 rounded-xl" @click="onclose"></i>
+            </div>
+
+            <div class="px-4">
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên phân quyền</label>
+                    <input type="text"
+                        class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
+                        v-model="rolename" required>
                 </div>
+            </div>
+
+            <div class="py-3 px-4">
+                <button
+                    class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
+                    @click="addrole">Thêm</button>
+                <button
+                    class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer"
+                    @click="onclose()">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!--modal sửa role-->
+    <div class=" fixed w-full h-full top-0 left-0 flex items-center justify-center z-50 " v-show="isShowUpdateRole">
+        <div class="absolute w-full h-full bg-gray-900 opacity-50" @click="showURole"></div>
+
+        <div class=" bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto ">
+            <div class="flex flex-row py-3 px-4">
+                <h5 class="text-lg font-semibold flex-grow">Cập nhập phân quyền</h5>
+                <i class="uil-multiply flex-none cursor-pointer bg-gray-400 rounded-xl" @click="showURole"></i>
+            </div>
+
+            <div class="px-4">
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên phân quyền</label>
+                    <input type="text"
+                        class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
+                        v-model="rolename" required>
+                </div>
+            </div>
+
+            <div class="py-3 px-4">
+                <button
+                    class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
+                    @click="updateRole">Cập nhập</button>
+                <button
+                    class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer"
+                    @click="showURole()">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!--model sửa user role-->
+    <div class=" fixed w-full h-full top-0 left-0 flex items-center justify-center z-50 " v-show="isShowUpdateURole">
+        <div class="absolute w-full h-full bg-gray-900 opacity-50" @click="onshowUserRole"></div>
+
+        <div class=" bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto ">
+            <div class="flex flex-row py-3 px-4">
+                <h5 class="text-lg font-semibold flex-grow">Cập nhập phân quyền</h5>
+                <i class="uil-multiply flex-none cursor-pointer bg-gray-400 rounded-xl" @click="onshowUserRole"></i>
+            </div>
+
+            <div class="px-4">
+                <div>
+                    <label for="" class="m-2 text-base">Tên người dùng</label>
+                    <select id="select" name="select" v-model="userid"
+                        class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none">
+                        <option disabled v-for="user in users" :key="user.id" :value="user.id">
+                            {{ user.fullname }}
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <label for="" class="m-2 text-base">Loại phân quyền</label>
+                    <select id="select" name="select" v-model="roleid"
+                        class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none">
+                        <option v-for="role in roles" :key="role.id" :value="role.id">
+                            {{ role.name_role }}
+                        </option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="py-3 px-4">
+                <button
+                    class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
+                    @click="updateUserRole()">Cập nhập</button>
+                <button
+                    class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer"
+                    @click="onshowUserRole">Đóng</button>
+            </div>
+        </div>
+    </div>
     <toast ref="toast"></toast>
 </template>
 
@@ -168,13 +287,15 @@
 import dayjs from 'dayjs';
 import toast from '../../components/toast/toast.vue';
 import adminService from '../../plugins/adminService'
+import userServices from '../../plugins/userServices';
 export default {
     data() {
         return {
-            roles: [], userRoles:[],
-            page: 1,activeTab : 'role',
-            showRole:true,showUserRole:false,
-            roleid:''
+            roles: [], userRoles: [], users: [],
+            page: 1, activeTab: 'role',
+            showRole: true, showUserRole: false, isShowUpdateRole: false,
+            isShowAdd: false, isShowUpdateURole: false,
+            roleid: '', rolename: '', userid: '',urid:''
         }
     },
     components:
@@ -183,38 +304,107 @@ export default {
     },
     mounted() {
         this.getRole()
+        userServices.renderUser().then((data) => { this.users = data })
     },
     methods:
     {
         formattedDate(time) {
             return dayjs(time).format('DD-MM-YYYY HH:mm:ss');
         },
-        isRoleBtn()
-        {
+        isRoleBtn() {
             this.activeTab = 'role'
             this.showRole = true
             this.showUserRole = false
         },
-        isUserRoleBtn()
-        {
+        isUserRoleBtn() {
             this.getUserRole()
             this.activeTab = 'roleuser'
             this.showRole = false
             this.showUserRole = true
         },
+        showURole() {
+            this.isShowUpdateRole = !this.isShowUpdateRole
+        },
+        sendRole(role) {
+            this.roleid = role.id
+            this.rolename = role.name_role
+        },
+        onshowUserRole() {
+            this.isShowUpdateURole = !this.isShowUpdateURole
+        },
+        sendUR(ur) {
+            this.roleid = ur.id_role
+            this.userid = ur.id_user
+            this.urid=ur.id
+        },
         getRole() {
             adminService.getRole().then((data) => { this.roles = data });
         },
-        getUserRole()
+        onclose() {
+            this.isShowAdd = !this.isShowAdd
+        },
+        getUserRole() {
+            if (this.roleid == '') {
+                adminService.getUserRole(this.page).then((data) => { this.userRoles = data })
+            } else {
+
+                adminService.getUserRole(this.page).then((data) => { this.userRoles = data.filter(item => item.id_role == this.roleid) })
+            }
+        },
+        async deleteRole(id) {
+            const result = await adminService.deleteRole(id);
+            if (result.status == 200) {
+                this.getRole()
+                this.$refs.toast.showToast(result.data.message)
+            }
+            else {
+                this.$refs.toast.showToast(result.data.message)
+            }
+        },
+        async updateRole() {
+            const result = await adminService.updateRole(this.roleid, this.rolename);
+            if (result.status == 200) {
+                this.getRole()
+                this.$refs.toast.showToast(result.data.message)
+                this.showURole()
+            }
+            else {
+                this.$refs.toast.showToast(result.data.message)
+            }
+        },
+        async addrole() {
+            const result = await adminService.addRole(this.rolename);
+            if (result.status == 200) {
+                this.getRole()
+                this.$refs.toast.showToast(result.data.message)
+                this.onclose()
+            }
+            else {
+                this.$refs.toast.showToast(result.data.message)
+            }
+        },
+       async  updateUserRole() {
+            const result = await adminService.updateUR(this.roleid,this.userid, this.urid);
+            if (result.status == 200) {
+                this.showUserRole = true
+                adminService.getUserRole(this.page).then((data) => { this.userRoles = data })
+                this.$refs.toast.showToast(result.data.message)
+                this.onshowUserRole()
+            }
+            else {
+                this.$refs.toast.showToast(result.data.message)
+            }
+        },
+        async deleteUR(id)
         {
-           if(this.roleid == '')
-           {
-            adminService.getUserRole(this.page).then((data)=>{this.userRoles = data})
-           }else
-           {
-            console.log(this.roleid)
-            adminService.getUserRole(this.page).then((data)=>{this.userRoles = data.filter(item=>item.id_role == this.roleid)})
-           }
+            const result = await adminService.deleteUR(id);
+            if (result.status == 200) {
+                adminService.getUserRole(this.page).then((data) => { this.userRoles = data })
+                this.$refs.toast.showToast(result.data.message)
+            }
+            else {
+                this.$refs.toast.showToast(result.data.message)
+            }
         }
 
     }
