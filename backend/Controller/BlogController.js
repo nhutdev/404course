@@ -273,22 +273,26 @@ const addComment = async (req, res) => {
 // Thực hiện xóa comment
 const deleteComment = async (req, res) => {
   try {
-    // nhận vào id của  comment
     const id = req.params.id;
+    
+    // Tìm và xóa các reply có reply_id bằng id của comment
+    await Comment.destroy({
+      where: {
+        reply_id: id
+      }
+    });
+
+    // Tìm và xóa comment chính dựa trên id
     const exitCmt = await Comment.findByPk(id);
-    const exitReply = await Comment.findAll({ id_reply: id });
     if (exitCmt) {
-      exitReply.forEach((element) => {
-        element.destroy();
-      });
       await exitCmt.destroy();
       res.status(200).json({ message: "Xóa bình luận thành công" });
     } else {
       res.status(202).json({ message: "Bình luận không tồn tại" });
     }
   } catch (error) {
-    // trả thông báo lỗi về console
     console.log(error);
+    res.status(500).json({ message: "Đã có lỗi xảy ra" });
   }
 };
 // Thực hiện cập nhập
