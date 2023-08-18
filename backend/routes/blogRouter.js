@@ -42,12 +42,12 @@ routerBlog.get("/api/blog/comment/get", getComment);
 routerBlog.get("/api/blog/comment/getbyid/:id", getCommentbyid);
 routerBlog.post("/api/blog/comment/add", addComment);
 routerBlog.put("/api/blog/comment/update/:id", updateComment);
-routerBlog.post("/api/blog/comment/delete/:id", deleteComment);
+routerBlog.delete("/api/blog/comment/delete/:id", deleteComment);
 
 routerBlog.get("/api/blog/replycomment/get/:id",get_replyComment)
 routerBlog.post("/api/blog/replycomment/add/:id", add_replyComment);
 routerBlog.put("/api/blog/replycomment/update/:id", update_replyComment);
-routerBlog.post("/api/blog/replycomment/delete/:id", delete_replyComment);
+routerBlog.delete("/api/blog/replycomment/delete/:id", delete_replyComment);
 
 module.exports = {
   routerBlog,

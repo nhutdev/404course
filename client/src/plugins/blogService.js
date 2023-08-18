@@ -169,5 +169,27 @@ class blogService {
             console.log(error)
         }
     }
+
+    async deleteReply(id) {
+        try {
+            const result = await axios.delete(`${this.url}blog/replycomment/delete/${id}`)
+            return result
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async updateReply(comment, id) {
+        try {
+            const result = await axios.put(`${this.url}blog/replycomment/update/${id}`,
+                {
+                    comment: comment
+                })
+            return result
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 }
 export default new blogService();
