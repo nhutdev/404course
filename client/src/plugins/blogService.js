@@ -62,69 +62,71 @@ class blogService {
         }
     }
     // get like - save - comment
-    async getLike(id)
-    {
+    async getLike(id) {
         try {
-         const result = await axios.get(`${this.url}blog/like/getbyid/${id}`);
-         return result.data   
+            const result = await axios.get(`${this.url}blog/like/getbyid/${id}`);
+            return result.data
         } catch (error) {
             console.log(error)
         }
     }
-    async getComment(id)
-    {
+    async getComment(id) {
         try {
-         const result = await axios.get(`${this.url}blog/comment/getbyid/${id}`);
-         return result.data   
+            const result = await axios.get(`${this.url}blog/comment/getbyid/${id}`);
+            return result.data
         } catch (error) {
             console.log(error)
         }
     }
-    async getSave(id)
-    {
+    async getSave(id) {
         try {
-         const result = await axios.get(`${this.url}blog/save/getbyid/${id}`);
-         return result.data   
+            const result = await axios.get(`${this.url}blog/save/getbyid/${id}`);
+            return result.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async getReply(id) {
+        try {
+            const result = await axios.get(`${this.url}blog/replycomment/get/${id}`)
+            return result.data
         } catch (error) {
             console.log(error)
         }
     }
     // handle thêm like - save - comment 
-    async likeBlog(  id_blog, id_user)
-    {
+    async likeBlog(id_blog, id_user) {
         try {
             const result = await axios.post(`${this.url}blog/like/handle`,
-            {
-                id_blog:id_blog,
-                id_user:id_user
-            })
+                {
+                    id_blog: id_blog,
+                    id_user: id_user
+                })
             return result
         } catch (error) {
             console.log(error)
         }
     }
-    async saveBlog(  id_blog, id_user)
-    {
+    async saveBlog(id_blog, id_user) {
         try {
             const result = await axios.post(`${this.url}blog/save/handle`,
-            {
-                id_blog:id_blog,
-                id_user:id_user
-            })
+                {
+                    id_blog: id_blog,
+                    id_user: id_user
+                })
             return result
         } catch (error) {
             console.log(error)
         }
     }
-    async commentBlog( comment, id_blog, id_user)
-    {
+    async commentBlog(comment, id_blog, id_user) {
         try {
             const result = await axios.post(`${this.url}blog/comment/add`,
-            {
-                id_blog:id_blog,
-                id_user:id_user,
-                comment:comment
-            })
+                {
+                    id_blog: id_blog,
+                    id_user: id_user,
+                    comment: comment
+                })
             return result
         } catch (error) {
             console.log(error)
@@ -132,22 +134,36 @@ class blogService {
     }
 
     // update delete Comment
-    async updateComment(comment,id)
-    {
+    async updateComment(comment, id) {
         try {
             const result = await axios.put(`${this.url}blog/comment/update/${id}`,
-            {
-                comment:comment
-            })
+                {
+                    comment: comment
+                })
             return result
         } catch (error) {
             console.log(error)
         }
     }
-    async deleteComment(id)
-    {
+    async deleteComment(id) {
         try {
             const result = await axios.delete(`${this.url}blog/comment/delete/${id}`)
+            return result
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    //reply cmt
+    async replyCMTBlog(comment, id_blog, id_user, id_reply) {
+        try {
+            const result = await axios.post(`${this.url}blog/replycomment/add/${id_reply}`,
+                {
+                    id_blog: id_blog,
+                    id_user: id_user,
+                    comment: comment,
+                })
             return result
         } catch (error) {
             console.log(error)

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 class noteService {
     url = `${import.meta.env.VITE_API_BASE_URL}`;
-    async addNote(title,content,id_user) {
+    async addNotes(title,content,id_user) {
         try {
             const result = await axios.post(`${this.url}note/add`,
                 {

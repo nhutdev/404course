@@ -150,6 +150,7 @@ import userServices from '../../plugins/userServices';
 import functionService from '../../plugins/functionService';
 import blogService from '../../plugins/blogService'
 import toast from '../../components/toast/toast.vue';
+import dayjs from 'dayjs';
 export default {
 
     data() {
@@ -173,8 +174,8 @@ export default {
             this.showAdd = !this.showAdd
         },
         formatDate(time) {
-            functionService.formatDate(time)
-        },
+        return dayjs(time).format('DD-MM-YYYY');
+    },
         clearText() {
             this.title = ''
             this.content = ''
@@ -220,7 +221,6 @@ export default {
             }
         },
         goToBlog(id) {
-
             window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/blogs/detail/${id}`;
         },
         sendData(blog) {

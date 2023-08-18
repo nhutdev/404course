@@ -19,7 +19,8 @@ const {
   add_replyComment,
   delete_replyComment,
   update_replyComment,
-  getBlogByID
+  getBlogByID,
+  get_replyComment
 } = require("../Controller/BlogController");
 const routerBlog = express.Router();
 
@@ -43,6 +44,7 @@ routerBlog.post("/api/blog/comment/add", addComment);
 routerBlog.put("/api/blog/comment/update/:id", updateComment);
 routerBlog.post("/api/blog/comment/delete/:id", deleteComment);
 
+routerBlog.get("/api/blog/replycomment/get/:id",get_replyComment)
 routerBlog.post("/api/blog/replycomment/add/:id", add_replyComment);
 routerBlog.put("/api/blog/replycomment/update/:id", update_replyComment);
 routerBlog.post("/api/blog/replycomment/delete/:id", delete_replyComment);
