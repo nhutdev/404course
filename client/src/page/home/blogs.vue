@@ -156,7 +156,7 @@ export default {
         return {
             showAdd: false, showUpdate: false,
             title: '', content: '', query: 1,
-            blogs: [], tags: [], imgs: [], status: 1,
+            blogs: [], tags: [], imgs: [], status: 0,
             user: '', id_tag: '', img_blog: '', blog: '', id: ''
         }
     },

@@ -49,19 +49,7 @@
                     <div class="ml-auto" :class="checkUser(blog.user.id)">
                         
                         <div class="action mr-3">
-                    <!-- Sử dụng v-if để kiểm tra xem sản phẩm có trong danh sách thích hay không -->
-                    <span v-if="saves.some(item => item.id_blog === blog.id && item.id_user === user.id)">
-                        <!-- Sử dụng v-for để lặp lại các sản phẩm trong danh sách thích -->
-                        <span v-for="save in saves.filter(item => item.id_blog === blog.id && item.id_user === user.id)">
-                            <!-- Kiểm tra trạng thái của sản phẩm và sử dụng màu đỏ hoặc #ccc tương ứng -->
-                            <i class="fa-solid fa-bookmark" :style="{ color: save.id ? 'red' : '#ccc' }"
-                                @click="saveBlog(blog.id)"></i>
-                        </span>
-                    </span>
-                    <!-- Nếu không có sản phẩm nào trong danh sách thích, hiển thị chữ màu #ccc -->
-                    <span v-else>
-                        <i class="fa-solid fa-bookmark" style="color: #ccc" @click="saveBlog(blog.id)"></i>
-                    </span>
+                   
                    
                 </div>
                     </div>
@@ -171,14 +159,14 @@ export default {
          getLike()
         {
             blogService.getLike(this.$route.params.id).then((data)=>{this.likes = data})
-            
+           
+
         },
         async saveBlog(id)
         {
             const result = await blogService.saveBlog(id,this.user.id)
             if (result.status == 200) {
                 this.$refs.toast.showToast(result.data.message)
-                this.getsave()
             }
             else {
                 this.$refs.toast.showToast(result.data.message)
@@ -187,7 +175,7 @@ export default {
         getSave()
         {
             blogService.getSave(this.$route.params.id).then((data)=>{this.saves = data})
-            
+            console.log(typeof (this.saves))
         },
 
     }
