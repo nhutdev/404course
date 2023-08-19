@@ -17,7 +17,7 @@ export default {
   mounted() {
     this.user = userService.getUserToken()
     if (this.user.role == 'Admin') {
-      this.$router.push({ name: 'login' });
+      this.$router.push({ name: 'admin' });
     }
   },
   components: { navbar },

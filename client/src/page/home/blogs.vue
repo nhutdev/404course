@@ -11,12 +11,18 @@
                 }}
                 </option>
             </select>
+            <p class="text-red-500 text-sm ml-2" v-if="!id_tag && tagFocused">Danh mục bị trống.</p>
         </div>
         <input class="title border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" v-model="title"
             placeholder="Tiêu đề blog" type="text">
+        <p class="text-red-500 text-sm ml-2" v-if="!title && titleFocused">Tiêu đề bị trống.</p>
         <input class="title border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" v-model="img_blog"
             placeholder="Đường dẫn ảnh" type="text">
-        <QuillEditor theme="snow" ref="myEditor" />
+        <p class="text-red-500 text-sm ml-2" v-if="!img_blog && imgFocused">Đường dẫn ảnh bị trống.</p>
+
+        <QuillEditor theme="snow" ref="myEditor" v-model="content" />
+        <p class="text-red-500 text-sm ml-2" v-if="!content && contentFocused">Nội dung bị trống.</p>
+
         <!-- buttons -->
         <div class="buttons flex mt-2">
             <div class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
@@ -109,21 +115,30 @@
                         }}
                         </option>
                     </select>
+            <p class="text-red-500 text-sm ml-2" v-if="!id_tag && tagFocused">Danh mục bị trống.</p>
+
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 ">Tiêu đề</label>
                         <input type="text"
                             class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
                             v-model="title" required>
+        <p class="text-red-500 text-sm ml-2" v-if="!title && titleFocused">Tiêu đề bị trống.</p>
+
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 ">Đường dẫn ảnh</label>
                         <input type="text"
                             class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
                             v-model="img_blog" required>
+        <p class="text-red-500 text-sm ml-2" v-if="!img_blog && imgFocused">Đường dẫn ảnh bị trống.</p>
+
                         <img :src="img_blog" alt="">
+
                     </div>
 
-                    <QuillEditor theme="snow" ref="myEditorUpdate" />
+                    <QuillEditor theme="snow" ref="myEditorUpdate" v-model="content"/>
+        <p class="text-red-500 text-sm ml-2" v-if="!content && contentFocused">Nội dung bị trống.</p>
+
                 </div>
                 <!-- Modal footer -->
                 <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
@@ -157,8 +172,9 @@ export default {
         return {
             showAdd: false, showUpdate: false,
             title: '', content: '', query: 1,
-            blogs: [], tags: [], imgs: [], status: 0,
-            user: '', id_tag: '', img_blog: '', blog: '', id: ''
+            blogs: [], tags: [], imgs: [], status: 1,
+            user: '', id_tag: '', img_blog: '', blog: '', id: '',
+            titleFocused: false, tagFocused: false, imgFocused: false, contentFocused: false
         }
     },
     components: {
@@ -174,8 +190,8 @@ export default {
             this.showAdd = !this.showAdd
         },
         formatDate(time) {
-        return dayjs(time).format('DD-MM-YYYY');
-    },
+            return dayjs(time).format('DD-MM-YYYY');
+        },
         clearText() {
             this.title = ''
             this.content = ''
@@ -189,16 +205,21 @@ export default {
             this.content = newContent;
         },
         async addBlog() {
-            const result = await blogService.addBlog(this.title, this.$refs.myEditor.getHTML(), this.user.id, this.id_tag, this.img_blog)
-            if (result.status == 200) {
-                this.$refs.toast.showToast(result.data.message)
-                this.getblog()
-                this.clearText()
-                this.showAdd = false
+            this.titleFocused = true, this.tagFocused = true, this.imgFocused = true, this.contentFocused = true
+            if (this.title && this.id_tag && this.img_blog && this.$refs.myEditor.getText().length > 1) {
+                const result = await blogService.addBlog(this.title, this.$refs.myEditor.getHTML(), this.user.id, this.id_tag, this.img_blog)
+                if (result.status == 200) {
+                    this.$refs.toast.showToast(result.data.message)
+                    this.getblog()
+                    this.clearText()
+                    this.showAdd = false
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
+                this.titleFocused = false, this.tagFocused = false, this.imgFocused = false, this.contentFocused = false
             }
-            else {
-                this.$refs.toast.showToast(result.data.message)
-            }
+
         },
         async deleteBlog(id) {
             const result = await blogService.deleteBlog(id)
@@ -235,16 +256,22 @@ export default {
             this.showUpdate = !this.showUpdate
         },
         async updateBlog() {
-            const result = await blogService.updateBlog(this.title, this.$refs.myEditorUpdate.getHTML(), this.user.id, this.id_tag, this.img_blog, this.id)
-            if (result.status == 200) {
-                this.$refs.toast.showToast(result.data.message)
-                this.getblog()
-                this.clearText()
-                this.showUpdate = false
+            this.titleFocused = true, this.tagFocused = true, this.imgFocused = true, this.contentFocused = true
+            if (this.title && this.id_tag && this.img_blog && this.$refs.myEditorUpdate.getText().length > 1) {
+                const result = await blogService.updateBlog(this.title, this.$refs.myEditorUpdate.getHTML(), this.user.id, this.id_tag, this.img_blog, this.id)
+                if (result.status == 200) {
+                    this.$refs.toast.showToast(result.data.message)
+                    this.getblog()
+                    this.clearText()
+                    this.showUpdate = false
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
+                this.titleFocused = false, this.tagFocused = false, this.imgFocused = false, this.contentFocused = false
+
             }
-            else {
-                this.$refs.toast.showToast(result.data.message)
-            }
+
         }
     }
 

@@ -4,9 +4,13 @@
         v-if="showAdd">
         <input class="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" v-model="title"
             placeholder="Tiêu đề note" type="text">
-        <QuillEditor theme="snow" ref="myEditor" />
+        <p class="text-red-500 text-sm ml-2" v-if="!title && titleFocused">Tiêu đề bị trống.</p>
+        <div class="mb-2">
+            <QuillEditor theme="snow" ref="myEditor" v-model="content" />
+            <p class="text-red-500 text-sm ml-2" v-if="!content && editFocused">Nội dung bị trống.</p>
+        </div>
         <!-- buttons -->
-        <div class="buttons flex">
+        <div class="buttons flex mt-2">
             <div class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
                 @click="addNote()">
                 Thêm</div>
@@ -63,10 +67,14 @@
                     <input type="text"
                         class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
                         v-model="title" required>
+                    <p class="text-red-500 text-sm ml-2" v-if="!title && titleFocused">Tiêu đề bị trống.</p>
+
                 </div>
                 <div>
                     <label class="block mb-2 text-sm font-medium text-gray-900 ">Nội dung</label>
-                    <QuillEditor theme="snow" ref="myEditorUpdate" />
+                    <QuillEditor theme="snow" ref="myEditorUpdate" v-model="content" />
+                    <p class="text-red-500 text-sm ml-2"
+                        v-if="!content && editFocused">Nội dung bị trống.</p>
                 </div>
             </div>
 
@@ -94,17 +102,18 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
 export default {
     data() {
         return {
-            notes: [],query: 1,user: '',
-            showAdd: false,showdropdown: false, isShowUpdate: false,
-            title: '',content: '', note: '',id: '',
+            notes: [], query: 1, user: '',
+            showAdd: false, showdropdown: false, isShowUpdate: false,
+            titleFocused: false, editFocused: false,
+            title: '', content: '', note: '', id: '',
             imgs: ['https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2022/01/Hinh-nen-4K-1.jpg?fit=3840%2C2160&ssl=1',
-                   'https://thuthuatnhanh.com/wp-content/uploads/2023/06/hinh-nen-4k-cuc-dep-sieu-net-cho-may-tinh.jpg',
-                   'https://thuthuatnhanh.com/wp-content/uploads/2023/06/hinh-nen-4k-cho-may-tinh.jpg',
-                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0QC8OuDTtHc6hPJbG8j09_V2G8jmvisd_E27Y_ugPDXdeCUctd4MrNvvJV-ez4EfZ46k&usqp=CAU',
-                   'https://mekoong.com/wp-content/uploads/2022/12/Hinh-nen-linh-ho-tro-thoi-chien-4k.png',
-                   'https://demoda.vn/wp-content/uploads/2022/01/hinh-nen-4k-laptop-va-pc-800x500.jpg', 
-                   'https://a-static.besthdwallpaper.com/landscape-scenery-genshin-impact-anime-video-game-wallpaper-2560x1440-72977_51.jpg', 
-                   'https://inkythuatso.com/uploads/thumbnails/800/2022/03/anh-genshin-impact-4k-ngoi-lang-qingce-17-10-31-27.jpg']
+                'https://thuthuatnhanh.com/wp-content/uploads/2023/06/hinh-nen-4k-cuc-dep-sieu-net-cho-may-tinh.jpg',
+                'https://thuthuatnhanh.com/wp-content/uploads/2023/06/hinh-nen-4k-cho-may-tinh.jpg',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0QC8OuDTtHc6hPJbG8j09_V2G8jmvisd_E27Y_ugPDXdeCUctd4MrNvvJV-ez4EfZ46k&usqp=CAU',
+                'https://mekoong.com/wp-content/uploads/2022/12/Hinh-nen-linh-ho-tro-thoi-chien-4k.png',
+                'https://demoda.vn/wp-content/uploads/2022/01/hinh-nen-4k-laptop-va-pc-800x500.jpg',
+                'https://a-static.besthdwallpaper.com/landscape-scenery-genshin-impact-anime-video-game-wallpaper-2560x1440-72977_51.jpg',
+                'https://inkythuatso.com/uploads/thumbnails/800/2022/03/anh-genshin-impact-4k-ngoi-lang-qingce-17-10-31-27.jpg']
         }
     },
     components: { toast, QuillEditor },
@@ -114,36 +123,48 @@ export default {
     },
     methods: {
         formatDate(time) {
-           functionService.formatDate(time)
+            functionService.formatDate(time)
         },
         async getNote() {
-            noteService.getNote(this.user.id).then((data)=>{this.notes=data})
+            noteService.getNote(this.user.id).then((data) => { this.notes = data })
         },
         async deleteNote(id) {
-            const result =await noteService.deleteNote(id);
+            const result = await noteService.deleteNote(id);
             if (result.status == 200) {
-                    this.$refs.toast.showToast(result.data.message)
-                    this.getNote()
-                }
-                else {
-                    this.$refs.toast.showToast(result.data.message)
-                }
+                this.$refs.toast.showToast(result.data.message)
+                this.getNote()
+            }
+            else {
+                this.$refs.toast.showToast(result.data.message)
+            }
         },
         async addNote() {
-            const result = await noteService.addNotes(this.title,this.$refs.myEditor.getHTML(),this.user.id)
-            if (result.status == 200) {
+            this.titleFocused = true
+            this.editFocused = true
+            if (this.title && this.$refs.myEditor.getText().length > 1) {
+                const result = await noteService.addNotes(this.title, this.$refs.myEditor.getHTML(), this.user.id)
+                if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message)
                     this.getNote()
-                    this.clearText()
+                    this.title = ''
                     this.showAdd = false
                 }
                 else {
                     this.$refs.toast.showToast(result.data.message)
                 }
+                this.titleFocused = false
+                this.editFocused = false
+            }
+
+
+
         },
         async updateNote() {
-            const result = await noteService.updateNote(this.title,this.$refs.myEditorUpdate.getHTML(),this.user.id,this.id)
-            if (result.status == 200) {
+            this.titleFocused = true
+            this.editFocused = true
+            if (this.title && this.$refs.myEditorUpdate.getText().length > 1) {
+                const result = await noteService.updateNote(this.title, this.$refs.myEditorUpdate.getHTML(), this.user.id, this.id)
+                if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message)
                     this.getNote()
                     this.clearText()
@@ -151,16 +172,14 @@ export default {
                 }
                 else {
                     this.$refs.toast.showToast(result.data.message)
-                }
+                } this.titleFocused = false
+                this.editFocused = false
+            }
         },
         getText(note) {
             this.title = note.title_note;
             this.$refs.myEditorUpdate.setHTML(note.content_note)
             this.id = note.id
-        },
-        clearText() {
-            this.title = ''
-            this.content = ''
         },
         opendropdown() {
             this.showdropdown = !this.showdropdown

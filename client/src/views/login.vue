@@ -69,16 +69,29 @@
 
 <script>
 import toast from '../components/toast/toast.vue'
+import userServices from '../plugins/userServices';
 export default {
   data() {
     return {
       itemlogin: '',
       password: '',
       passwordFocused: false,
-      itemFocused: false
+      itemFocused: false,
+      user:''
     }
   },
   components: { toast },
+  mounted()
+  {
+    this.user = userServices.getUserToken()
+    if (this.user.role == 'Admin') {
+      this.$router.push({ name: 'admin' });
+    }
+    else
+    {
+      this.$router.push({name:'home'})
+    }
+  },
   methods: {
     validPassword(password) {
       const re = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;

@@ -79,12 +79,13 @@ const updateInfo = async (req, res) => {
 const updatePassword = async (req, res) => {
   try {
     // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
-    const {id,password,newpassword} = req.body;
+    const {password,newpassword} = req.body;
+    const id = req.params.id
         const existUser = await User.findByPk(id)
         if (existUser){
             const isMatch = await bcrypt.compare(password, existUser.password)
             if (!isMatch) {
-                return res.status(201).json({ message: "Không thành công" })
+                return res.status(201).json({ message: "Mật khẩu cũ không đúng." })
             }
             else{
                 const salt = await bcrypt.genSalt(10);
@@ -92,6 +93,10 @@ const updatePassword = async (req, res) => {
                 await existUser.update({password:hashedPassword})
                 return res.status(200).json({ message: "Thành công" })
             }
+        }
+        else
+        {
+          res.status(202).json({message:'Không tồn tại user này'})
         }
   } catch (error) {
     // xuất lỗi ra trên console

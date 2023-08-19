@@ -248,13 +248,23 @@
 
 <script>
 import '../assets/admin.css'
+import userServices from '../plugins/userServices';
 export default
     {
         data() {
             return {
                 isShow: true,
                 isShowavatar: false,
+                user:''
             };
+        },
+        mounted()
+        {
+          this.user = userServices.getUserToken()
+          if(this.user.role != 'Admin')
+          {
+            this.$router.push({ name: 'login' });
+          }
         },
         methods:
         {
