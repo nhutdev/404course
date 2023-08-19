@@ -68,7 +68,7 @@ const addCourse = async (req, res) => {
         title_course: title_course,
         description_course: description_course,
         img_course: img_course,
-        status: false,
+        status: true,
       });
       if (course) {
         res.status(200).json({ message: "Thêm thành công khóa học", course });

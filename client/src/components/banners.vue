@@ -1,11 +1,12 @@
 <template>
-    <div class="mx-auto container">
+    <div class="px-2 py-2">
         <swiper :pagination="true" :modules="modules" class="mySwiper" :autoplay="{ delay: 1000 }">
         <swiper-slide v-for="banner in banners">
-        <div class=" py-8 px-6 xl:px-0 flex  flex-col">
-            <div class="flex justify-between bg-gray-50  items-stretch flex-row">
-                <div class="flex items-center bg-gray-800 dark:bg-white justify-center">
-                    <p class="transform flex flex-shrink-0 -rotate-90 text-2xl font-semibold tracking-wide leading-normal text-white dark:text-gray-800">404Learn</p>
+        <div class=" py-8 px-6 xl:px-0 flex  flex-col ">
+            <div class="flex justify-between bg-gray-50  items-stretch flex-row  ">
+                
+                <div class="flex items-center justify-center bg-gradient-to-r from-violet-500 to-fuchsia-500">
+                    <p class="transform flex flex-shrink-0 -rotate-90 text-2xl font-semibold tracking-wide leading-normal text-white ">404Learn</p>
                 </div>
                 <div class="flex justify-center items-start flex-col xl:w-2/5 md:w-5/12 xl:px-7 px-6 md:px-0 md:py-0 py-5 ">
                     <div>
@@ -16,8 +17,8 @@
                     </div>
                 </div>
                 <div class="hidden md:block h-44 md:h-60 xl:h-72">
-                    <img class="hidden h-full xl:block" :src="banner.img_url" alt="pexels-dmitry-zvolskiy-2082090-1" />
-                    <img class="xl:hidden h-full" :src="banner.img_url" alt="pexels-dmitry-zvolskiy-2082090-1-1" />
+                    <img class="hidden h-full xl:block " :src="banner.img_url" alt="pexels-dmitry-zvolskiy-2082090-1" />
+                    <img class="xl:hidden h-full " :src="banner.img_url" alt="pexels-dmitry-zvolskiy-2082090-1-1" />
                     
                 </div>
             </div>

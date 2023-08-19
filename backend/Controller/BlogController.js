@@ -19,7 +19,7 @@ const getBlog = async (req, res) => {
         where:{status:status},
         order: [["id", "DESC"]],
         include: [
-            { model: User, attributes: ['id', 'fullname'] },
+            { model: User, attributes: ['id', 'fullname','avatar'] },
             { model: Tag, attributes: ['id', 'nametag','status'] },
         ],
         offset: offset,
@@ -41,6 +41,22 @@ const getBlog = async (req, res) => {
   }
 };
 
+const getBlogByID = async (req,res)=>{
+ try {
+  const blogs = await Blog.findAll({
+    attributes: ['id', 'title_blog', 'content_blog', 'status', 'img_blog', 'createdAt', 'updatedAt'],
+    where:{id:req.params.id},
+    order: [["id", "DESC"]],
+    include: [
+        { model: User, attributes: ['id', 'fullname','avatar'] },
+        { model: Tag, attributes: ['id', 'nametag','status'] },
+    ],
+});
+res.json(blogs)
+ } catch (error) {
+  console.log(error)
+ }
+}
 // hàm xử lý thêm blog
 const addBlog = async (req, res) => {
   try {
@@ -55,7 +71,7 @@ const addBlog = async (req, res) => {
           title_blog: title_blog,
           content_blog: content_blog,
           img_blog:img_blog,
-          status: false,
+          status: true,
         });
         return res.status(200).json({ message: "Tạo blog thành công!" });
       } else {
@@ -149,11 +165,30 @@ const getlike = async (req, res) => {
     console.log(error);
   }
 };
-
+const  getlikebyId = async (req, res) => {
+  try {
+    const id =req.params.id
+    const like = await Like.findAll({where:{id_blog:id}});
+    res.status(200).json(like);
+  } catch (error) {
+    // trả thông báo lỗi về console
+    console.log(error);
+  }
+};
 const get_saveBlog = async (req, res) => {
   try {
     const save = await Save.findAll();
-    res.status(400).json(save);
+    res.json(save);
+  } catch (error) {
+    // trả thông báo lỗi về console
+    console.log(error);
+  }
+};
+const get_saveBlogByID = async (req, res) => {
+  try {
+    const id =req.params.id
+    const save = await Save.findAll({where:{id_blog:id}});
+    res.json(save);
   } catch (error) {
     // trả thông báo lỗi về console
     console.log(error);
@@ -199,13 +234,27 @@ const getComment = async (req, res) => {
     console.log(error);
   }
 };
+const getCommentbyid= async (req, res) => {
+  try {
+    const id = req.params.id
+    const cmt = await Comment.findAll({where:{id_blog:id}, include: [
+      { model: User, attributes: ['id', 'fullname','avatar'] },
+     
+  ],}
+     );
+    res.status(200).json(cmt);
+  } catch (error) {
+    // trả thông báo lỗi về console
+    console.log(error);
+  }
+};
 // Thực hiện comment
 const addComment = async (req, res) => {
   try {
     const { comment, id_blog, id_user } = req.body;
     const exsitBlog = await Blog.findByPk(id_blog);
-    const exsitUser = await User.findByPk(id_user);
-    if (exsitBlog && exsitUser) {
+    const existUser = await User.findByPk(id_user)
+    if (exsitBlog && existUser ) {
       await Comment.create({
         id_blog: id_blog,
         id_user: id_user,
@@ -224,22 +273,26 @@ const addComment = async (req, res) => {
 // Thực hiện xóa comment
 const deleteComment = async (req, res) => {
   try {
-    // nhận vào id của  comment
     const id = req.params.id;
+    
+    // Tìm và xóa các reply có reply_id bằng id của comment
+    await Comment.destroy({
+      where: {
+        reply_id: id
+      }
+    });
+
+    // Tìm và xóa comment chính dựa trên id
     const exitCmt = await Comment.findByPk(id);
-    const exitReply = await Comment.findAll({ id_reply: id });
     if (exitCmt) {
-      exitReply.forEach((element) => {
-        element.destroy();
-      });
       await exitCmt.destroy();
       res.status(200).json({ message: "Xóa bình luận thành công" });
     } else {
       res.status(202).json({ message: "Bình luận không tồn tại" });
     }
   } catch (error) {
-    // trả thông báo lỗi về console
     console.log(error);
+    res.status(500).json({ message: "Đã có lỗi xảy ra" });
   }
 };
 // Thực hiện cập nhập
@@ -251,7 +304,7 @@ const updateComment = async (req, res) => {
     const exitCmt = await Comment.findByPk(id);
     if (exitCmt) {
       exitCmt.comment = comment;
-      await Comment.save();
+      await exitCmt.save();
       res.status(200).json({ message: "Cập nhập bình luận thành công" });
     } else {
       res.status(202).json({ message: "Bình luận không tồn tại" });
@@ -261,17 +314,32 @@ const updateComment = async (req, res) => {
     console.log(error);
   }
 };
+const get_replyComment = async(req,res)=>{
+  try {
+    const id = req.params.id
+    const cmt = await Comment.findAll({where:{reply_id:id}, include: [
+      { model: User, attributes: ['id', 'fullname','avatar'] },
+     
+  ],}
+     );
+    res.status(200).json(cmt);
+  } catch (error) {
+    // trả thông báo lỗi về console
+    console.log(error);
+  }
+}
 // Thực hiện reply comment
 const add_replyComment = async (req, res) => {
   try {
     const id = req.params.id; // id comment cap 1
-    const { comment, id_user } = req.body;
+    const { comment, id_user ,id_blog} = req.body;
     const exits = await Comment.findByPk(id);
     if (exits) {
       await Comment.create({
         comment: comment,
         id_user: id_user,
-        id_reply: id,
+        id_blog:id_blog,
+        reply_id: id,
       });
       res.status(200).json({ message: "Bình luận thành công" });
     } else {
@@ -339,4 +407,9 @@ module.exports = {
   add_replyComment,
   delete_replyComment,
   update_replyComment,
+  getBlogByID,
+  getlikebyId,
+  get_saveBlogByID,
+  getCommentbyid,
+  get_replyComment
 };

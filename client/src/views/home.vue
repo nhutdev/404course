@@ -1,14 +1,13 @@
 <template>
   <navbar />
   <router-view/>
-  <footervue />
 </template>
 
 <script>
 
 import navbar from '../components/header/navbar.vue'
 import userService from '../plugins/userServices';
-import footervue from '../components/footer.vue';
+
 export default {
   data() {
     return {
@@ -18,10 +17,10 @@ export default {
   mounted() {
     this.user = userService.getUserToken()
     if (this.user.role == 'Admin') {
-      this.$router.push({ name: 'login' });
+      this.$router.push({ name: 'admin' });
     }
   },
-  components: { navbar, footervue },
+  components: { navbar },
 }
 
 

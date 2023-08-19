@@ -92,7 +92,7 @@
 <script>
 import dayjs from 'dayjs';
 import toast from '../../components/toast/toast.vue';
-import userService from '../../plugins/userService';
+import userService from '../../plugins/userServices';
 import adminService from '../../plugins/adminService'
 export default {
     data() {

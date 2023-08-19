@@ -85,17 +85,19 @@
 
     </div>
   </div>
+  <changePass v-if="showChange" @cancel="onShowChange"/>
+  <toast ref="toast"></toast>
  </template>
  
  <script>
  import userService from '../../plugins/userServices'
+ import changePass from '../../components/changePass.vue'
+ import toast from '../toast/toast.vue'
  export default {
    data() {
      return {
-       showdropdown: false,
-       showCreator:false,
-       user: '',
-       hidden: false,
+       showdropdown: false,showCreator:false,showChange:false,hidden: false,
+       user: '',   
        routes: [
          { path: "/home", name: "Trang chủ" },
          { path: "/home/note", name: "Ghi chú" },
@@ -103,6 +105,7 @@
        ]
      }
    },
+   components:{toast,changePass},
    mounted() {
      this.user = userService.getUserToken()
      if(this.user.role == 'Creator')
@@ -117,6 +120,10 @@
      },
      handleNavbar() {
        this.hidden = !this.hidden
+     },
+     onShowChange()
+     {
+      this.showChange = !this.showChange
      },
      outWeb() {
        localStorage.removeItem('token');

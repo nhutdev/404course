@@ -57,7 +57,7 @@ const addTag = async (req, res) => {
         }
         else {
             await Tag.create({ nametag: nametag, status: false })
-            res.status(201).json({ message: 'Thêm thành công' })
+            res.status(200).json({ message: 'Thêm thành công' })
         }
     } catch (error) {
         console.log(error)
@@ -85,10 +85,6 @@ const updateTag = async (req, res) => {
         const id = req.params.id;
         const { nametag } = req.body
         const exits = await Tag.findByPk(id);
-        const exitsBlog = await Blog.findOne({ where: { id_tag: id } })
-        if (exitsBlog) {
-            res.status(202).json({ message: 'Tag đang dùng bởi blog, không thể cập nhập' })
-        }
         if (exits) {
             exits.nametag = nametag
             await exits.save();
@@ -190,7 +186,7 @@ const updateRole = async (req, res) => {
         const id = req.params.id;
         const { name_role } = req.body
         const exits = await Role.findByPk(id);
-        const exitsUsed = await User_role.findAll({ where: { id_role: id } })
+        const exitsUsed = await User_role.findOne({ where: { id_role: id } })
         if (exitsUsed) {
             res.status(202).json({ message: 'Role đang được dùng ,không thể cập nhập' })
         }
@@ -211,7 +207,7 @@ const deleteRole = async (req, res) => {
     try {
         const id = req.params.id;
         const exits = await Role.findByPk(id);
-        const exitsUsed = await User_role.findAll({ where: { id_role: id } })
+        const exitsUsed = await User_role.findOne({ where: { id_role: id } })
         if (exitsUsed) {
             res.status(202).json({ message: 'Role đang được dùng ,không thể cập nhập' })
         }
@@ -230,8 +226,9 @@ const deleteRole = async (req, res) => {
 // change role
 const changeRole = async (req, res) => {
     try {
-        const { id_role, id_user } = req.body
-        const exits = await User_role.findOne({ where: { id_role, id_user } })
+        const { id_role, id_user,id_ur } = req.body
+        const exits = await User_role.findByPk(id_ur)
+       
         if (exits) {
             exits.id_role = id_role
             exits.id_user = id_user
