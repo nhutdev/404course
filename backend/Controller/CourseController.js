@@ -1,13 +1,13 @@
 const db = require("../models");
-const Course = db.course
-const User = db.user
-const Index = db.index_course
-const Index_Content = db.content_index_course
+const Course = db.course;
+const User = db.user;
+const Index = db.index_course;
+const Index_Content = db.content_index_course;
 const ITEMS_PER_PAGE = 5; // Số lượng mục trên mỗi trang
 
 const getAll = async (req, res) => {
   try {
-    const status = req.query.status
+    const status = req.query.status;
     const page = parseInt(req.query.page) || 1; // Trang hiện tại từ query string, mặc định là trang 1
 
     const offset = (page - 1) * ITEMS_PER_PAGE;
@@ -22,7 +22,7 @@ const getAll = async (req, res) => {
         "createdAt",
         "updatedAt",
       ],
-      where:{status:status},
+      where: { status: status },
       order: [["id", "DESC"]],
       include: [
         { model: User, attributes: ["id", "fullname"] },
@@ -48,20 +48,19 @@ const getAll = async (req, res) => {
     const totalItems = courses.count;
     const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-        res.json({
-            courses: courses.rows,
-            currentPage: page,
-            totalPages: totalPages
-        });
-    } catch (error) {
-        console.log(error);
-    }
-}
+    res.json({
+      courses: courses.rows,
+      currentPage: page,
+      totalPages: totalPages,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const addCourse = async (req, res) => {
   try {
-    const { id_user, title_course, description_course, img_course } =
-      req.body;
+    const { id_user, title_course, description_course, img_course } = req.body;
     const exitst = await User.findByPk(id_user);
     if (exitst) {
       const course = await Course.create({
