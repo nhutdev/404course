@@ -24,15 +24,21 @@
                         <input type="text" id="title" v-model="course_title"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Nhập tiêu đề" required>
-
+                        <p class="text-red-500 m-2" v-if="!course_title && course_titleFocused">- Vui lòng nhập tiêu đề</p>
+                        <p class="text-red-500 m-2" v-if="course_title.length < 6 && course_titleFocused">- Nhập lớn 6</p>
                         <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Mô
                             tả</label>
                         <input type="text" id="description" v-model="course_description"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Nhập mô tả" required>
+                        <p class="text-red-500 m-2" v-if="!course_description && course_descriptionFocused">Vui lòng nhập mô
+                            tả</p>
+                        <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Đường
+                            dẫn ảnh mạng:</label>
+                        <input placeholder="Nhập nội dung đường ảnh" type="text" id="head" name="head" v-model="img_course"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                        <p class="text-red-500 m-2" v-if="!img_course && img_courseFocused">Vui lòng nhập đường dẫn ảnh</p>
 
-                        <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Đường dẫn ảnh mạng:</label>
-                        <input type="text" id="head" name="head" v-model="img_course" />
                     </div>
                 </div>
 
@@ -142,37 +148,47 @@
                 </div>
                 <div class="modal-footer">
                     <div class="py-4 px-4">
-                        
+
                         <div class="mt-8 bg-white p-4 shadow rounded-lg" v-for="index in index_courses">
-                <h2 class="text-gray-500 text-lg font-semibold pb-4">{{ index.title_index }}</h2>
-                <div class="my-1"></div> 
-                <div class="bg-gradient-to-r from-cyan-300 to-cyan-500 h-px mb-6"></div> 
-                <table class="w-full table-auto text-sm">
-                    <thead>
-                        <tr class="text-sm leading-normal">
-                            <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Tiêu đề</th>
-                            <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Kiểu tài liệu</th>
-                            <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Nội dung</th>
-                            <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-rose-300 border-b border-grey-light">X</th>                       
-                        </tr>
-                    </thead>
-                    <tbody v-for="content in index_contents.filter(item => item.id_index == index.id)">
-                        <tr class="hover:bg-grey-lighter">
-                            <td class="py-2 px-4 border-b border-grey-light">{{ content.title_content }}</td>
-                            <td class="py-2 px-4 border-b border-grey-light">{{ content.type }}</td>
-                            <td class="py-2 px-4 border-b border-grey-light" v-if="content.type == 'video'">{{ content.link_video }}</td>
-                            <td class="py-2 px-4 border-b border-grey-light" v-if="content.type == 'document'">{{ content.description_content }}</td>
-                             <td class="py-2 px-4 border-b border-grey-light">
-                                <button type="button"
-                                        class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 "
-                                        @click="deleteContent(content.id)">X</button>
-                             </td>
-                        </tr>
-                    </tbody>
-                </table>
-               
-                
-            </div>
+                            <h2 class="text-gray-500 text-lg font-semibold pb-4">{{ index.title_index }}</h2>
+                            <div class="my-1"></div>
+                            <div class="bg-gradient-to-r from-cyan-300 to-cyan-500 h-px mb-6"></div>
+                            <table class="w-full table-auto text-sm">
+                                <thead>
+                                    <tr class="text-sm leading-normal">
+                                        <th
+                                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                                            Tiêu đề</th>
+                                        <th
+                                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                                            Kiểu tài liệu</th>
+                                        <th
+                                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                                            Nội dung</th>
+                                        <th
+                                            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-rose-300 border-b border-grey-light">
+                                            X</th>
+                                    </tr>
+                                </thead>
+                                <tbody v-for="content in index_contents.filter(item => item.id_index == index.id)">
+                                    <tr class="hover:bg-grey-lighter">
+                                        <td class="py-2 px-4 border-b border-grey-light">{{ content.title_content }}</td>
+                                        <td class="py-2 px-4 border-b border-grey-light">{{ content.type }}</td>
+                                        <td class="py-2 px-4 border-b border-grey-light" v-if="content.type == 'video'">{{
+                                            content.link_video }}</td>
+                                        <td class="py-2 px-4 border-b border-grey-light" v-if="content.type == 'document'">
+                                            {{ content.description_content }}</td>
+                                        <td class="py-2 px-4 border-b border-grey-light">
+                                            <button type="button"
+                                                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 "
+                                                @click="deleteContent(content.id)">X</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                        </div>
                     </div>
                 </div>
 
@@ -306,6 +322,7 @@ export default {
             content_title: '', content_description: '', content_link: '', content_type: '',
             show_Video: false, show_Content: false,
             isShowAddIndex: false, isShowAddContent: false,
+            course_titleFocused: false, course_descriptionFocused: false, img_courseFocused: false
         };
     },
     mounted() {
@@ -318,11 +335,11 @@ export default {
             this.$emit("cancel");
         },
         async addCourse() {
-            try {
-                if (this.course_title == '' || this.course_description == '') {
-                    this.$refs.toast.showToast('Vui lòng nhập dữ liệu')
-                }
-                else {
+            this.course_titleFocused = true
+            this.course_descriptionFocused = true
+            this.img_courseFocused = true
+            if (this.course_title && this.course_description && this.img_course) {
+                try {
                     const result = await this.$axios.post(`course/add`, {
                         "id_user": this.user.id,
                         "title_course": this.course_title,
@@ -340,10 +357,15 @@ export default {
                     else {
                         this.$refs.toast.showToast(result.data.message)
                     }
+                    this.course_titleFocused = false
+                    this.course_descriptionFocused = false
+                    this.img_courseFocused = false
+
+                } catch (error) {
+                    console.log(error)
                 }
-            } catch (error) {
-                console.log(error)
             }
+
         },
 
         addAllIndex() {
@@ -358,12 +380,10 @@ export default {
         },
 
         addAllContent() {
-            if(this.index_contents.length >0)
-            {
+            if (this.index_contents.length > 0) {
                 this.onclose()
             }
-            else
-            {
+            else {
                 this.$refs.toast.showToast('Vui lòng nhập ít nhất 1 nội dung để hoàn thành.')
 
             }
@@ -467,7 +487,7 @@ export default {
         oncloseAddContent() {
             this.isShowAddContent = !this.isShowAddContent
         }
-        
+
     },
 };
 </script>
