@@ -66,7 +66,8 @@
                     </td>
 
                     <td class="border-t">
-                        <span class="text-gray-700 px-6 py-4 flex items-center"><img class="w-10 h-10" :src="banner.img_url"  alt=""></span>
+                        <span class="text-gray-700 px-6 py-4 flex items-center"><img class="w-10 h-10" :src="banner.img_url"
+                                alt=""></span>
                     </td>
 
                     <td class="border-t">
@@ -102,16 +103,19 @@
 
             <div class="px-4">
                 <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên banner</label>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 ">Tiêu đề banner</label>
                     <input type="text"
                         class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
                         v-model="title_banner" required>
+                    <p class="text-red-500 text-sm ml-2" v-if="!title_banner && titleFocused">Nhập tiêu đề banner</p>
+
                 </div>
                 <div>
                     <label for="img-file">
                         <i class="text-violet-500 uil-image-plus text-2xl"></i>
-                        <input id="img-file" type="file" @change="onFileSelected"  hidden
-                            accept=".png, .jpeg, .gif, .jpg" />
+                        <input id="img-file" type="file" @change="onFileSelected" hidden accept=".png, .jpeg, .gif, .jpg" />
+                        <p class="text-red-500 text-sm ml-2" v-if="!avatar && avatarFocused">Vui lòng tải ảnh</p>
+
                     </label>
                 </div>
             </div>
@@ -139,16 +143,18 @@
 
             <div class="px-4">
                 <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-900 ">Tên banner</label>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 ">Tiêu đề banner</label>
                     <input type="text"
                         class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
                         v-model="title_banner" required>
+                    <p class="text-red-500 text-sm ml-2" v-if="!title_banner && titleFocused">Nhập tiêu đề banner</p>
+
                 </div>
                 <div>
                     <label for="img-file">
                         <i class="text-violet-500 uil-image-plus text-2xl"></i>
-                        <input id="img-file" type="file" @change="onFileSelected"  hidden
-                            accept=".png, .jpeg, .gif, .jpg" />
+                        <input id="img-file" type="file" @change="onFileSelected" hidden accept=".png, .jpeg, .gif, .jpg" />
+
                     </label>
                 </div>
             </div>
@@ -202,12 +208,9 @@ export default
         data() {
             return {
                 banners: [],
-                title_banner: '',
-                id: '',
-                avatar: '',
-                isShowAdd: false,
-                isShowUpdate: false,
-                isShowdelete: false
+                title_banner: '', id: '', avatar: '',
+                isShowAdd: false, isShowUpdate: false, isShowdelete: false,
+                titleFocused: false, avatarFocused: false
             }
         },
         components: {
@@ -219,34 +222,39 @@ export default
         methods: {
             select(banner) {
                 this.title_banner = banner.title_banner,
-                this.id = banner.id
+                    this.id = banner.id
             },
             onFileSelected(event) {
                 this.avatar = event.target.files[0]
             },
             async addbanner() {
-                if (this.avatar) {
-                const formData = new FormData();
-                formData.append('avatar', this.avatar);
-                formData.append('title_banner',this.title_banner)
-                try {
-                    const response = await this.$axios.post(`banner/add`, formData,{
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
+                this.titleFocused = true
+                this.avatarFocused = true
+
+                if (this.avatar && this.title_banner) {
+                    const formData = new FormData();
+                    formData.append('avatar', this.avatar);
+                    formData.append('title_banner', this.title_banner)
+                    try {
+                        const response = await this.$axios.post(`banner/add`, formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        });
+                        if (response.status == 200) {
+                            this.$refs.toast.showToast(response.data.message)
+                            this.getbanner()
+                            this.onclose()
                         }
-                    });
-                    if (response.status == 200) {
-                        this.$refs.toast.showToast(response.data.message)
-                       this.getbanner()
+                        else {
+                            this.$refs.toast.showToast(response.data.message)
+                        }
+                        this.titleFocused = false
+                        this.avatarFocused = false
+                    } catch (error) {
+                        console.error(error);
                     }
-                    else
-                    {
-                        this.$refs.toast.showToast(response.data.message)
-                    }
-                } catch (error) {
-                    console.error(error);
                 }
-            }
             },
             async getbanner() {
                 try {
@@ -259,26 +267,33 @@ export default
                 }
             },
             async updatebanner() {
-               
-                const formData = new FormData();
-                formData.append('avatar', this.avatar);
-                formData.append('title_banner',this.title_banner)
-                try {
-                    const response = await this.$axios.put(`banner/update/${this.id}`, formData,{
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
+                this.titleFocused = true
+
+
+                if (this.title_banner) {
+                    const formData = new FormData();
+                    formData.append('avatar', this.avatar);
+                    formData.append('title_banner', this.title_banner)
+                    try {
+                        const response = await this.$axios.put(`banner/update/${this.id}`, formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        });
+                        if (response.status == 200) {
+                            this.$refs.toast.showToast(response.data.message)
+                            this.getbanner()
+                            this.oncloseUpdate()
                         }
-                    });
-                    if (response.status == 200) {
-                        this.$refs.toast.showToast(response.data.message)
-                       this.getbanner()
+                        else {
+                            this.$refs.toast.showToast(response.data.message)
+                        }
+                        this.titleFocused = false
+
+
+                    } catch (error) {
+                        console.error(error);
                     }
-                    else
-                    {
-                        this.$refs.toast.showToast(response.data.message)
-                    }
-                } catch (error) {
-                    console.error(error);
                 }
             },
             async deletebanner() {

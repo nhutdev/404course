@@ -57,7 +57,7 @@ const addTag = async (req, res) => {
         }
         else {
             await Tag.create({ nametag: nametag, status: false })
-            res.status(201).json({ message: 'Thêm thành công' })
+            res.status(200).json({ message: 'Thêm thành công' })
         }
     } catch (error) {
         console.log(error)
@@ -85,10 +85,6 @@ const updateTag = async (req, res) => {
         const id = req.params.id;
         const { nametag } = req.body
         const exits = await Tag.findByPk(id);
-        const exitsBlog = await Blog.findOne({ where: { id_tag: id } })
-        if (exitsBlog) {
-            res.status(202).json({ message: 'Tag đang dùng bởi blog, không thể cập nhập' })
-        }
         if (exits) {
             exits.nametag = nametag
             await exits.save();

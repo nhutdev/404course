@@ -85,11 +85,11 @@ export default {
   {
     this.user = userServices.getUserToken()
     if (this.user.role == 'Admin') {
-      this.$router.push({ name: 'admin' });
+      this.$router.push({ path: '/admin/' })
     }
     else
     {
-      this.$router.push({name:'home'})
+      this.$router.push({ path: '/home/' })
     }
   },
   methods: {

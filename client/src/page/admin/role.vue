@@ -143,7 +143,8 @@
                     </td>
                     <td class="border-t flex">
                         <span
-                            class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" @click="deleteUR(roleuser.id)">Xóa</span>
+                            class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                            @click="deleteUR(roleuser.id)">Xóa</span>
                         <span
                             class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                             @click="onshowUserRole(); sendUR(roleuser)">Cập
@@ -194,6 +195,8 @@
                     <input type="text"
                         class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
                         v-model="rolename" required>
+                    <p class="text-red-500 text-sm ml-2" v-if="!rolename && nameFocused">Phân quyền đang bị trống.</p>
+
                 </div>
             </div>
 
@@ -224,6 +227,8 @@
                     <input type="text"
                         class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
                         v-model="rolename" required>
+                    <p class="text-red-500 text-sm ml-2" v-if="!rolename && nameFocused">Phân quyền đang bị trống.</p>
+
                 </div>
             </div>
 
@@ -257,6 +262,8 @@
                             {{ user.fullname }}
                         </option>
                     </select>
+                    <p class="text-red-500 text-sm ml-2" v-if="!userid && useridFocused">Vui lòng chọn 1 user.</p>
+
                 </div>
                 <div>
                     <label for="" class="m-2 text-base">Loại phân quyền</label>
@@ -266,6 +273,8 @@
                             {{ role.name_role }}
                         </option>
                     </select>
+                    <p class="text-red-500 text-sm ml-2" v-if="!roleid && roleidFocused">Vui lòng chọn 1 role.</p>
+
                 </div>
 
             </div>
@@ -294,8 +303,9 @@ export default {
             roles: [], userRoles: [], users: [],
             page: 1, activeTab: 'role',
             showRole: true, showUserRole: false, isShowUpdateRole: false,
-            isShowAdd: false, isShowUpdateURole: false,
-            roleid: '', rolename: '', userid: '',urid:''
+            isShowAdd: false, isShowUpdateURole: false, nameFocused: false,
+            useridFocused: false, roleidFocused: false,
+            roleid: '', rolename: '', userid: '', urid: ''
         }
     },
     components:
@@ -335,7 +345,7 @@ export default {
         sendUR(ur) {
             this.roleid = ur.id_role
             this.userid = ur.id_user
-            this.urid=ur.id
+            this.urid = ur.id
         },
         getRole() {
             adminService.getRole().then((data) => { this.roles = data });
@@ -362,41 +372,57 @@ export default {
             }
         },
         async updateRole() {
-            const result = await adminService.updateRole(this.roleid, this.rolename);
-            if (result.status == 200) {
-                this.getRole()
-                this.$refs.toast.showToast(result.data.message)
-                this.showURole()
+            this.nameFocused = true
+            if (this.rolename) {
+                const result = await adminService.updateRole(this.roleid, this.rolename);
+                if (result.status == 200) {
+                    this.getRole()
+                    this.$refs.toast.showToast(result.data.message)
+                    this.showURole()
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
+                this.nameFocused = false
             }
-            else {
-                this.$refs.toast.showToast(result.data.message)
-            }
+
         },
         async addrole() {
-            const result = await adminService.addRole(this.rolename);
-            if (result.status == 200) {
-                this.getRole()
-                this.$refs.toast.showToast(result.data.message)
-                this.onclose()
+            this.nameFocused = true
+            if (this.rolename) {
+                const result = await adminService.addRole(this.rolename);
+                if (result.status == 200) {
+                    this.getRole()
+                    this.$refs.toast.showToast(result.data.message)
+                    this.onclose()
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
+                this.nameFocused = false
             }
-            else {
-                this.$refs.toast.showToast(result.data.message)
-            }
+
         },
-       async  updateUserRole() {
-            const result = await adminService.updateUR(this.roleid,this.userid, this.urid);
-            if (result.status == 200) {
-                this.showUserRole = true
-                adminService.getUserRole(this.page).then((data) => { this.userRoles = data })
-                this.$refs.toast.showToast(result.data.message)
-                this.onshowUserRole()
+        async updateUserRole() {
+            this.useridFocused = true
+            this.roleidFocused = true
+            if (this.userid && this.roleid) {
+                const result = await adminService.updateUR(this.roleid, this.userid, this.urid);
+                if (result.status == 200) {
+                    this.showUserRole = true
+                    adminService.getUserRole(this.page).then((data) => { this.userRoles = data })
+                    this.$refs.toast.showToast(result.data.message)
+                    this.onshowUserRole()
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
+                this.useridFocused = false
+                this.roleidFocused = false
             }
-            else {
-                this.$refs.toast.showToast(result.data.message)
-            }
+
         },
-        async deleteUR(id)
-        {
+        async deleteUR(id) {
             const result = await adminService.deleteUR(id);
             if (result.status == 200) {
                 adminService.getUserRole(this.page).then((data) => { this.userRoles = data })
