@@ -43,9 +43,10 @@
             <section>
                 <h1 class="text-3xl font-bold text-gray-600 mb-10">Danh sách khóa học</h1>
                 <!--khóa học-->
-                <div class="mt-6 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-8 " v-for="course in courses">
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-8 ">
                     <!-- chi tiet -->
-                    <div class="relative w-full h-64 bg-cover bg-center group rounded-lg overflow-hidden shadow-lg hover:shadow-3xl  transition duration-300 ease-in-out "
+                    <div  v-for="course in courses">
+                        <div class="relative w-full h-64 bg-cover bg-center group rounded-lg overflow-hidden shadow-lg hover:shadow-3xl  transition duration-300 ease-in-out "
                         v-bind:style="{ 'background-image': 'url(' + course.img_course + ')' }">
                         <div
                             class="absolute inset-0 bg-black bg-opacity-50 group-hover:opacity-75 transition duration-300 ease-in-out">
@@ -60,7 +61,9 @@
                                 class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Chỉnh
                                 sửa</button>
                         </div>
-                    </div>   
+                    </div>
+                    </div>
+                       
                 </div>
 
                 <!--chi muc-->
@@ -83,59 +86,18 @@
                     </nav>
                 </div>
             </section>
-
-            <!--edit course-->
-            <div class=" fixed w-full h-full top-0 left-0 flex items-center justify-center z-50 " v-show="ShowEdit">
-                <div class="absolute w-full h-full bg-gray-900 opacity-50" @click="openEdit"></div>
-
-                <div class=" bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto ">
-                    <div class="flex flex-row py-3 px-4">
-                        <h5 class="text-lg font-semibold flex-grow">Cập nhập khóa học</h5>
-                        <i class="uil-multiply flex-none cursor-pointer bg-gray-400 rounded-xl" @click="openEdit"></i>
-                    </div>
-                    <div class="px-4">
-                        <div v-for="(index, i) in getcourse.index_courses">
-                            <div class="flex w-full h-10 bg-white rounded-md justify-between shadow-lg shadow-grey-500/50 border-solid border-2"
-                                @click="ShowIndex()">
-                                <div class="p-2 flex items-center">
-                                    <i class="fa-solid fa-plus font-bold text-base mr-2" v-if="isShowIndex"></i>
-                                    <i class="fa-solid fa-minus" v-if="!isShowIndex"></i>
-                                    <h3 class="font-bold text-base ml-2" v-if="isShowIndex"> {{ i + 1 + '.' + ' ' +
-                                        index.title_index }}</h3>
-                                </div>
-                                <div class="p-2">
-                                    <h3 class="font-bold text-base">{{ sumcontent(index.content_index_courses) }} bài học</h3>
-                                </div>
-
-                            </div>
-                            <!--lisst content index-->
-                            <ol class=" flex items-center p-5" v-if="!isShowIndex" v-for="(content,i) in index.content_index_courses" >
-                                <li>{{i + 1 + '.' + ' '+ content.title_content }}</li>
-                                <li v-if="content.type == 'document'">{{  content.description_content }}</li> 
-                                <li v-if="content.type == 'video'"><iframe id="youtubeFrame" src="https://www.youtube.com/embed/y881t8ilMyc" frameborder="0" allowfullscreen></iframe>
- </li> 
-                            </ol>
-                        </div>
-                    </div>
-                    <div class="py-3 px-4">
-
-                        <button
-                            class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer"
-                            @click="openEdit()">Đóng</button>
-                    </div>
-                </div>
-            </div>
-
         </main>
         
     </body>
     <createCourse v-if="is_showcreate" @cancel="Showcreate()" />
+    <editCourses v-if="ShowEdit" @cancel="openEdit()" :courseid="this.id_course"/>
 </template>
 
 <script>
-import userService from '../plugins/userServices';
 import createCourse from '../page/creator/createCourses.vue';
+import userService from '../plugins/userServices';
 import courseService from '../plugins/courseService';
+import editCourses from '../page/creator/editCourses.vue';
 export default {
     data() {
         return {
@@ -143,16 +105,17 @@ export default {
             user: '',
             courses: [],
             page: 1,
-            status: 0,
+            status:1,
             isShowIndex: true,
             getcourse: '',
-            ShowEdit: false
+            ShowEdit: false,
+            id_course:''
         }
     },
-    components: { createCourse },
+    components: { createCourse,editCourses },
     mounted() {
         this.user = userService.getUserToken()
-        courseService.getCourse(this.page, this.status).then((data) => { this.courses = data.courses.filter(item => item.status == this.status) });
+        courseService.getCourse(this.page, this.status).then((data) => { this.courses = data.courses});
         console.log(this.courses)
         if (this.user.role != 'Creator') {
             this.$router.push({ name: 'login' });
@@ -169,6 +132,7 @@ export default {
             this.ShowEdit = !this.ShowEdit
         }, sendData(course) {
             this.getcourse = course
+            this.id_course = course.id
         },
         sumcontent(content) {
             let sum = 0;

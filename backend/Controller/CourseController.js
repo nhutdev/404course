@@ -58,6 +58,15 @@ const getAll = async (req, res) => {
   }
 };
 
+const getByid = async (req,res)=>{
+  try {
+    const id = req.params.id
+    const result = await Course.findOne({where:{id}})
+    res.json(result)
+  } catch (error) {
+    console.log(error)
+  }
+}
 const addCourse = async (req, res) => {
   try {
     const { id_user, title_course, description_course, img_course } = req.body;
@@ -88,6 +97,8 @@ const updateCourse = async (req, res) => {
     const exits = await Course.findByPk(id);
     if (exits) {
       await exits.update({ title_course, description_course, img_course });
+      res.status(200).json({ message: "Cập nhập thành công khóa học" });
+
     } else {
       res.status(202).json({ message: "Không tồn tại khóa học này" });
     }
@@ -159,8 +170,7 @@ const updateIndex = async (req, res) => {
     if (exits) {
       await exits.update({
         title_index: title_index,
-        description_index: d,
-        description_index,
+        description_index: description_index,
       });
       res.status(200).json({ message: "Cập nhập thành công chỉ mục" });
     } else {
@@ -200,7 +210,15 @@ const getContent = async (req, res) => {
     console.log(error);
   }
 };
-
+const getbyIndex = async (req, res) => {
+  try {
+    const id = req.params.id
+    const get = await Index_Content.findAll({where:{id_index:id}});
+    res.json(get);
+  } catch (error) {
+    console.log(error);
+  }
+};
 const addContent = async (req, res) => {
   try {
     const id = req.params.id;
@@ -226,14 +244,13 @@ const addContent = async (req, res) => {
 const updateContent = async (req, res) => {
   try {
     const id = req.params.id;
-    const { title_content, description_content, type, link_video } = req.body;
+    const { title_content, description_content, link_video } = req.body;
     const exits = await Index_Content.findByPk(id);
     if (exits) {
-      await Index_Content.create({
+      await exits.update({
         id_index: id,
         title_content: title_content,
         description_content: description_content,
-        type: type,
         link_video: link_video,
       });
       res.status(200).json({ message: "Cập nhập thành công nội dung" });
@@ -272,4 +289,6 @@ module.exports = {
   addContent,
   updateContent,
   deleteContent,
+  getByid,
+  getbyIndex
 };

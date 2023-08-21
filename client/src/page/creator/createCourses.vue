@@ -1,100 +1,46 @@
 <template>
-  <div
-    class="fixed w-full h-full top-0 left-0 flex items-center justify-center z-50 overflow-auto"
-  >
+  <div class="fixed w-full h-full top-0 left-0 flex items-center justify-center z-50 overflow-auto">
     <div class="absolute w-full h-full bg-gray-900 opacity-30"></div>
-    <div
-      class="bg-white w-11/12 md:max-w-3xl mx-auto rounded shadow-lg z-50 overflow-y-auto max-h-full"
-    >
+    <div class="bg-white w-11/12 md:max-w-3xl mx-auto rounded shadow-lg z-50 overflow-y-auto max-h-full">
       <!-- thêm khóa học-->
       <div class="course" v-if="isShowCourse">
         <div class="flex flex-row py-2 px-4 bg-violet-300">
           <h5 class="text-lg font-semibold flex-grow text-white">
             Thêm khóa học
           </h5>
-          <button
-            @click="onclose()"
-            type="button"
+          <button @click="onclose()" type="button"
             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-            data-modal-hide="defaultModal"
-          >
-            <svg
-              class="w-3 h-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
+            data-modal-hide="defaultModal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
             </svg>
           </button>
         </div>
 
         <div class="modal-footer">
           <div class="py-4 px-4">
-            <label
-              for="text"
-              class="block mb-2 text-base font-medium text-gray-900 dark:text-white"
-              >Tiêu đề</label
-            >
-            <input
-              type="text"
-              id="title"
-              v-model="course_title"
+            <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Tiêu đề</label>
+            <input type="text" id="title" v-model="course_title"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Nhập tiêu đề"
-              required
-            />
-            <p
-              class="text-red-500 m-2"
-              v-if="!course_title && course_titleFocused"
-            >
+              placeholder="Nhập tiêu đề" required />
+            <p class="text-red-500 m-2" v-if="!course_title && course_titleFocused">
               - Vui lòng nhập tiêu đề
             </p>
-            <p
-              class="text-red-500 m-2"
-              v-if="course_title.length < 6 && course_titleFocused"
-            >
+            <p class="text-red-500 m-2" v-if="course_title.length < 6 && course_titleFocused">
               - Nhập lớn 6
             </p>
-            <label
-              for="text"
-              class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1"
-              >Mô tả</label
-            >
-            <input
-              type="text"
-              id="description"
-              v-model="course_description"
+            <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Mô tả</label>
+            <input type="text" id="description" v-model="course_description"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Nhập mô tả"
-              required
-            />
-            <p
-              class="text-red-500 m-2"
-              v-if="!course_description && course_descriptionFocused"
-            >
+              placeholder="Nhập mô tả" required />
+            <p class="text-red-500 m-2" v-if="!course_description && course_descriptionFocused">
               Vui lòng nhập mô tả
             </p>
-            <label
-              for="text"
-              class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1"
-              >Đường dẫn ảnh mạng:</label
-            >
-            <input
-              placeholder="Nhập nội dung đường ảnh"
-              type="text"
-              id="head"
-              name="head"
-              v-model="img_course"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            />
+            <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Đường dẫn ảnh
+              mạng:</label>
+            <input placeholder="Nhập nội dung đường ảnh" type="text" id="head" name="head" v-model="img_course"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
             <p class="text-red-500 m-2" v-if="!img_course && img_courseFocused">
               Vui lòng nhập đường dẫn ảnh
             </p>
@@ -102,16 +48,10 @@
         </div>
 
         <div class="modal-footer py-3 px-4">
-          <button
-            class="py-2 px-4 bg-violet-300 text-white rounded-lg cursor-pointer mr-4"
-            @click="onclose()"
-          >
+          <button class="py-2 px-4 bg-violet-300 text-white rounded-lg cursor-pointer mr-4" @click="onclose()">
             Đóng
           </button>
-          <button
-            class="py-2 px-4 bg-violet-300 text-white rounded-lg cursor-pointer"
-            @click="addCourse()"
-          >
+          <button class="py-2 px-4 bg-violet-300 text-white rounded-lg cursor-pointer" @click="addCourse()">
             Bước tiếp theo
           </button>
         </div>
@@ -124,72 +64,39 @@
             Thêm chỉ mục
           </h5>
           <div class="flex space-x-6">
-            <span
-              class="cursor-pointer px-4 py-2 bg-violet-500 rounded"
-              @click="oncloseAddIndex()"
-              >+ Thêm chỉ mục</span
-            >
+            <span class="cursor-pointer px-4 py-2 bg-violet-500 rounded" @click="oncloseAddIndex()">+ Thêm chỉ mục</span>
           </div>
-          <button
-            @click="onclose()"
-            type="button"
+          <button @click="onclose()" type="button"
             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-            data-modal-hide="defaultModal"
-          >
-            <svg
-              class="w-3 h-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
+            data-modal-hide="defaultModal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
             </svg>
           </button>
         </div>
 
         <div class="modal-footer">
           <div class="py-4 px-4">
-            <div
-              class="overflow-x-auto bg-white rounded-lg shadow cursor-pointer"
-            >
-              <table
-                class="w-full whitespace-no-wrap bg-white overflow-hidden table-striped"
-              >
+            <div class="overflow-x-auto bg-white rounded-lg shadow cursor-pointer">
+              <table class="w-full whitespace-no-wrap bg-white overflow-hidden table-striped">
                 <thead>
                   <tr class="text-left">
-                    <th
-                      class="px-6 py-3 text-gray-500 font-bold tracking-wider uppercase text-xs"
-                    >
+                    <th class="px-6 py-3 text-gray-500 font-bold tracking-wider uppercase text-xs">
                       STT
                     </th>
-                    <th
-                      class="px-6 py-3 text-gray-500 font-bold tracking-wider uppercase text-xs"
-                    >
+                    <th class="px-6 py-3 text-gray-500 font-bold tracking-wider uppercase text-xs">
                       Tiêu đề
                     </th>
-                    <th
-                      class="px-6 py-3 text-gray-500 font-bold tracking-wider uppercase text-xs"
-                    >
+                    <th class="px-6 py-3 text-gray-500 font-bold tracking-wider uppercase text-xs">
                       Giới thiệu
                     </th>
-                    <th
-                      class="px-6 py-3 text-gray-500 font-bold tracking-wider uppercase text-xs"
-                    ></th>
+                    <th class="px-6 py-3 text-gray-500 font-bold tracking-wider uppercase text-xs"></th>
                   </tr>
                 </thead>
                 <tbody class="text-sm">
-                  <tr
-                    class="focus-within:bg-gray-200 overflow-hidden"
-                    v-for="(index_course, index) in index_courses"
-                    :key="index"
-                  >
+                  <tr class="focus-within:bg-gray-200 overflow-hidden" v-for="(index_course, index) in index_courses"
+                    :key="index">
                     <td class="border-t">
                       <span class="text-gray-700 px-6 py-4 flex items-center">{{
                         index + 1
@@ -207,11 +114,9 @@
                     </td>
                     <td class="border-t">
                       <span class="text-rose-700 px-6 py-4 flex items-center">
-                        <button
-                          type="button"
+                        <button type="button"
                           class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2"
-                          @click="deleteIndex(index_course.id)"
-                        >
+                          @click="deleteIndex(index_course.id)">
                           X
                         </button>
                       </span>
@@ -227,10 +132,7 @@
         </div>
 
         <div class="modal-footer py-3 px-4">
-          <button
-            class="py-2 px-4 bg-violet-300 text-white rounded-lg cursor-pointer"
-            @click="addAllIndex()"
-          >
+          <button class="py-2 px-4 bg-violet-300 text-white rounded-lg cursor-pointer" @click="addAllIndex()">
             Bước tiếp theo
           </button>
         </div>
@@ -243,78 +145,50 @@
             Thêm chỉ mục
           </h5>
           <div class="flex space-x-6">
-            <span
-              class="cursor-pointer px-4 py-2 bg-violet-500 rounded"
-              @click="oncloseAddContent()"
-              >+ Thêm nội dung</span
-            >
+            <span class="cursor-pointer px-4 py-2 bg-violet-500 rounded" @click="oncloseAddContent()">+ Thêm nội
+              dung</span>
           </div>
-          <button
-            @click="onclose()"
-            type="button"
+          <button @click="onclose()" type="button"
             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-            data-modal-hide="defaultModal"
-          >
-            <svg
-              class="w-3 h-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
+            data-modal-hide="defaultModal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
             </svg>
           </button>
         </div>
         <div class="modal-footer">
           <div class="py-4 px-4">
-            <div
-              class="mt-8 bg-white p-4 shadow rounded-lg"
-              v-for="index in index_courses"
-            >
+            <div class="mt-8 bg-white p-4 shadow rounded-lg" v-for="index in index_courses">
               <h2 class="text-gray-500 text-lg font-semibold pb-4">
                 {{ index.title_index }}
               </h2>
               <div class="my-1"></div>
-              <div
-                class="bg-gradient-to-r from-cyan-300 to-cyan-500 h-px mb-6"
-              ></div>
+              <div class="bg-gradient-to-r from-cyan-300 to-cyan-500 h-px mb-6"></div>
               <table class="w-full table-auto text-sm">
                 <thead>
                   <tr class="text-sm leading-normal">
                     <th
-                      class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light"
-                    >
+                      class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
                       Tiêu đề
                     </th>
                     <th
-                      class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light"
-                    >
+                      class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
                       Kiểu tài liệu
                     </th>
                     <th
-                      class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light"
-                    >
+                      class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
                       Nội dung
                     </th>
                     <th
-                      class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-rose-300 border-b border-grey-light"
-                    >
+                      class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-rose-300 border-b border-grey-light">
                       X
                     </th>
                   </tr>
                 </thead>
-                <tbody
-                  v-for="content in index_contents.filter(
-                    (item) => item.id_index == index.id
-                  )"
-                >
+                <tbody v-for="content in index_contents.filter(
+                  (item) => item.id_index == index.id
+                )">
                   <tr class="hover:bg-grey-lighter">
                     <td class="py-2 px-4 border-b border-grey-light">
                       {{ content.title_content }}
@@ -322,24 +196,16 @@
                     <td class="py-2 px-4 border-b border-grey-light">
                       {{ content.type }}
                     </td>
-                    <td
-                      class="py-2 px-4 border-b border-grey-light"
-                      v-if="content.type == 'video'"
-                    >
+                    <td class="py-2 px-4 border-b border-grey-light" v-if="content.type == 'video'">
                       {{ content.link_video }}
                     </td>
-                    <td
-                      class="py-2 px-4 border-b border-grey-light"
-                      v-if="content.type == 'document'"
-                    >
+                    <td class="py-2 px-4 border-b border-grey-light" v-if="content.type == 'document'">
                       {{ content.description_content }}
                     </td>
                     <td class="py-2 px-4 border-b border-grey-light">
-                      <button
-                        type="button"
+                      <button type="button"
                         class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2"
-                        @click="deleteContent(content.id)"
-                      >
+                        @click="deleteContent(content.id)">
                         X
                       </button>
                     </td>
@@ -351,10 +217,7 @@
         </div>
 
         <div class="modal-footer py-3 px-4">
-          <button
-            class="py-2 px-4 bg-violet-300 text-white rounded-lg cursor-pointer"
-            @click="addAllContent()"
-          >
+          <button class="py-2 px-4 bg-violet-300 text-white rounded-lg cursor-pointer" @click="addAllContent()">
             Hoàn thành
           </button>
         </div>
@@ -363,56 +226,32 @@
   </div>
 
   <!--Thêm index-->
-  <div
-    class="fixed w-full h-full top-0 left-0 flex items-center justify-center z-50"
-    v-show="isShowAddIndex"
-  >
-    <div
-      class="absolute w-full h-full bg-gray-900 opacity-50"
-      @click="oncloseAddIndex()"
-    ></div>
+  <div class="fixed w-full h-full top-0 left-0 flex items-center justify-center z-50" v-show="isShowAddIndex">
+    <div class="absolute w-full h-full bg-gray-900 opacity-50" @click="oncloseAddIndex()"></div>
 
-    <div
-      class="bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto"
-    >
+    <div class="bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
       <div class="flex flex-row py-3 px-4">
         <h5 class="text-lg font-semibold flex-grow">Thêm chỉ mục</h5>
-        <i
-          class="uil-multiply flex-none cursor-pointer bg-gray-400 rounded-xl"
-          @click="oncloseAddIndex()"
-        ></i>
+        <i class="uil-multiply flex-none cursor-pointer bg-gray-400 rounded-xl" @click="oncloseAddIndex()"></i>
       </div>
 
       <div class="px-4">
         <div>
-          <label class="block mb-2 text-sm font-medium text-gray-900"
-            >Tiêu đề</label
-          >
-          <input
-            type="text"
+          <label class="block mb-2 text-sm font-medium text-gray-900">Tiêu đề</label>
+          <input type="text"
             class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none"
-            v-model="index_title"
-            required
-          />
+            v-model="index_title" required />
           <p class="text-red-500 m-2" v-if="!index_title && index_titleFocused">
             - Vui lòng nhập tiêu đề
           </p>
         </div>
 
         <div>
-          <label class="block mb-2 text-sm font-medium text-gray-900"
-            >Mô tả</label
-          >
-          <input
-            type="text"
+          <label class="block mb-2 text-sm font-medium text-gray-900">Mô tả</label>
+          <input type="text"
             class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none"
-            v-model="index_description"
-            required
-          />
-          <p
-            class="text-red-500 m-2"
-            v-if="!index_description && index_descriptionFocused"
-          >
+            v-model="index_description" required />
+          <p class="text-red-500 m-2" v-if="!index_description && index_descriptionFocused">
             - Vui lòng nhập mô tả
           </p>
         </div>
@@ -421,14 +260,12 @@
       <div class="py-3 px-4">
         <button
           class="py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
-          @click="addIndex()"
-        >
+          @click="addIndex()">
           Thêm chỉ mục
         </button>
         <button
           class="py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer"
-          @click="oncloseAddIndex()"
-        >
+          @click="oncloseAddIndex()">
           Đóng
         </button>
       </div>
@@ -436,42 +273,21 @@
   </div>
 
   <!--Thêm index content-->
-  <div
-    class="fixed w-full h-full top-0 left-0 flex items-center justify-center z-50"
-    v-show="isShowAddContent"
-  >
-    <div
-      class="absolute w-full h-full bg-gray-900 opacity-50"
-      @click="oncloseAddContent()"
-    ></div>
+  <div class="fixed w-full h-full top-0 left-0 flex items-center justify-center z-50" v-show="isShowAddContent">
+    <div class="absolute w-full h-full bg-gray-900 opacity-50" @click="oncloseAddContent()"></div>
 
-    <div
-      class="bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto"
-    >
+    <div class="bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
       <div class="flex flex-row py-3 px-4">
         <h5 class="text-lg font-semibold flex-grow">Thêm nội dung</h5>
-        <i
-          class="uil-multiply flex-none cursor-pointer bg-gray-400 rounded-xl"
-          @click="oncloseAddContent()"
-        ></i>
+        <i class="uil-multiply flex-none cursor-pointer bg-gray-400 rounded-xl" @click="oncloseAddContent()"></i>
       </div>
 
       <div class="px-4">
         <div>
-          <label class="block mb-2 text-sm font-medium text-gray-900"
-            >Chọn nội dung</label
-          >
-          <select
-            id="select"
-            name="select"
-            v-model="id_index"
-            class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
-          >
-            <option
-              v-for="index in index_courses"
-              :key="index.id"
-              :value="index.id"
-            >
+          <label class="block mb-2 text-sm font-medium text-gray-900">Chọn nội dung</label>
+          <select id="select" name="select" v-model="id_index"
+            class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none">
+            <option v-for="index in index_courses" :key="index.id" :value="index.id">
               {{ index.title_index }}
             </option>
           </select>
@@ -481,77 +297,43 @@
         </div>
 
         <div>
-          <label class="block mb-2 text-sm font-medium text-gray-900"
-            >Tiêu đề</label
-          >
-          <input
-            type="text"
+          <label class="block mb-2 text-sm font-medium text-gray-900">Tiêu đề</label>
+          <input type="text"
             class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none"
-            v-model="content_title"
-            required
-          />
-          <p
-            class="text-red-500 m-2"
-            v-if="!content_title && content_titleFocused"
-          >
+            v-model="content_title" required />
+          <p class="text-red-500 m-2" v-if="!content_title && content_titleFocused">
             - Vui lòng nhập tiêu đề
           </p>
         </div>
 
         <div>
-          <label class="block mb-2 text-sm font-medium text-gray-900"
-            >Loại tài liệu:</label
-          >
-          <select
-            id="select"
-            name="select"
-            v-model="content_type"
-            @change="handleContent()"
-            class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
-          >
+          <label class="block mb-2 text-sm font-medium text-gray-900">Loại tài liệu:</label>
+          <select id="select" name="select" v-model="content_type" @change="handleContent()"
+            class="block appearance-none w-full bg-white border px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none">
             <option value="video">Video</option>
             <option value="document">Document</option>
           </select>
-          <p
-            class="text-red-500 m-2"
-            v-if="!content_type && content_typeFocused"
-          >
+          <p class="text-red-500 m-2" v-if="!content_type && content_typeFocused">
             - Vui lòng chọn loại tài liệu
           </p>
         </div>
 
         <div v-if="show_Video">
-          <label class="block mb-2 text-sm font-medium text-gray-900"
-            >Đường dẫn Youtube</label
-          >
-          <input
-            type="text"
+          <label class="block mb-2 text-sm font-medium text-gray-900">Đường dẫn Youtube</label>
+          <input type="text"
             class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none"
-            v-model="content_link"
-            required
-          />
-          <p
-            class="text-red-500 m-2"
-            v-if="!content_link && content_linkFocused"
-          >
+            v-model="content_link" required />
+          <p class="text-red-500 m-2" v-if="!content_link && content_linkFocused">
             - Vui lòng nhập đường dẫn Youtube
           </p>
         </div>
 
         <div v-if="show_Content">
-          <label class="block mb-2 text-sm font-medium text-gray-900"
-            >Mô tả</label
-          >
-          <input
-            type="text"
+          <label class="block mb-2 text-sm font-medium text-gray-900">Mô tả</label>
+          <input type="text"
             class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none"
-            v-model="content_description"
-            required
-          />
-          <p
-            class="text-red-500 m-2"
-            v-if="!content_description && content_descriptionFocused"
-          >
+            v-model="content_description" required />
+          <p class="text-red-500 m-2" v-if="!content_description && content_descriptionFocused">
             - Vui lòng nhập đường dẫn Youtube
           </p>
         </div>
@@ -560,14 +342,12 @@
       <div class="py-3 px-4">
         <button
           class="py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
-          @click="addContent()"
-        >
+          @click="addContent()">
           Thêm nội dung
         </button>
         <button
           class="py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer"
-          @click="oncloseAddContent()"
-        >
+          @click="oncloseAddContent()">
           Đóng
         </button>
       </div>
