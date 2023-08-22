@@ -453,6 +453,7 @@ export default {
     addAllContent() {
       if (this.index_contents.length > 0) {
         this.onclose();
+        window.location.reload()
       } else {
         this.$refs.toast.showToast(
           "Vui lòng nhập ít nhất 1 nội dung để hoàn thành."

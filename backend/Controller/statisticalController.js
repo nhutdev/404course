@@ -1,10 +1,10 @@
 const db = require("../models"); // gọi về model
 
 const Blog = db.blog; // gọi ra model blog
-const Tag = db.tag; // gọi ra model tag
 const Comment = db.comment_blog; // gọi ra model comment blog
 const Like = db.like_blog; // gọi ra model like blog
 const Save = db.save_blog; // gọi ra model save blog
+const Tag = db.tag; // gọi ra model tag
 
 const Course = db.course
 const Index = db.index_course
@@ -18,17 +18,17 @@ const User_role = db.user_role; // gọi ra model user_role đặt tên là User
 
 const sequelize = require('sequelize');
 // Thống kê điểm tương tác -> comment
-const chartCoursePoint = async (req,res)=>{
+const chartCoursePoint = async (req, res) => {
     try {
-         const get = await Question.findAll({
-            attributes:['id_course', [sequelize.fn('COUNT', 'Course.id'), 'point']],
-            include:{
-                model:Course,
-                attributes:['title_course']
+        const get = await Question.findAll({
+            attributes: ['id_course', [sequelize.fn('COUNT', 'Course.id'), 'point']],
+            include: {
+                model: Course,
+                attributes: ['title_course']
             },
-            group:['id_course']
-         }) ;
-         res.json(get)
+            group: ['id_course']
+        });
+        res.json(get)
 
     } catch (error) {
         console.log(error)
@@ -36,18 +36,18 @@ const chartCoursePoint = async (req,res)=>{
 }
 
 // Thống kê số lượng đk của các khoá học
-const chartCourseBySave = async(req,res)=>{
+const chartCourseBySave = async (req, res) => {
     try {
         const getSave = await Save_Course.findAll({
-            attributes:['id_course',[sequelize.fn('COUNT',"Course.id"),'subcribed']],
+            attributes: ['id_course', [sequelize.fn('COUNT', "Course.id"), 'subcribed']],
             order: [["subcribed", "DESC"]],
-            include:{
-                model:Course,
-                attributes:['title_course']
+            include: {
+                model: Course,
+                attributes: ['title_course']
             },
-            group:['id_course'],
-            
-            
+            group: ['id_course'],
+
+
         });
         res.json(getSave)
     } catch (error) {
@@ -56,33 +56,33 @@ const chartCourseBySave = async(req,res)=>{
 }
 
 // Thông kê lượt tương tác của blog
-const chartBlog = async(req,res)=>{
+const chartBlog = async (req, res) => {
     try {
         const Blogger = await Blog.findAll({
             attributes: [
-              'id',
-              [sequelize.fn('COUNT', sequelize.col('like_blogs.id')), 'like_count'],
-              [sequelize.fn('COUNT', sequelize.col('comment_blogs.id')), 'comment_count'],
-              [sequelize.fn('COUNT', sequelize.col('save_blogs.id')), 'save_count']
+                'id',
+                [sequelize.fn('COUNT', sequelize.col('like_blogs.id')), 'like_count'],
+                [sequelize.fn('COUNT', sequelize.col('comment_blogs.id')), 'comment_count'],
+                [sequelize.fn('COUNT', sequelize.col('save_blogs.id')), 'save_count']
             ],
             include: [
-              {
-                model: Like,
-                attributes: []
-              },
-              {
-                model: Comment,
-                attributes: []
-              },
-              {
-                model: Save,
-                attributes: []
-              }
+                {
+                    model: Like,
+                    attributes: []
+                },
+                {
+                    model: Comment,
+                    attributes: []
+                },
+                {
+                    model: Save,
+                    attributes: []
+                }
             ],
             group: ['blog.id']
-            
-          });
-          res.json(Blogger)
+
+        });
+        res.json(Blogger)
 
     } catch (error) {
         console.log(error)
@@ -90,18 +90,18 @@ const chartBlog = async(req,res)=>{
 }
 
 // thong ke blog tung user
-const chartBlogByUser = async(req,res)=>{
+const chartBlogByUser = async (req, res) => {
     try {
         const getUserBlog = await Blog.findAll({
-            attributes:['id_user',[sequelize.fn('COUNT',"User.id"),'cc']],
+            attributes: ['id_user', [sequelize.fn('COUNT', "User.id"), 'cc']],
             order: [["cc", "DESC"]],
-            include:{
-                model:User,
-                attributes:['fullname']
+            include: {
+                model: User,
+                attributes: ['fullname']
             },
-            group:['id_user'],
-            
-            
+            group: ['id_user'],
+
+
         });
         res.json(getUserBlog)
     } catch (error) {
@@ -109,31 +109,53 @@ const chartBlogByUser = async(req,res)=>{
     }
 }
 //dem xem co bao nhieu user o moi role
-const chartUserByRole = async(req,res)=>{
+const chartUserByRole = async (req, res) => {
     try {
         const GetUser_role = await Role.findAll({
             attributes: [
-              'id','name_role',
-              [sequelize.fn('COUNT',('name_role')), 'count'],
+                'id', 'name_role',
+                [sequelize.fn('COUNT', ('name_role')), 'count'],
             ],
             include: [
-              {
-                model: User_role,
-                attributes: []
-              },
+                {
+                    model: User_role,
+                    attributes: []
+                },
             ],
             group: ['Role.id']
-            
-          });
-          res.json(GetUser_role)
+
+        });
+        res.json(GetUser_role)
     } catch (error) {
         console.log(error)
     }
 }
+
+//top blog
+const topBlog = async (req, res) => {
+    try {
+
+        const result = await Blog.findAll({
+            attributes: ['id'],
+            include: [
+                {
+                    model: Like,
+                    attributes: [[sequelize.fn('COUNT', sequelize.col('like_blogs.id_blog')), 'likeCount']],
+                },
+            ],
+            group: ['blog.id'],
+        });
+        res.json(result)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     chartCoursePoint,
     chartBlog,
     chartBlogByUser,
     chartCourseBySave,
-    chartUserByRole
+    chartUserByRole,
+    topBlog
 }

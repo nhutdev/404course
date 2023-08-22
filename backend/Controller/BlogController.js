@@ -5,7 +5,7 @@ const Tag = db.tag; // gọi ra model tag
 const Comment = db.comment_blog; // gọi ra model comment blog
 const Like = db.like_blog; // gọi ra model like blog
 const Save = db.save_blog; // gọi ra model save blog
-const ITEMS_PER_PAGE = 10; // Số lượng mục trên mỗi trang
+const ITEMS_PER_PAGE =9 ; // Số lượng mục trên mỗi trang
 
 // hàm xử lý lấy ra danh sách blog
 const getBlog = async (req, res) => {

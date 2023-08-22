@@ -1,43 +1,9 @@
 <template>
     <!--blog view-->
-    <!--add-->
-    <div class=" mt-5 editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl"
-        v-if="showAdd">
-        <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 ">Chọn thể loại</label>
-            <select id="select" name="select" v-model="id_tag"
-                class="block appearance-none w-full bg-white border px-4 py-2 pr-8 mb-2 leading-tight focus:outline-none">
-                <option v-for="tag in tags.filter(items => items.status == 1)" :key="tag.id" :value="tag.id"> {{ tag.nametag
-                }}
-                </option>
-            </select>
-            <p class="text-red-500 text-sm ml-2" v-if="!id_tag && tagFocused">Danh mục bị trống.</p>
-        </div>
-        <input class="title border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" v-model="title"
-            placeholder="Tiêu đề blog" type="text">
-        <p class="text-red-500 text-sm ml-2" v-if="!title && titleFocused">Tiêu đề bị trống.</p>
-        <input class="title border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" v-model="img_blog"
-            placeholder="Đường dẫn ảnh" type="text">
-        <p class="text-red-500 text-sm ml-2" v-if="!img_blog && imgFocused">Đường dẫn ảnh bị trống.</p>
-
-        <QuillEditor theme="snow" ref="myEditor" v-model="content" />
-        <p class="text-red-500 text-sm ml-2" v-if="!content && contentFocused">Nội dung bị trống.</p>
-
-        <!-- buttons -->
-        <div class="buttons flex mt-2">
-            <div class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
-                @click="addBlog()">
-                Thêm</div>
-            <div class="  py-2 px-4 bg-gradient-to-r from-indigo-100 via-purple-300 to-pink-200 text-white rounded-lg cursor-pointer mr-4"
-                @click="openAdd()">
-                Hủy</div>
-        </div>
-    </div>
+   
 
     <!--view-->
     <div id="blog" class=" px-4 xl:px-4 py-14">
-        <button @click="openAdd()" v-if="!showAdd" type="button"
-            class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 ">Thêm</button>
         <div class="container mx-auto px-6 md:px-0">
             <div class=" grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-8 ">
                 <!-- chi tiet -->
@@ -161,16 +127,15 @@
 <script>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import userServices from '../../plugins/userServices';
-import functionService from '../../plugins/functionService';
-import blogService from '../../plugins/blogService'
-import toast from '../../components/toast/toast.vue';
 import dayjs from 'dayjs';
+import userServices from '../plugins/userServices';
+import blogService from '../plugins/blogService';
+import toast from './toast/toast.vue';
 export default {
 
     data() {
         return {
-            showAdd: false, showUpdate: false,
+            showUpdate: false,
             title: '', content: '', query: 1,
             blogs: [], tags: [], imgs: [], status: 1,
             user: '', id_tag: '', img_blog: '', blog: '', id: '',
@@ -186,9 +151,7 @@ export default {
         this.user = userServices.getUserToken()
     },
     methods: {
-        openAdd() {
-            this.showAdd = !this.showAdd
-        },
+        
         formatDate(time) {
             return dayjs(time).format('DD-MM-YYYY');
         },
@@ -203,23 +166,6 @@ export default {
         },
         updateContent(newContent) {
             this.content = newContent;
-        },
-        async addBlog() {
-            this.titleFocused = true, this.tagFocused = true, this.imgFocused = true, this.contentFocused = true
-            if (this.title && this.id_tag && this.img_blog && this.$refs.myEditor.getText().length > 1) {
-                const result = await blogService.addBlog(this.title, this.$refs.myEditor.getHTML(), this.user.id, this.id_tag, this.img_blog)
-                if (result.status == 200) {
-                    this.$refs.toast.showToast(result.data.message)
-                    this.getblog()
-                    this.clearText()
-                    this.showAdd = false
-                }
-                else {
-                    this.$refs.toast.showToast(result.data.message)
-                }
-                this.titleFocused = false, this.tagFocused = false, this.imgFocused = false, this.contentFocused = false
-            }
-
         },
         async deleteBlog(id) {
             const result = await blogService.deleteBlog(id)
