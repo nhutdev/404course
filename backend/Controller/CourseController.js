@@ -4,7 +4,8 @@ const User = db.user;
 const Index = db.index_course;
 const Index_Content = db.content_index_course;
 const ITEMS_PER_PAGE = 6; // Số lượng mục trên mỗi trang
-
+const Question = db.question_course
+const Save = db.save_course
 const getAll = async (req, res) => {
   try {
     const status = req.query.status;
@@ -127,20 +128,34 @@ const updateCourse = async (req, res) => {
 const deleteCourse = async (req, res) => {
   try {
     const id = req.params.id;
-    const exits = await Course.findByPk(id);
-    const exitsIndex = await Index.findOne({ where: { id_course: id } });
-    if (exitsIndex) {
-      res.status(202).json({ message: "Không xóa được khóa học này" });
-    } else if (exits) {
-      await exits.destroy();
-      res.status(200).json({ message: "Xóa thành công khóa học" });
-    } else {
-      res.status(202).json({ message: "Không tồn tại khóa học này" });
+    const course = await Course.findByPk(id);
+
+    if (!course) {
+      return res.status(202).json({ message: "Không tồn tại khóa học này" });
     }
+
+    const exitsIndex = await Index.findAll({ where: { id_course: id } });
+
+    await Promise.all(
+      exitsIndex.map(async (element) => {
+        await Index_Content.destroy({ where: { id_index: element.id } });
+      })
+    );
+   
+    await Index.destroy({ where: { id_course: id } });
+    await Save.destroy({ where: { id_course: id } });
+    await Question.destroy({ where: { id_course: id } });
+
+
+    await course.destroy();
+    res.status(200).json({ message: "Xóa thành công khóa học" });
+    
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    res.status(500).json({ message: "Đã xảy ra lỗi trong quá trình xóa khóa học" });
   }
 };
+
 
 // Chỉ mục crud
 
@@ -227,6 +242,7 @@ const getContent = async (req, res) => {
     console.log(error);
   }
 };
+
 const getbyIndex = async (req, res) => {
   try {
     const id = req.params.id
@@ -236,6 +252,7 @@ const getbyIndex = async (req, res) => {
     console.log(error);
   }
 };
+
 const addContent = async (req, res) => {
   try {
     const id = req.params.id;
@@ -292,6 +309,66 @@ const deleteContent = async (req, res) => {
     console.log(error);
   }
 };
+
+const getSave = async(req,res)=>{
+  try {
+    const result = await Save.findAll()
+    res.json(result)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const handleSave = async(req,res)=>{
+  try {
+    const {id_course,id_user} = req.body
+    const UserSave = await Save.findOne({where:{id_course:id_course,id_user:id_user}})
+    if(UserSave)
+    {
+      const followed = await Save.destroy({where:{id_course,id_user}})
+      return res.status(200).json({message:"Huỷ thành công"})
+
+    }
+    else
+    {
+      const followent = await Save.create({id_course,id_user})
+      return res.status(200).json({message:"Lưu thành công"})
+    }
+  } catch (error) {
+    // xuất lỗi ra trên console
+    console.log(error)
+  }
+}
+
+const getComment = async(req,res)=>{
+  try {
+    const id = req.params.id
+    const result = await Question.findAll({where:{id_course:id},
+      include:{
+        model:User,
+        attributes:['fullname','avatar']
+      }})
+    res.status(200).json(result)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const addQuestion = async(req,res)=>{
+  try {
+    const id = req.params.id
+    const {content_question,id_user}=req.body
+    const result = await Question.create({
+      id_course:id,
+      id_user:id_user,
+      content_question:content_question
+    })
+    res.status(200).json({message:'Bình luận thành công'})
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   getAll,
   addCourse,
@@ -306,5 +383,7 @@ module.exports = {
   updateContent,
   deleteContent,
   getByid,
-  getbyIndex
+  getbyIndex,
+  getSave,handleSave,
+  getComment,addQuestion
 };

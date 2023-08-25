@@ -6,24 +6,47 @@
                 <!--khóa học-->
                 <div class="mt-2 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-x-6 gap-y-8 ">
                     <!-- chi tiet -->
-                    <div  v-for="course in courses">
+                    <div v-for="course in courses">
                         <div class="relative w-full h-64 bg-cover bg-center group rounded-lg overflow-hidden shadow-lg hover:shadow-3xl  transition duration-300 ease-in-out "
-                        v-bind:style="{ 'background-image': 'url(' + course.img_course + ')' }">
-                        <div
-                            class="absolute inset-0 bg-black bg-opacity-50 group-hover:opacity-75 transition duration-300 ease-in-out">
-                        </div>
-                        <div class="relative w-full h-full flex flex-col justify-center items-center">
-                            <h3 class="text-center">
-                                <a class="text-white text-2xl font-bold text-center">
-                                    {{ course.title_course }}
-                                </a>
-                            </h3>
-                            <button type="button" @click="gotoCourse(course.id)"
-                                class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Xem khóa học</button>
+                            v-bind:style="{ 'background-image': 'url(' + course.img_course + ')' }">
+                            <div
+                                class="absolute inset-0 bg-black bg-opacity-50 group-hover:opacity-75 transition duration-300 ease-in-out">
+                            </div>
+                            <div class="relative w-full h-full flex flex-col justify-center items-center">
+                                <h3 class="text-center">
+                                    <a class="text-white text-2xl font-bold text-center">
+                                        {{ course.title_course }}
+                                    </a>
+                                </h3>
+                                <div class="flex">
+                                    <button type="button" @click="gotoCourse(course.id)"
+                                        class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Xem
+                                        khóa học</button>
+
+                                    <div class="ml-2">
+                                        <span
+                                            v-if="saves.some(item => item.id_course === course.id && item.id_user === user.id)">
+                                            <!-- Sử dụng v-for để lặp lại các sản phẩm trong danh sách thích -->
+                                            <span
+                                                v-for="save in saves.filter(item => item.id_course === course.id && item.id_user === user.id)">
+                                                <button type="button" @click="savecourse(course.id)"
+                                                   
+                                                    class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">
+                                                {{ save.id ? 'Đã lưu' : 'Lưu' }}
+                                                </button>
+                                            </span>
+                                        </span>
+                                        <!-- Nếu không có sản phẩm nào trong danh sách thích, hiển thị chữ màu #ccc -->
+                                        <span v-else>
+                                            <button type="button" @click="savecourse(course.id)"
+                                                class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Lưu</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    </div>
-                       
+
                 </div>
 
                 <!--chi muc-->
@@ -47,33 +70,65 @@
                 </div>
             </section>
         </main>
-        
+
     </body>
+    <toast ref="toast"/>
 </template>
 
 <script>
 import userService from '../plugins/userServices';
 import courseService from '../plugins/courseService';
+import toast from './toast/toast.vue';
 export default {
     data() {
         return {
             user: '',
-            courses: [],
+            courses: [], saves: [],
             page: 1,
-            status:1,
-            id_course:''
+            status: 1,
+            id_course: ''
         }
     },
-    components: {  },
+    components: {toast},
     mounted() {
         this.user = userService.getUserToken()
-        courseService.getCourse(this.page, this.status).then((data) => { this.courses = data.courses});
+        courseService.getCourse(this.page, this.status).then((data) => { this.courses = data.courses });
+        this.getSave()
     },
     methods: {
-        gotoCourse(id)
+        gotoCourse(id) {
+            window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/course_detail/${id}`;
+        },
+        async getSave() {
+            try {
+                const result = await this.$axios.get(`course/save/get`)
+                this.saves = result.data
+                console.log(result)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async savecourse(id)
         {
-        window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/course_detail/${id}`;
-
+            try {
+                const result = await this.$axios.post(`course/save/handle`,
+                {
+                    'id_user':this.user.id,
+                    'id_course':id
+                });
+                
+                if(result.status == 200)
+                {
+                    this.$refs.toast.showToast(result.data.message)
+                    this.getSave()
+                }
+                else
+                {
+                    this.$refs.toast.showToast(result.data.message)
+                }
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 }

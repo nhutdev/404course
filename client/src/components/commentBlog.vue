@@ -315,15 +315,18 @@ export default {
         },
 
         async addcomment(id) {
-            const result = await blogService.commentBlog(this.comment, this.blogId, this.user.id);
-            if (result.status == 200) {
-                this.$refs.toast.showToast(result.data.message)
-                blogService.getComment(this.blogId).then((data) => { this.comments = data })
-                this.comment = ''
+            if (this.comment.trim() != '') {
+                const result = await blogService.commentBlog(this.comment, this.blogId, this.user.id);
+                if (result.status == 200) {
+                    this.$refs.toast.showToast(result.data.message)
+                    blogService.getComment(this.blogId).then((data) => { this.comments = data })
+                    this.comment = ''
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
             }
-            else {
-                this.$refs.toast.showToast(result.data.message)
-            }
+
         },
 
         async deleteCmt(id) {
@@ -338,14 +341,17 @@ export default {
         },
 
         async editcomment() {
-            const result = await blogService.updateComment(this.comment, this.idComment);
-            if (result.status == 200) {
-                this.oncloseEdit()
-                blogService.getComment(this.blogId).then((data) => { this.comments = data })
-                this.$refs.toast.showToast(result.data.message)
-            }
-            else {
-                this.$refs.toast.showToast(result.data.message)
+            if (this.comment.trim() != '') {
+
+                const result = await blogService.updateComment(this.comment, this.idComment);
+                if (result.status == 200) {
+                    this.oncloseEdit()
+                    blogService.getComment(this.blogId).then((data) => { this.comments = data })
+                    this.$refs.toast.showToast(result.data.message)
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
             }
         },
 
@@ -355,14 +361,17 @@ export default {
         },
 
         async replycomment() {
-            const result = await blogService.replyCMTBlog(this.recomment, this.blogId, this.user.id, this.idComment);
-            if (result.status == 200) {
-                this.oncloseReply()
-                blogService.getComment(this.blogId).then((data) => { this.comments = data })
-                this.$refs.toast.showToast(result.data.message)
-            }
-            else {
-                this.$refs.toast.showToast(result.data.message)
+            if (this.recomment.trim() != '') {
+
+                const result = await blogService.replyCMTBlog(this.recomment, this.blogId, this.user.id, this.idComment);
+                if (result.status == 200) {
+                    this.oncloseReply()
+                    blogService.getComment(this.blogId).then((data) => { this.comments = data })
+                    this.$refs.toast.showToast(result.data.message)
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
             }
         },
 
@@ -378,15 +387,18 @@ export default {
         },
 
         async editreply() {
-            const result = await blogService.updateReply(this.recomment, this.idComment);
-            if (result.status == 200) {
-                this.oncloseREdit()
-                this.getReply(this.id_reply)
-                this.$refs.toast.showToast(result.data.message)
+            if (this.recomment.trim() != '') {
+                const result = await blogService.updateReply(this.recomment, this.idComment);
+                if (result.status == 200) {
+                    this.oncloseREdit()
+                    this.getReply(this.id_reply)
+                    this.$refs.toast.showToast(result.data.message)
+                }
+                else {
+                    this.$refs.toast.showToast(result.data.message)
+                }
             }
-            else {
-                this.$refs.toast.showToast(result.data.message)
-            }
+
         }
 
     },

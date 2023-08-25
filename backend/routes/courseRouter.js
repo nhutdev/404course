@@ -1,7 +1,7 @@
 const express = require("express");
 const {getAll,addCourse,updateCourse,deleteCourse,getByid,
-    getIndex,addIndex,updateIndex,deleteIndex,getbyIndex,
-    getContent,addContent,updateContent,deleteContent  } = require("../Controller/CourseController")
+    getIndex,addIndex,updateIndex,deleteIndex,getbyIndex,addQuestion,
+    getContent,addContent,updateContent,deleteContent  ,getSave,handleSave,getComment} = require("../Controller/CourseController")
 const routerCourse = express.Router();
 
 routerCourse.get('/api/course/get',getAll)
@@ -17,9 +17,15 @@ routerCourse.delete('/api/course/index/delete/:id',deleteIndex)
 
 routerCourse.get('/api/course/index/content/get',getContent)
 routerCourse.get('/api/course/index/content/get/:id',getbyIndex)
-routerCourse.post('/api/course/index/content/add/:id',addContent)
+routerCourse.post('/api/cour,se/index/content/add/:id',addContent)
 routerCourse.put('/api/course/index/content/update/:id',updateContent)
 routerCourse.delete('/api/course/index/content/delete/:id',deleteContent)
+
+routerCourse.get('/api/course/save/get',getSave)
+routerCourse.post('/api/course/save/handle',handleSave)
+
+routerCourse.get('/api/course/question/get/:id',getComment)
+routerCourse.post('/api/course/question/add/:id',addQuestion)
 
 module.exports = {
     routerCourse

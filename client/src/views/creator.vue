@@ -45,25 +45,29 @@
                 <!--khóa học-->
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-8 ">
                     <!-- chi tiet -->
-                    <div  v-for="course in courses">
+                    <div v-for="course in courses">
                         <div class="relative w-full h-64 bg-cover bg-center group rounded-lg overflow-hidden shadow-lg hover:shadow-3xl  transition duration-300 ease-in-out "
-                        v-bind:style="{ 'background-image': 'url(' + course.img_course + ')' }">
-                        <div
-                            class="absolute inset-0 bg-black bg-opacity-50 group-hover:opacity-75 transition duration-300 ease-in-out">
-                        </div>
-                        <div class="relative w-full h-full flex flex-col justify-center items-center">
-                            <h3 class="text-center">
-                                <a class="text-white text-2xl font-bold text-center">
-                                    {{ course.title_course }}
-                                </a>
-                            </h3>
-                            <button type="button" @click="openEdit(), sendData(course)"
-                                class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Chỉnh
-                                sửa</button>
+                            v-bind:style="{ 'background-image': 'url(' + course.img_course + ')' }">
+                            <div
+                                class="absolute inset-0 bg-black bg-opacity-50 group-hover:opacity-75 transition duration-300 ease-in-out">
+                            </div>
+                            <div class="relative w-full h-full flex flex-col justify-center items-center">
+                                <h3 class="text-center">
+                                    <a class="text-white text-2xl font-bold text-center">
+                                        {{ course.title_course }}
+                                    </a>
+                                </h3>
+                                <div class="flex">
+                                    <button type="button" @click="openEdit(), sendData(course)"
+                                        class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Chỉnh
+                                        sửa</button>
+                                    <button type="button" @click="deleteCourse(course.id)"
+                                        class=" cursor-pointer ml-2 py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Xóa</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    </div>
-                       
+
                 </div>
 
                 <!--chi muc-->
@@ -87,10 +91,10 @@
                 </div>
             </section>
         </main>
-        
+
     </body>
     <createCourse v-if="is_showcreate" @cancel="Showcreate()" />
-    <editCourses v-if="ShowEdit" @cancel="openEdit()" :courseid="this.id_course"/>
+    <editCourses v-if="ShowEdit" @cancel="openEdit()" :courseid="this.id_course" />
 </template>
 
 <script>
@@ -105,18 +109,18 @@ export default {
             user: '',
             courses: [],
             page: 1,
-            status:1,
+            status: 1,
             isShowIndex: true,
             getcourse: '',
             ShowEdit: false,
-            id_course:''
+            id_course: ''
         }
     },
-    components: { createCourse,editCourses },
+    components: { createCourse, editCourses },
     mounted() {
         this.user = userService.getUserToken()
-        courseService.getCourse(this.page, this.status).then((data) => { this.courses = data.courses});
-        console.log(this.courses)
+        courseService.getCourse(this.page, this.status).then((data) => { this.courses = data.courses });
+
         if (this.user.role != 'Creator') {
             this.$router.push({ name: 'login' });
         }
@@ -137,11 +141,21 @@ export default {
         sumcontent(content) {
             let sum = 0;
             for (let i = 0; i < content.length; i++) {
-                    sum++;
+                sum++;
             }
             return sum;
         },
-        
+        async deleteCourse(id) {
+            try {
+                const result = await this.$axios.delete(`course/delete/${id}`)
+                if (result.status == 200) {
+                    courseService.getCourse(this.page, this.status).then((data) => { this.courses = data.courses });
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
     }
 }
 

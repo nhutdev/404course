@@ -27,16 +27,10 @@
             <p class="text-red-500 m-2" v-if="!course_title && course_titleFocused">
               - Vui lòng nhập tiêu đề
             </p>
-            <p class="text-red-500 m-2" v-if="course_title.length < 6 && course_titleFocused">
-              - Nhập lớn 6
-            </p>
+           
             <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Mô tả</label>
-            <input type="text" id="description" v-model="course_description"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Nhập mô tả" required />
-            <p class="text-red-500 m-2" v-if="!course_description && course_descriptionFocused">
-              Vui lòng nhập mô tả
-            </p>
+              <QuillEditor  theme="snow" ref="courseEditor" v-model="course_descriptionFocused"/>
+            
             <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Đường dẫn ảnh
               mạng:</label>
             <input placeholder="Nhập nội dung đường ảnh" type="text" id="head" name="head" v-model="img_course"
@@ -248,12 +242,8 @@
 
         <div>
           <label class="block mb-2 text-sm font-medium text-gray-900">Mô tả</label>
-          <input type="text"
-            class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none"
-            v-model="index_description" required />
-          <p class="text-red-500 m-2" v-if="!index_description && index_descriptionFocused">
-            - Vui lòng nhập mô tả
-          </p>
+          <QuillEditor  theme="snow" ref="indexEditor" />
+         
         </div>
       </div>
 
@@ -330,12 +320,8 @@
 
         <div v-if="show_Content">
           <label class="block mb-2 text-sm font-medium text-gray-900">Mô tả</label>
-          <input type="text"
-            class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none"
-            v-model="content_description" required />
-          <p class="text-red-500 m-2" v-if="!content_description && content_descriptionFocused">
-            - Vui lòng nhập đường dẫn Youtube
-          </p>
+          <QuillEditor  theme="snow" ref="contentEditor" />
+            
         </div>
       </div>
 
@@ -361,49 +347,28 @@
 import userService from "../../plugins/userServices";
 import courseService from "../../plugins/courseService";
 import toast from "../../components/toast/toast.vue";
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 export default {
   emits: ["cancel"],
   data() {
     return {
       user: "",
-      isShowCourse: true,
-      isShowIndex: false,
-      isShowContent: false,
-      course: [],
-      index_courses: [],
-      index_contents: [],
-      id_course: "",
-      id_index: "",
-      course_title: "",
-      course_description: "",
-      img_course: "",
-      index_title: "",
-      index_description: "",
-      content_title: "",
-      content_description: "",
-      content_link: "",
-      content_type: "",
-      show_Video: false,
-      show_Content: false,
-      isShowAddIndex: false,
-      isShowAddContent: false,
-      course_titleFocused: false,
-      course_descriptionFocused: false,
-      img_courseFocused: false,
-      index_titleFocused: false,
-      index_descriptionFocused: false,
-      id_indexFocused: false,
-      content_titleFocused: false,
-      content_typeFocused: false,
-      content_linkFocused: false,
-      content_descriptionFocused: false,
+      isShowCourse: true,isShowIndex: false,isShowContent: false,
+      course: [], index_courses: [], index_contents: [],id_course: "",id_index: "",
+      course_title: "",course_description: "", img_course: "",
+      index_title: "", index_description: "", content_title: "",content_description: "", content_link: "", content_type: "",
+      show_Video: false, show_Content: false, isShowAddIndex: false, isShowAddContent: false,
+      course_titleFocused: false,course_descriptionFocused: false,
+      img_courseFocused: false, index_titleFocused: false,index_descriptionFocused: false,id_indexFocused: false,
+      content_titleFocused: false, content_typeFocused: false, content_linkFocused: false, content_descriptionFocused: false,
     };
   },
   mounted() {
     this.user = userService.getUserToken();
     console.log(this.user);
   },
-  components: { toast },
+  components: {QuillEditor, toast },
   methods: {
     onclose() {
       this.$emit("cancel");
@@ -412,12 +377,12 @@ export default {
       this.course_titleFocused = true;
       this.course_descriptionFocused = true;
       this.img_courseFocused = true;
-      if (this.course_title && this.course_description && this.img_course) {
+      if (this.course_title && this.$refs.courseEditor.getText().length > 1 && this.img_course) {
         try {
           const result = await this.$axios.post(`course/add`, {
             id_user: this.user.id,
             title_course: this.course_title,
-            description_course: this.course_description,
+            description_course:  this.$refs.courseEditor.getHTML(),
             img_course: this.img_course,
           });
           if (result.status == 200) {
@@ -463,14 +428,14 @@ export default {
 
     async addIndex() {
       this.index_titleFocused = true;
-      this.index_descriptionFocused = true;
-      if (this.index_titleFocused && this.index_descriptionFocused) {
+     
+      if (this.index_titleFocused ) {
         try {
           const result = await this.$axios.post(
             `course/index/add/` + this.id_course,
             {
               title_index: this.index_title,
-              description_index: this.index_description,
+              description_index: this.$refs.indexEditor.getHTML(),
             }
           );
           if (result.status == 200) {
@@ -485,7 +450,7 @@ export default {
             this.$refs.toast.showToast(result.data.message);
           }
           this.index_titleFocused = false;
-          this.index_descriptionFocused = false;
+         
         } catch (error) {
           console.log(error);
         }
@@ -523,16 +488,16 @@ export default {
       this.content_titleFocused = true;
       this.content_typeFocused = true;
       this.content_linkFocused = true;
-      this.content_descriptionFocused = true;
+    
       if (
-        this.id_indexFocused && this.content_titleFocused && this.content_typeFocused && this.content_linkFocused && this.content_descriptionFocused
+        this.id_indexFocused && this.content_titleFocused && this.content_typeFocused && this.content_linkFocused
       ) {
         try {
           const result = await this.$axios.post(
             `course/index/content/add/${this.id_index}`,
             {
               title_content: this.content_title,
-              description_content: this.content_description,
+              description_content:  this.$refs.contentEditor.getHTML(),
               link_video: this.content_link,
               type: this.content_type,
             }
@@ -554,7 +519,7 @@ export default {
           this.content_titleFocused = false;
           this.content_typeFocused = false;
           this.content_linkFocused = false;
-          this.content_descriptionFocused = false;
+      
         } catch (error) {
           console.log(error);
         }
