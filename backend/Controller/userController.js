@@ -68,10 +68,39 @@ const updateInfo = async (req, res) => {
   try {
     // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
     const id = req.params.id;
-    
+ 
+    // Thực hiện kiểm tra xem user có không
+    const exists = await User.findByPk(id)
+    if(exists)
+    {
+      upload.single("avatar")(req, res, async function (err) {
+        const {fullname}=req.body
+        if (err instanceof multer.MulterError) {
+          return res.status(400).json({ message: err.message });
+        } else if (err) {
+          return res.status(400).json({ message: err.message });
+        }
+        // Kiểm tra nếu có file ảnh mới được chọn
+        if (req.file) {
+          const imageUrl = `${req.protocol}://${req.get("host")}/${req.file.filename
+            }`;
+          exists.avatar_name = req.file.filename
+          exists.avatar = imageUrl;
+          exists.fullname = fullname
+          await exists.save();
+          console.log(fullname)
+          res.status(200).json({message:"Cập nhập thành công",exists})
+        } else{
+          exists.fullname = fullname
+          res.status(200).json({message:"Cập nhập thành công",exists})
+          await exists.save();
+        }
+      });
+       
+    }
   } catch (error) {
-    // xuất lỗi ra trên console
-    console.log(error)
+     // xuất lỗi ra trên console
+     console.log(error)
   }
 }
 

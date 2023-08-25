@@ -1,7 +1,5 @@
 <template>
     <!--blog view-->
-   
-
     <!--view-->
     <div id="blog" class=" px-4 xl:px-4 py-14">
         <div class="container mx-auto px-6 md:px-0">
@@ -142,6 +140,7 @@ export default {
             titleFocused: false, tagFocused: false, imgFocused: false, contentFocused: false
         }
     },
+    props:['filter'],
     components: {
         QuillEditor, toast
     },
@@ -150,8 +149,7 @@ export default {
         this.gettag()
         this.user = userServices.getUserToken()
     },
-    methods: {
-        
+    methods: { 
         formatDate(time) {
             return dayjs(time).format('DD-MM-YYYY');
         },
@@ -162,7 +160,16 @@ export default {
         },
 
         async getblog() {
-            blogService.getblog(this.query, this.status).then((data) => { this.blogs = data.blogs })
+            blogService.getblog(this.query, this.status).then((data) => { 
+                if(this.filter == '')
+                {
+                    this.blogs = data.blogs
+                }
+                else if(this.filter)
+                {
+                    this.blogs = data.blogs.filter(item => item.id_user == this.filter )
+                }
+             })
         },
         updateContent(newContent) {
             this.content = newContent;

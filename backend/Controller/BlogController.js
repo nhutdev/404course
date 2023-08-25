@@ -15,7 +15,7 @@ const getBlog = async (req, res) => {
     const offset = (page - 1) * ITEMS_PER_PAGE;
 
     const blogs = await Blog.findAndCountAll({
-        attributes: ['id', 'title_blog', 'content_blog', 'status', 'img_blog', 'createdAt', 'updatedAt'],
+        attributes: ['id', 'title_blog', 'id_user','content_blog', 'status', 'img_blog', 'createdAt', 'updatedAt'],
         where:{status:status},
         order: [["id", "DESC"]],
         include: [

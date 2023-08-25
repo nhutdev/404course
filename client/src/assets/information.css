@@ -431,4 +431,19 @@ html {
     color: rgb(68 86 108/var(--tw-text-opacity))
 }
 
+.after-effect {
+    position: relative;
+    display: inline-block;
+    --tw-gradient-from: #fa5252;
+    --tw-gradient-to: rgba(250,82,82,0);
+    --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to);
+    --tw-gradient-to: #dd2476;
+    font-family: Roboto Slab,serif;
+    font-size: 2.5rem;
+    font-weight: 700
+}
 
+.after\:left-52:after {
+    content: var(--tw-content);
+    left: 13rem
+}
