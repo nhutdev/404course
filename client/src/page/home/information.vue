@@ -1,12 +1,12 @@
 <template>
-    <section class="bg-homeBg min-h-screen bg-no-repeat bg-center bg-cover bg-fixed md:pb-16 w-full ">
+    <section :style="backgroundStyle" class=" min-h-screen bg-no-repeat bg-center bg-cover bg-fixed md:pb-16 w-full ">
         <div class="container w-full   lg:bg-transparent  flex justify-between py-5 lg:px-0 lg:pt-[50px]">
         </div>
         <div class="container grid grid-cols-12 md:gap-10 justify-between lg:mt-[220px]">
             <div class="col-span-12 lg:col-span-4 lg:h-screen lg:sticky top-44">
                 <!--navbar left-->
                 <div
-                    class=" mt-2 w-full mb-6 lg:mb-0 mx-auto relative bg-white text-center  px-6 rounded-[20px]  md:mt-[220px] lg:mt-0 ">
+                    class=" mt-2 w-full mb-6 lg:mb-0 mx-auto relative bg-gray-800 bg-opacity-50 shadow-lg backdrop-blur-md text-center  px-6 rounded-[20px]  md:mt-[220px] lg:mt-0 ">
                     <img alt="avatar" :src="avatar"
                         class="w-[240px] md:block absolute left-[50%] transform -translate-x-[50%] h-[240px] drop-shadow-xl mx-auto rounded-[20px] -mt-[140px] hidden"
                         loading="lazy" style="color: transparent;">
@@ -16,7 +16,7 @@
                             {{ role }}</h3>
                         <div class="p-7 rounded-2xl mt-7 bg-[#F3F6F6] dark:bg-[#1D1D1D]">
                             <div class="flex py-2.5 border-b border-[#E3E3E3] dark:border-[#3D3A3A]"><span
-                                    class="flex-shrink-0 socialbtn bg-white dark:bg-black text-[#E93B81] shadow-md"><svg
+                                    class="flex-shrink-0 socialbtn bg-gray-800 bg-opacity-50 shadow-lg backdrop-blur-md dark:bg-black text-[#E93B81] shadow-md"><svg
                                         stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 320 512"
                                         height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -31,7 +31,7 @@
                                 </div>
                             </div>
                             <div class="flex py-2.5 border-b border-[#E3E3E3] dark:border-[#3D3A3A]"><span
-                                    class="flex-shrink-0 socialbtn bg-white dark:bg-black text-[#6AB5B9]  shadow-md"><svg
+                                    class="flex-shrink-0 socialbtn bg-gray-800 bg-opacity-50 shadow-lg backdrop-blur-md dark:bg-black text-[#6AB5B9]  shadow-md"><svg
                                         stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 384 512"
                                         height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -44,7 +44,7 @@
                                 </div>
                             </div>
                             <div class="flex py-2.5 border-b border-[#E3E3E3] dark:border-[#3D3A3A]"><span
-                                    class="flex-shrink-0 socialbtn bg-white dark:bg-black text-[#FD7590] shadow-md"><svg
+                                    class="flex-shrink-0 socialbtn bg-gray-800 bg-opacity-50 shadow-lg backdrop-blur-md dark:bg-black text-[#FD7590] shadow-md"><svg
                                         stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512"
                                         height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -71,7 +71,7 @@
             <div class="col-span-12 lg:col-span-8 ">
                 <!--header top treo lo lửng-->
                 <header
-                    class="lg:w-[526px] h-[144px] hidden lg:block p-[30px]  mb-10 rounded-[16px] bg-white dark:bg-[#111111] ">
+                    class="lg:w-[526px] h-[144px] hidden lg:block p-[30px]  mb-10 rounded-[16px] bg-gray-800 bg-opacity-50 shadow-lg backdrop-blur-md dark:bg-[#111111] ">
                     <nav class="hidden lg:block">
                         <ul class="flex ">
                             <!--trang chu hien thị các bài blog của cá nhân-->
@@ -122,15 +122,15 @@
                     </nav>
                 </header>
                 <!--nội dung-->
-                <div class="lg:rounded-2xl bg-white">
+                <div class="lg:rounded-2xl bg-gray-800 bg-opacity-50 shadow-lg backdrop-blur-md">
                     <div>
                         <!--view home-->
                         <div class="pt-12 md:py-12 px-2 sm:px-5 md:px-10 lg:px-14">
                             <div class="home" v-if="showhome">
-                                <h2 class="after-effect after:left-52">Bài đăng</h2>
+                                <h2 class="after-effect after:left-52 border-b-2 border-gray-300 pb-2">Bài đăng</h2>
                                 <div class="lg:grid grid-cols-12 md:gap-10  items-center ">
                                     <div class="col-span-12 space-y-2.5">
-                                        <div class="lg:mr-16">
+                                        <div class="">
                                             <blog :filter="id" />
                                         </div>
                                     </div>
@@ -156,7 +156,8 @@
     <div class=" fixed w-full h-full top-0 left-0 flex items-center justify-center z-50 overflow-auto " v-if="updateInfo">
         <div class="absolute w-full h-full bg-gray-900 opacity-50"></div>
 
-        <div class=" bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto ">
+        <div
+            class=" bg-gray-800 bg-opacity-50 shadow-lg backdrop-blur-md w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto ">
             <div class="flex flex-row py-3 px-4">
                 <h5 class="text-lg font-semibold flex-grow">Cập nhập ảnh</h5>
                 <i class="uil-multiply flex-none cursor-pointer bg-gray-400 rounded-xl" @click="updateInfo = false"></i>
@@ -215,21 +216,44 @@ import '../../assets/information.css'
 import userServices from '../../plugins/userServices';
 import toast from '../../components/toast/toast.vue';
 import blog from '../../components/blog.vue';
+
 export default {
 
     data() {
         return {
             user: '',
             username: '', fullname: '', email: '', avatar: '', role: '', id: '',
-            updateInfo: false, showimg: true, active: 'home',
-            showhome: true, showcourse: false, showfollow: false
+            updateInfo: false, showimg: true, active: 'home', currentImgIndex: 0,
+            showhome: true, showcourse: false, showfollow: false,
+            imgs: [`${import.meta.env.VITE_API_BASE_FE}/src/assets/1.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/2.jpg`,
+            `${import.meta.env.VITE_API_BASE_FE}/src/assets/3.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/4.jpg`,
+            `${import.meta.env.VITE_API_BASE_FE}/src/assets/5.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/6.jpg`,
+            `${import.meta.env.VITE_API_BASE_FE}/src/assets/7.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/8.jpg`,
+            `${import.meta.env.VITE_API_BASE_FE}/src/assets/9.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/10.jpg`,
+            `${import.meta.env.VITE_API_BASE_FE}/src/assets/11.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/12.jpg`,
+            `${import.meta.env.VITE_API_BASE_FE}/src/assets/13.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/14.jpg`,
+            `${import.meta.env.VITE_API_BASE_FE}/src/assets/15.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/16.jpg`,
+            `${import.meta.env.VITE_API_BASE_FE}/src/assets/17.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/18.jpg`,
+            `${import.meta.env.VITE_API_BASE_FE}/src/assets/19.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/20.jpg`,
+            ]
         }
     },
     components: { toast, blog },
+    computed: {
+        backgroundStyle() {
+            return {
+                backgroundImage: `url(${this.imgs[this.currentImgIndex]})`,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+            };
+        },
+    },
+    created() {
+        this.currentImgIndex = Math.floor(Math.random() * this.imgs.length);
+    },
     mounted() {
         this.user = userServices.getUserToken()
         this.id = this.user.id
-        console.log(this.id)
         this.username = this.user.username
         this.fullname = this.user.fullname
         this.email = this.user.email

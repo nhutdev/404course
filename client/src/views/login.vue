@@ -77,14 +77,23 @@ export default {
       password: '',
       passwordFocused: false,
       itemFocused: false,
-      user:''
+      user: ''
     }
   },
   components: { toast },
-  mounted()
-  {
+  mounted() {
     this.user = userServices.getUserToken()
-    
+    if (this.user !== null) {
+      if (this.user.role == 'Admin') {
+        window.location.href = `${import.meta.env.VITE_API_BASE_FE}/admin`;
+
+      }
+      else {
+        window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home`;
+
+      }
+    }else{return ''}
+
   },
   methods: {
     validPassword(password) {

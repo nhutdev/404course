@@ -230,6 +230,11 @@ export default {
       this.content = ''
       this.img_blog = ''
     },
+    goIn4()
+    {
+      window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/information/${this.user.id}`;
+
+    }
 
   }
 

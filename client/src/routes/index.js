@@ -47,9 +47,14 @@ const router = createRouter({
         component: () => import('../page/home/blog_details.vue'),
       },
       {
-        path: 'information',
+        path: 'information/:id',
         name: 'information',
         component: () => import('../page/home/information.vue'),
+      },
+      {
+        path: 'course_detail/:id',
+        name: 'course_detail',
+        component: () => import('../page/home/course_detail.vue'),
       }
     ]
   },

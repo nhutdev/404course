@@ -18,7 +18,7 @@
                                     {{ course.title_course }}
                                 </a>
                             </h3>
-                            <button type="button" 
+                            <button type="button" @click="gotoCourse(course.id)"
                                 class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Xem khóa học</button>
                         </div>
                     </div>
@@ -70,7 +70,11 @@ export default {
         courseService.getCourse(this.page, this.status).then((data) => { this.courses = data.courses});
     },
     methods: {
-        
+        gotoCourse(id)
+        {
+        window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/course_detail/${id}`;
+
+        }
     }
 }
 

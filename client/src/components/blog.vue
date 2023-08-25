@@ -25,7 +25,7 @@
                                 {{ blog.title_blog }}
                             </a>
                         </h3>
-                        <div class="flex">
+                        <div class="flex px-2">
                             <button type="button" @click="openUpdate(), sendData(blog)" v-if="user.id == blog.user.id"
                                 class=" mr-2 cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Chỉnh
                                 sửa</button>

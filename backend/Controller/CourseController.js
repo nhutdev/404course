@@ -61,7 +61,24 @@ const getAll = async (req, res) => {
 const getByid = async (req,res)=>{
   try {
     const id = req.params.id
-    const result = await Course.findOne({where:{id}})
+    const result = await Course.findOne({where:{id},
+      include: [
+        { model: User, attributes: ["id", "fullname"] },
+        {
+          model: Index,
+          attributes: ["id", "title_index", "description_index"],
+          include: {
+            model: Index_Content,
+            attributes: [
+              "id",
+              "title_content",
+              "description_content",
+              "type",
+              "link_video",
+            ],
+          },
+        },
+      ],})
     res.json(result)
   } catch (error) {
     console.log(error)
@@ -248,7 +265,6 @@ const updateContent = async (req, res) => {
     const exits = await Index_Content.findByPk(id);
     if (exits) {
       await exits.update({
-        id_index: id,
         title_content: title_content,
         description_content: description_content,
         link_video: link_video,

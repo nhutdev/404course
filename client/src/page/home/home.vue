@@ -1,7 +1,7 @@
 <template>
     <banner/>
     <course/>
-    <blog/>
+    <blog filter=""/>
     <footerv/>
 </template>
 
