@@ -27,10 +27,10 @@
             <p class="text-red-500 m-2" v-if="!course_title && course_titleFocused">
               - Vui lòng nhập tiêu đề
             </p>
-           
+
             <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Mô tả</label>
-              <QuillEditor  theme="snow" ref="courseEditor" />
-            
+            <QuillEditor theme="snow" ref="courseEditor" />
+
             <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Đường dẫn ảnh
               mạng:</label>
             <input placeholder="Nhập nội dung đường ảnh" type="text" id="head" name="head" v-model="img_course"
@@ -103,7 +103,7 @@
                     </td>
                     <td class="border-t">
                       <span class="text-gray-700 px-6 py-4 flex items-center">
-                        {{ index_course.description_index }}
+                        <span v-html="index_course.description_index"></span>
                       </span>
                     </td>
                     <td class="border-t">
@@ -194,7 +194,7 @@
                       {{ content.link_video }}
                     </td>
                     <td class="py-2 px-4 border-b border-grey-light" v-if="content.type == 'document'">
-                      {{ content.description_content }}
+                      <span v-html="content.description_content"></span>
                     </td>
                     <td class="py-2 px-4 border-b border-grey-light">
                       <button type="button"
@@ -242,8 +242,8 @@
 
         <div>
           <label class="block mb-2 text-sm font-medium text-gray-900">Mô tả</label>
-          <QuillEditor  theme="snow" ref="indexEditor" />
-         
+          <QuillEditor theme="snow" ref="indexEditor" />
+
         </div>
       </div>
 
@@ -320,8 +320,8 @@
 
         <div v-if="show_Content">
           <label class="block mb-2 text-sm font-medium text-gray-900">Mô tả</label>
-          <QuillEditor  theme="snow" ref="contentEditor" />
-            
+          <QuillEditor theme="snow" ref="contentEditor" />
+
         </div>
       </div>
 
@@ -354,13 +354,13 @@ export default {
   data() {
     return {
       user: "",
-      isShowCourse: true,isShowIndex: false,isShowContent: false,
-      course: [], index_courses: [], index_contents: [],id_course: "",id_index: "",
-      course_title: "",course_description: "", img_course: "",
-      index_title: "", index_description: "", content_title: "",content_description: "", content_link: "", content_type: "",
+      isShowCourse: true, isShowIndex: false, isShowContent: false,
+      course: [], index_courses: [], index_contents: [], id_course: "", id_index: "",
+      course_title: "", course_description: "", img_course: "",
+      index_title: "", index_description: "", content_title: "", content_description: "", content_link: "", content_type: "",
       show_Video: false, show_Content: false, isShowAddIndex: false, isShowAddContent: false,
-      course_titleFocused: false,course_descriptionFocused: false,
-      img_courseFocused: false, index_titleFocused: false,index_descriptionFocused: false,id_indexFocused: false,
+      course_titleFocused: false, course_descriptionFocused: false,
+      img_courseFocused: false, index_titleFocused: false, index_descriptionFocused: false, id_indexFocused: false,
       content_titleFocused: false, content_typeFocused: false, content_linkFocused: false, content_descriptionFocused: false,
     };
   },
@@ -368,7 +368,7 @@ export default {
     this.user = userService.getUserToken();
     console.log(this.user);
   },
-  components: {QuillEditor, toast },
+  components: { QuillEditor, toast },
   methods: {
     onclose() {
       this.$emit("cancel");
@@ -382,7 +382,7 @@ export default {
           const result = await this.$axios.post(`course/add`, {
             id_user: this.user.id,
             title_course: this.course_title,
-            description_course:  this.$refs.courseEditor.getHTML(),
+            description_course: this.$refs.courseEditor.getHTML(),
             img_course: this.img_course,
           });
           if (result.status == 200) {
@@ -428,8 +428,8 @@ export default {
 
     async addIndex() {
       this.index_titleFocused = true;
-     
-      if (this.index_titleFocused ) {
+
+      if (this.index_titleFocused) {
         try {
           const result = await this.$axios.post(
             `course/index/add/` + this.id_course,
@@ -445,12 +445,12 @@ export default {
               this.index_courses = data;
             });
             this.index_title = "";
-            this.index_description = " ";
+            this.$refs.indexEditor.setHTML('')
           } else {
             this.$refs.toast.showToast(result.data.message);
           }
           this.index_titleFocused = false;
-         
+
         } catch (error) {
           console.log(error);
         }
@@ -488,28 +488,41 @@ export default {
       this.content_titleFocused = true;
       this.content_typeFocused = true;
       this.content_linkFocused = true;
-    
-      if (
-        this.id_indexFocused && this.content_titleFocused && this.content_typeFocused && this.content_linkFocused
-      ) {
+
+      if (this.content_type && this.content_title) {
         try {
-          const result = await this.$axios.post(
-            `course/index/content/add/${this.id_index}`,
-            {
-              title_content: this.content_title,
-              description_content:  this.$refs.contentEditor.getHTML(),
-              link_video: this.content_link,
-              type: this.content_type,
-            }
-          );
-          if (result.status == 200) {
-            courseService.getContent().then((data) => {
-              this.index_contents = data;
-            });
+
+          let result;
+          if (this.content_type == 'document') {
+            result = await this.$axios.post(
+              `course/index/content/add/${this.id_index}`,
+              {
+                title_content: this.content_title,
+                description_content: this.$refs.contentEditor.getHTML(),
+                link_video: null,
+                type: this.content_type,
+              }
+            );
+          } else {
+
+            result = await this.$axios.post(
+              `course/index/content/add/${this.id_index}`,
+              {
+                title_content: this.content_title,
+                description_content: null,
+                link_video: this.content_link,
+                type: this.content_type,
+              }
+            );
+          }
+
+          if (result.status === 200) { // Use strict equality operator
+            const data = await courseService.getContent();
+            this.index_contents = data;
             this.$refs.toast.showToast(result.data.message);
             this.isShowAddContent = false;
             this.content_title = "";
-            this.content_description = "";
+            this.$refs.contentEditor.setHTML('')
             this.content_link = "";
             this.content_type = "";
           } else {
@@ -519,7 +532,6 @@ export default {
           this.content_titleFocused = false;
           this.content_typeFocused = false;
           this.content_linkFocused = false;
-      
         } catch (error) {
           console.log(error);
         }

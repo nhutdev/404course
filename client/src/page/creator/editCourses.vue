@@ -38,7 +38,7 @@
 
                         <div class="description_course">
                             <label class="block mb-2 text-sm font-medium text-gray-900 ">Mô tả khóa học</label>
-                            <QuillEditor theme="snow" ref="courseEditor" v-model="description_course"  />
+                            <QuillEditor theme="snow" ref="courseEditor" v-model="description_course" />
 
                         </div>
 
@@ -200,7 +200,7 @@
                                                 {{ content.title_content }}
                                             </td>
                                             <td class="px-6 py-4" v-if="content.type == 'document'">
-                                                {{ content.description_content }}
+                                                <span v-html="content.description_content"></span>
                                             </td>
                                             <td class="px-6 py-4" v-if="content.type == 'video'">
                                                 <!-- <iframe  :src="content.link_video" frameborder="0" allowfullscreen></iframe> -->
@@ -266,6 +266,11 @@
 
                     <!-- Modal course body -->
                     <div class="p-6 space-y-6">
+                        <div>
+                            <button @click="getData()"
+                                class="text-white w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0">Lấy
+                                dữ liệu mô tả</button>
+                        </div>
                         <div class="title_course">
                             <label class="block mb-2 text-sm font-medium text-gray-900 ">Tiêu đề chương</label>
                             <input type="text"
@@ -277,7 +282,7 @@
 
                         <div class="description_index">
                             <label class="block mb-2 text-sm font-medium text-gray-900 ">Mô tả chương</label>
-                            <QuillEditor theme="snow" ref="indexEditors" v-model="description_index" />
+                            <QuillEditor theme="snow" ref="indexEditorsUpdate" />
                         </div>
 
                     </div>
@@ -332,12 +337,17 @@
                         </div>
 
                         <div class="description_content" v-if="type == 'document'">
+                            <div>
+                                <button @click="getDataContent()"
+                                    class="text-white w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 mb-2 md:mr-0">Lấy
+                                    dữ liệu mô tả</button>
+                            </div>
                             <label class="block mb-2 text-sm font-medium text-gray-900 ">Mô tả chương</label>
                             <QuillEditor theme="snow" ref="contentEditor" />
                         </div>
 
                         <div class="video_link" v-if="type == 'video'">
-                            <label class="block mb-2 text-sm font-medium text-gray-900 ">Mô tả chương</label>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 ">Đường dẫn video</label>
                             <input type="text"
                                 class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
                                 v-model="video_link" required>
@@ -460,7 +470,7 @@
 
                 <div v-if="show_Content">
                     <label class="block mb-2 text-sm font-medium text-gray-900">Mô tả</label>
-                    
+
                     <QuillEditor theme="snow" ref="contentEditor" v-model="description_index" />
 
                 </div>
@@ -480,7 +490,7 @@
             </div>
         </div>
     </div>
-    
+
     <toast ref="toast"></toast>
 </template>
 
@@ -511,7 +521,7 @@ export default {
         courseService.getCourseByID(this.courseid).then((data) => {
             {
                 this.courses = data,
-                this.title_course = this.courses.title_course
+                    this.title_course = this.courses.title_course
                 this.$refs.courseEditor.setHTML(this.courses.description_course)
                 this.img_course = this.courses.img_course
             }
@@ -560,14 +570,17 @@ export default {
         sendIndex(index) {
             this.id_index = index.id
             this.title_index = index.title_index
-            const description = index.description_index
-            this.$refs.indexEditors.setContent(description)
+            this.description_index = index.description_index
+        },
+        getData() {
+            this.$refs.indexEditorsUpdate.setHTML(this.description_index)
         },
         async updateIndex() {
             this.title_indexFocused = true
 
+
             if (this.title_index) {
-                const result = await courseService.updateIndex(this.id_index, this.title_index, this.$refs.indexEditors.getHTML())
+                const result = await courseService.updateIndex(this.id_index, this.title_index, this.$refs.indexEditorsUpdate.getHTML())
                 if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message);
                     this.isShowUindex = false
@@ -587,10 +600,10 @@ export default {
             try {
                 const result = await this.$axios.delete(`course/index/delete/` + id);
                 if (result.status == 200) {
-                    this.$refs.toast.showToast(result.data.message);
-                    courseService.getCourse_Index(this.id_course).then((data) => {
-                        this.index_courses = data;
+                    courseService.getCourse_Index(this.courseid).then((data) => {
+                        this.indexs = data;
                     });
+                    this.$refs.toast.showToast(result.data.message);
                 } else {
                     this.$refs.toast.showToast(result.data.message);
                 }
@@ -600,12 +613,13 @@ export default {
         },
         async addIndex() {
             this.title_indexFocused = true
-           
-            if (this.title_index ) {
+
+            if (this.title_index) {
                 const result = await courseService.addIndex(this.courseid, this.title_index, this.$refs.indexEditors.getHTML())
                 if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message);
                     this.isShowAddIndex = false
+                    this.$refs.indexEditors.setHTML('')
                     courseService.getCourse_Index(this.courseid).then((data) => {
                         this.indexs = data;
                     });
@@ -621,10 +635,13 @@ export default {
 
         sendContent(content) {
             this.title_content = content.title_content
-            this.$refs.contentEditor.setHTML(content.description_content)
+            this.document_content = content.description_content
             this.video_link = content.link_video
             this.id_content = content.id
             this.type = content.type
+        },
+        getDataContent() {
+            this.$refs.contentEditor.setHTML(this.document_content)
         },
         handleContent() {
             if (this.type == "video") {
@@ -674,12 +691,12 @@ export default {
             }
         },
         async addContent() {
-            this.title_contentFocused = true  
+            this.title_contentFocused = true
             this.typeFocused = true
             this.id_indexFocused = true
-            if (this.title_content ) {
-
-                const result = await courseService.addContent(this.id_index, this.title_content, this.$refs.contentEditor.getHTML(), this.video_link, this.type)
+            if (this.title_content) {
+                let result;
+                result = await courseService.addContent(this.id_index, this.title_content, this.$refs.contentEditor.getHTML(), this.video_link, this.type)
                 if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message);
                     this.isShowAddContent = false

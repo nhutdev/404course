@@ -186,7 +186,7 @@
             v-on:keyup.enter="handleSearch">
           <p v-show="showResults " class="p-2 text-sm text-zinc-400">Kết quả tìm kiếm từ khóa '{{ search }}' ?</p>
 
-          <div class="flex flex-col w-full" v-show="showResults && searchCourses.length > 0">
+          <div class="flex flex-col w-full" v-if="showResults && searchCourses.length > 0">
             <h5 class="m-2 border-b border-gray-300 pb-2 font-bold text-base">Khóa học</h5>
             <div class="cursor-pointer w-full border-gray-100 rounded-t border-b " v-for="course in searchCourses">
               <div class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative"
@@ -203,7 +203,9 @@
               </div>
             </div>
 
-            <div class="flex flex-col w-full" v-show="showResults && searchBlogs.length > 0">
+           
+          </div>
+          <div class="flex flex-col w-full" v-if="showResults && searchBlogs.length > 0">
               <h5 class="m-2 border-b border-gray-300 pb-2 font-bold text-base">Bài đăng</h5>
               <div class="cursor-pointer w-full border-gray-100 rounded-t border-b " v-for="blog in searchBlogs">
                 <div class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative"
@@ -219,7 +221,6 @@
                 </div>
               </div>
             </div>
-          </div>
         </div>
       </div>
     </div>
@@ -344,33 +345,3 @@ export default {
 
 }
 </script>
-<style scoped>
-.search_form {
-  position: relative;
-}
-
-.search_form ul {
-  position: absolute;
-  top: 100%;
-  /* tính từ input */
-  left: 0;
-  right: 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  z-index: 999;
-  list-style-type: none;
-  /* loại bỏ dấu chấm đầu dòng */
-  margin: 0;
-  /* đặt margin về 0 */
-  padding: 0;
-  /* đặt padding về 0 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-}
-
-.search_form ul.show {
-  opacity: 1;
-}
-</style>

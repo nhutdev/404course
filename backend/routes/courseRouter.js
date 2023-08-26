@@ -17,7 +17,7 @@ routerCourse.delete('/api/course/index/delete/:id',deleteIndex)
 
 routerCourse.get('/api/course/index/content/get',getContent)
 routerCourse.get('/api/course/index/content/get/:id',getbyIndex)
-routerCourse.post('/api/cour,se/index/content/add/:id',addContent)
+routerCourse.post('/api/course/index/content/add/:id',addContent)
 routerCourse.put('/api/course/index/content/update/:id',updateContent)
 routerCourse.delete('/api/course/index/content/delete/:id',deleteContent)
 
