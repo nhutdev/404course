@@ -38,11 +38,8 @@
 
                         <div class="description_course">
                             <label class="block mb-2 text-sm font-medium text-gray-900 ">Mô tả khóa học</label>
-                            <input type="text"
-                                class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
-                                v-model="description_course" required>
-                            <p class="text-red-500 text-sm ml-2" v-if="!description_course && description_CourseFocused">Nội
-                                dung bị trống.</p>
+                            <QuillEditor theme="snow" ref="courseEditor" v-model="description_course"  />
+
                         </div>
 
                         <div class="img_course">
@@ -114,7 +111,7 @@
                                             {{ index.title_index }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ index.description_index }}
+                                            <p v-html="index.description_index"></p>
                                         </td>
                                         <td class="border-t">
                                             <span class="px-6 py-4 flex items-center">
@@ -230,8 +227,9 @@
                     </div>
                     <!-- Modal content footer -->
                     <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                        <button type="button" 
-                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="Complete()">Hoàn
+                        <button type="button"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            @click="Complete()">Hoàn
                             thành</button>
                     </div>
                 </div>
@@ -279,11 +277,7 @@
 
                         <div class="description_index">
                             <label class="block mb-2 text-sm font-medium text-gray-900 ">Mô tả chương</label>
-                            <input type="text"
-                                class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
-                                v-model="description_index" required>
-                            <p class="text-red-500 text-sm ml-2" v-if="!description_index && description_indexFocused">Nội
-                                dung bị trống.</p>
+                            <QuillEditor theme="snow" ref="indexEditors" v-model="description_index" />
                         </div>
 
                     </div>
@@ -339,11 +333,7 @@
 
                         <div class="description_content" v-if="type == 'document'">
                             <label class="block mb-2 text-sm font-medium text-gray-900 ">Mô tả chương</label>
-                            <input type="text"
-                                class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
-                                v-model="document_content" required>
-                            <p class="text-red-500 text-sm ml-2" v-if="!document_content && document_contentFocused">Nội
-                                dung bị trống.</p>
+                            <QuillEditor theme="snow" ref="contentEditor" />
                         </div>
 
                         <div class="video_link" v-if="type == 'video'">
@@ -391,12 +381,7 @@
 
                 <div>
                     <label class="block mb-2 text-sm font-medium text-gray-900">Mô tả</label>
-                    <input type="text"
-                        class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none"
-                        v-model="description_index" required />
-                    <p class="text-red-500 m-2" v-if="!description_index && description_indexFocused">
-                        - Vui lòng nhập mô tả
-                    </p>
+                    <QuillEditor theme="snow" ref="indexEditors" v-model="description_index" />
                 </div>
             </div>
 
@@ -446,7 +431,7 @@
                         class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none"
                         v-model="title_content" required />
                     <p class="text-red-500 m-2" v-if="!title_content && title_contentFocused">
-                        - Vui lòng nhập tiêu đề
+                        - Vui lòng nhập đường dẫn Youtube
                     </p>
                 </div>
 
@@ -470,16 +455,14 @@
                     <p class="text-red-500 m-2" v-if="!video_link && video_linkFocused">
                         - Vui lòng nhập đường dẫn Youtube
                     </p>
+
                 </div>
 
                 <div v-if="show_Content">
                     <label class="block mb-2 text-sm font-medium text-gray-900">Mô tả</label>
-                    <input type="text"
-                        class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none"
-                        v-model="document_content" required />
-                    <p class="text-red-500 m-2" v-if="!document_content && document_contentFocused">
-                        - Vui lòng nhập đường dẫn Youtube
-                    </p>
+                    
+                    <QuillEditor theme="snow" ref="contentEditor" v-model="description_index" />
+
                 </div>
             </div>
 
@@ -497,12 +480,15 @@
             </div>
         </div>
     </div>
+    
     <toast ref="toast"></toast>
 </template>
 
 <script>
 import toast from "../../components/toast/toast.vue";
 import courseService from "../../plugins/courseService";
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 export default {
     emits: ["cancel"],
     props: ["courseid"],
@@ -520,13 +506,13 @@ export default {
             show_Video: false, show_Content: false, id_indexFocused: false
         };
     },
-    components: { toast },
+    components: { QuillEditor, toast },
     mounted() {
         courseService.getCourseByID(this.courseid).then((data) => {
             {
                 this.courses = data,
-                    this.title_course = this.courses.title_course
-                this.description_course = this.courses.description_course
+                this.title_course = this.courses.title_course
+                this.$refs.courseEditor.setHTML(this.courses.description_course)
                 this.img_course = this.courses.img_course
             }
         })
@@ -538,10 +524,10 @@ export default {
         },
         async updateCourse() {
             this.title_CourseFocused = true
-            this.description_CourseFocused = true
+
             this.img_CourseFocused = true
-            if (this.title_course && this.description_course && this.img_course) {
-                const result = await courseService.updateCourse(this.courseid, this.title_course, this.description_course, this.img_course)
+            if (this.title_course && this.img_course) {
+                const result = await courseService.updateCourse(this.courseid, this.title_course, this.$refs.courseEditor.getHTML(), this.img_course)
                 if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message);
                     this.editCourse = false
@@ -554,7 +540,7 @@ export default {
                     this.$refs.toast.showToast(result.data.message);
                 }
                 this.title_CourseFocused = false
-                this.description_CourseFocused = false
+
                 this.img_CourseFocused = false
             }
 
@@ -574,13 +560,14 @@ export default {
         sendIndex(index) {
             this.id_index = index.id
             this.title_index = index.title_index
-            this.description_index = index.description_index
+            const description = index.description_index
+            this.$refs.indexEditors.setContent(description)
         },
         async updateIndex() {
             this.title_indexFocused = true
-            this.description_indexFocused = true
-            if (this.title_index && this.description_index) {
-                const result = await courseService.updateIndex(this.id_index, this.title_index, this.description_index)
+
+            if (this.title_index) {
+                const result = await courseService.updateIndex(this.id_index, this.title_index, this.$refs.indexEditors.getHTML())
                 if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message);
                     this.isShowUindex = false
@@ -593,7 +580,7 @@ export default {
                     this.$refs.toast.showToast(result.data.message);
                 }
                 this.title_indexFocused = false
-                this.description_indexFocused = false
+
             }
         },
         async deleteIndex(id) {
@@ -613,9 +600,9 @@ export default {
         },
         async addIndex() {
             this.title_indexFocused = true
-            this.description_indexFocused = true
-            if (this.title_index && this.description_index) {
-                const result = await courseService.addIndex(this.courseid, this.title_index, this.description_index)
+           
+            if (this.title_index ) {
+                const result = await courseService.addIndex(this.courseid, this.title_index, this.$refs.indexEditors.getHTML())
                 if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message);
                     this.isShowAddIndex = false
@@ -634,7 +621,7 @@ export default {
 
         sendContent(content) {
             this.title_content = content.title_content
-            this.document_content = content.description_content
+            this.$refs.contentEditor.setHTML(content.description_content)
             this.video_link = content.link_video
             this.id_content = content.id
             this.type = content.type
@@ -650,10 +637,10 @@ export default {
         },
         async updatecontent() {
             this.title_contentFocused = true
-            this.document_contentFocused = true
+
             this.video_linkFocused = true
-            if (this.title_content && (this.document_content || this.video_link)) {
-                const result = await courseService.updateContent(this.id_content, this.title_content, this.document_content, this.video_link)
+            if (this.title_content) {
+                const result = await courseService.updateContent(this.id_content, this.title_content, this.$refs.contentEditor.getHTML(), this.video_link)
                 if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message);
                     this.isShowUcontent = false
@@ -666,7 +653,6 @@ export default {
                     this.$refs.toast.showToast(result.data.message);
                 }
                 this.title_contentFocused = false
-                this.document_contentFocused = false
                 this.video_linkFocused = false
             }
         },
@@ -688,14 +674,12 @@ export default {
             }
         },
         async addContent() {
-            this.title_contentFocused = true
-            this.document_contentFocused = true
-            this.video_linkFocused = true
+            this.title_contentFocused = true  
             this.typeFocused = true
             this.id_indexFocused = true
-            if (this.title_content && (this.document_content || this.video_link)) {
+            if (this.title_content ) {
 
-                const result = await courseService.addContent(this.id_index, this.title_content, this.document_content, this.video_link, this.type)
+                const result = await courseService.addContent(this.id_index, this.title_content, this.$refs.contentEditor.getHTML(), this.video_link, this.type)
                 if (result.status == 200) {
                     this.$refs.toast.showToast(result.data.message);
                     this.isShowAddContent = false
@@ -708,8 +692,6 @@ export default {
                     this.$refs.toast.showToast(result.data.message);
                 }
                 this.title_contentFocused = false
-                this.document_contentFocused = false
-                this.video_linkFocused = false
                 this.typeFocused = false
                 this.id_indexFocused = false
             }
@@ -718,8 +700,7 @@ export default {
             }
         },
 
-        Complete()
-        {
+        Complete() {
             window.location.reload()
         }
 

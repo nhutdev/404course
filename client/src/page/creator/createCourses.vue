@@ -29,7 +29,7 @@
             </p>
            
             <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Mô tả</label>
-              <QuillEditor  theme="snow" ref="courseEditor" v-model="course_descriptionFocused"/>
+              <QuillEditor  theme="snow" ref="courseEditor" />
             
             <label for="text" class="block mb-2 text-base font-medium text-gray-900 dark:text-white mt-1">Đường dẫn ảnh
               mạng:</label>

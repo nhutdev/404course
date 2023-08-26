@@ -19,12 +19,11 @@
             <router-link to="/creator">Quản lý khóa học</router-link>
           </li>
         </ul>
-          <!--center navbar search-->
-        <div class="relative w-1/3">
-          <input type="text" name="search_query" placeholder="Tìm kiếm" autocomplete="off" minlength="1"
-            class="w-full px-4 py-1 text-gray-800 rounded-full focus:outline-none" v-model="search"
-            v-on:keyup.enter="handleSearch" >
-          
+        <!--center navbar search-->
+        <div class="relative w-1/3 " >
+          <input type="text" name="search_query" placeholder="Tìm kiếm" minlength="1"
+            class="w-full px-4 py-1 text-gray-800 rounded-full focus:outline-none cursor-pointer" readonly @click="openSearch"
+            >
         </div>
 
         <div class="flex space-x-5 justify-center items-center pl-2">
@@ -159,56 +158,56 @@
   </div>
 
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-x-hidden overflow-y-auto"
-        v-show="showResults">
+    v-if="showResults">
 
-        <div class="relative w-full max-w-2xl max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                       Kết quả tìm kiếm
-                    </h3>
-                    <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
-                        @click="showResults = false">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
+    <div class="relative w-full max-w-2xl max-h-full">
+      <!-- Modal content -->
 
-                    </button>
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <!-- Modal header -->
+        <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            Tìm kiếm
+          </h3>
+          <button type="button"
+            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
+            @click="openSearch">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="p-6 space-y-6">
+          <input type="text" name="search_query" placeholder="Nhập từ khóa tìm kiếm" autocomplete="off" minlength="1"
+            class="w-full px-4 py-2 text-gray-800 focus:outline-none border" v-model="search"
+            v-on:keyup.enter="handleSearch">
+          <p v-show="showResults " class="p-2 text-sm text-zinc-400">Kết quả tìm kiếm từ khóa '{{ search }}' ?</p>
+
+          <div class="flex flex-col w-full" v-show="showResults && searchCourses.length > 0">
+            <h5 class="m-2 border-b border-gray-300 pb-2 font-bold text-base">Khóa học</h5>
+            <div class="cursor-pointer w-full border-gray-100 rounded-t border-b " v-for="course in searchCourses">
+              <div class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative"
+                @click="gotoCourse(course.id)">
+                <div class="flex flex-col items-center">
+                  <img :src="course.img_course" alt="pic 1"
+                    class=" rounded-full w-10 h-10 object-cover cursor-pointer ml-2" />
                 </div>
-                <!-- Modal body -->
-                <div class="p-6 space-y-6">
-                  
-           <p  v-show="showResults" class="p-2 text-sm text-zinc-400">Kết quả tìm kiếm từ khóa {{ search }} ?</p>
-            
-            <div class="flex flex-col w-full"  v-show="showResults &&  searchCourses.length > 0">
-              <h5 class="m-2 border-b-2 border-gray-300 pb-2 font-bold text-base">Khóa học</h5>
-              <div class="cursor-pointer w-full border-gray-100 rounded-t border-b "
-                v-for="course in searchCourses">
-                <div
-                  class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative" @click="gotoCourse(course.id)">
-                  <div class="flex flex-col items-center">
-                    <img :src="course.img_course" alt="pic 1"
-                      class=" rounded-full w-10 h-10 object-cover cursor-pointer ml-2" />
+                <div class="w-full items-center flex">
+                  <div class="mx-2 -mt-1  text-sm"> {{ course.title_course }}
                   </div>
-                  <div class="w-full items-center flex">
-                    <div class="mx-2 -mt-1  text-sm"> {{ course.title_course }}
-                    </div>
-                  </div>
-               
+                </div>
+
               </div>
             </div>
 
-            <div class="flex flex-col w-full"  v-show="showResults &&  searchBlogs.length > 0">
-              <h5 class="m-2 border-b-2 border-gray-300 pb-2 font-bold text-base">Bài đăng</h5>
-              <div class="cursor-pointer w-full border-gray-100 rounded-t border-b "
-                v-for="blog in searchBlogs">
-                <div
-                  class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative" @click="gotoblog(blog.id)">
+            <div class="flex flex-col w-full" v-show="showResults && searchBlogs.length > 0">
+              <h5 class="m-2 border-b border-gray-300 pb-2 font-bold text-base">Bài đăng</h5>
+              <div class="cursor-pointer w-full border-gray-100 rounded-t border-b " v-for="blog in searchBlogs">
+                <div class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative"
+                  @click="gotoblog(blog.id)">
                   <div class="flex flex-col items-center">
                     <img :src="blog.img_blog" alt="pic 1"
                       class=" rounded-full w-10 h-10 object-cover cursor-pointer ml-2" />
@@ -221,10 +220,10 @@
               </div>
             </div>
           </div>
-                </div>
-            </div>
         </div>
+      </div>
     </div>
+  </div>
   <changePass v-if="showChange" @cancel="onShowChange" />
   <toast ref="toast"></toast>
 </template>
@@ -311,30 +310,35 @@ export default {
     },
     async handleSearch() {
       this.showResults = true
+      this.searchBlogs = []
+      this.searchCourses = []
       try {
         const result = await this.$axios.get(`course/search?q=${this.search}`)
         this.searchCourses = result.data
 
         const getblog = await this.$axios.get(`blog/search?q=${this.search}`)
         this.searchBlogs = getblog.data
-        
-        this.search = ''
+
+       
       } catch (error) {
         console.log(error)
       }
     },
-    hideResults()
-    {
-this.showResults = false
+    hideResults() {
+      this.showResults = false
     },
     gotoCourse(id) {
-            window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/course_detail/${id}`;
-        },
-        gotoblog(id)
-        {
-          window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/blogs/detail/${id}`;
+      window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/course_detail/${id}`;
+    },
+    gotoblog(id) {
+      window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/blogs/detail/${id}`;
 
-        }
+    },
+    openSearch()
+    {
+      this.showResults = !this.showResults
+       this.search = ''
+    }
 
   }
 
