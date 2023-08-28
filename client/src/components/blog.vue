@@ -43,6 +43,28 @@
 
             </div>
         </div>
+        <div class="grid sm:grid-cols-3 gap-4 grid-cols-2 mb-10 mt-10" v-if="indexs>1">
+            <nav aria-label="Page navigation ">
+                <ul class="inline-flex -space-x-px">
+                    <li>
+                        <a
+                            class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 ml-0 rounded-l-lg leading-tight py-2 px-3 ">&lt&lt</a>
+                    </li>
+                    
+                   <div v-for="n in indexs">
+                    <li>
+                        <a 
+                            class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 leading-tight py-2 px-3 " @click="changePage(n)">{{ n }}</a>
+                    </li>
+                </div>
+
+                    <li>
+                        <a
+                            class="bg-white border border-gray-300 text-gray-500 hover:bg-gray-{}00 hover:text-gray-700 rounded-r-lg leading-tight py-2 px-3 ">&gt&gt</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 
 
@@ -79,14 +101,14 @@
                         }}
                         </option>
                     </select>
-            <p class="text-red-500 text-sm ml-2" v-if="!id_tag && tagFocused">Danh mục bị trống.</p>
+                    <p class="text-red-500 text-sm ml-2" v-if="!id_tag && tagFocused">Danh mục bị trống.</p>
 
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 ">Tiêu đề</label>
                         <input type="text"
                             class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
                             v-model="title" required>
-        <p class="text-red-500 text-sm ml-2" v-if="!title && titleFocused">Tiêu đề bị trống.</p>
+                        <p class="text-red-500 text-sm ml-2" v-if="!title && titleFocused">Tiêu đề bị trống.</p>
 
                     </div>
                     <div>
@@ -94,14 +116,14 @@
                         <input type="text"
                             class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:outline-none "
                             v-model="img_blog" required>
-        <p class="text-red-500 text-sm ml-2" v-if="!img_blog && imgFocused">Đường dẫn ảnh bị trống.</p>
+                        <p class="text-red-500 text-sm ml-2" v-if="!img_blog && imgFocused">Đường dẫn ảnh bị trống.</p>
 
                         <img :src="img_blog" alt="">
 
                     </div>
 
-                    <QuillEditor theme="snow" ref="myEditorUpdate" v-model="content"/>
-        <p class="text-red-500 text-sm ml-2" v-if="!content && contentFocused">Nội dung bị trống.</p>
+                    <QuillEditor theme="snow" ref="myEditorUpdate" v-model="content" />
+                    <p class="text-red-500 text-sm ml-2" v-if="!content && contentFocused">Nội dung bị trống.</p>
 
                 </div>
                 <!-- Modal footer -->
@@ -135,12 +157,12 @@ export default {
         return {
             showUpdate: false,
             title: '', content: '', query: 1,
-            blogs: [], tags: [], imgs: [], status: 1,
+            blogs: [], tags: [], imgs: [], status: 1, indexs: '', numbers: [],
             user: '', id_tag: '', img_blog: '', blog: '', id: '',
             titleFocused: false, tagFocused: false, imgFocused: false, contentFocused: false
         }
     },
-    props:['filter'],
+    props: ['filter'],
     components: {
         QuillEditor, toast
     },
@@ -148,10 +170,16 @@ export default {
         this.getblog()
         this.gettag()
         this.user = userServices.getUserToken()
+        this.generateNumbers()
     },
-    methods: { 
+    methods: {
         formatDate(time) {
             return dayjs(time).format('DD-MM-YYYY');
+        },
+        generateNumbers() {
+            for (let i = 1; i <= this.indexs; i++) {
+                this.numbers.push(i);
+            }
         },
         clearText() {
             this.title = ''
@@ -160,16 +188,16 @@ export default {
         },
 
         async getblog() {
-            blogService.getblog(this.query, this.status).then((data) => { 
-                if(this.filter == '')
-                {
+            blogService.getblog(this.query, this.status).then((data) => {
+                if (this.filter == '') {
                     this.blogs = data.blogs
+                    this.indexs = data.totalPages
                 }
-                else if(this.filter)
-                {
-                    this.blogs = data.blogs.filter(item => item.id_user == this.filter )
+                else if (this.filter) {
+                    this.blogs = data.blogs.filter(item => item.id_user == this.filter)
+                    this.indexs = data.totalPages
                 }
-             })
+            })
         },
         updateContent(newContent) {
             this.content = newContent;
@@ -225,6 +253,12 @@ export default {
 
             }
 
+        },
+        changePage(n)
+        {
+            
+            this.query = n
+            this.getblog()
         }
     }
 

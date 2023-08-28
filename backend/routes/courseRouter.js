@@ -1,5 +1,5 @@
 const express = require("express");
-const {getAll,addCourse,updateCourse,deleteCourse,getByid,
+const {getAll,addCourse,updateCourse,deleteCourse,getByid,getAllSave,
     getIndex,addIndex,updateIndex,deleteIndex,getbyIndex,addQuestion,
     getContent,addContent,updateContent,deleteContent  ,getSave,handleSave,getComment} = require("../Controller/CourseController")
 const routerCourse = express.Router();
@@ -9,6 +9,7 @@ routerCourse.get('/api/course/get/:id',getByid)
 routerCourse.post('/api/course/add',addCourse)
 routerCourse.put('/api/course/update/:id',updateCourse)
 routerCourse.delete('/api/course/delete/:id',deleteCourse)
+routerCourse.get('/api/course/getbysave',getAllSave)
 
 routerCourse.get('/api/course/index/get/:id', getIndex)
 routerCourse.post('/api/course/index/add/:id',addIndex)

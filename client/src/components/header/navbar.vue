@@ -2,10 +2,11 @@
   <div>
     <div class="bg-white dark:bg-gray-800 rounded shadow-lg py-5 px-7">
       <nav class="flex justify-between">
-        <div class="flex items-center space-x-3 lg:pr-16 pr-6">
+        <div class="flex items-center space-x-3 lg:pr-16 pr-6 cursor-pointer">
           <img class="cursor-pointer dark:bg-white p-1 rounded-full"
             src="https://tuk-cdn.s3.amazonaws.com/can-uploader/header-1-svg1.svg" alt="circle" />
-          <h2 class="font-normal text-2xl leading-6 text-gray-800 dark:text-white">404Learn</h2>
+            <router-link to="/home">
+          <h2 class="font-normal text-2xl leading-6 text-gray-800 dark:text-white">404Learn</h2></router-link>
         </div>
 
         <!-- For medium and plus sized devices -->
@@ -20,7 +21,7 @@
           </li>
         </ul>
         <!--center navbar search-->
-        <div class="relative w-1/3 " >
+        <div class="relative w-1/3 hidden md:block " >
           <input type="text" name="search_query" placeholder="Tìm kiếm" minlength="1"
             class="w-full px-4 py-1 text-gray-800 rounded-full focus:outline-none cursor-pointer" readonly @click="openSearch"
             >
@@ -43,7 +44,7 @@
         </div>
 
       </nav>
-      <!-- for smaller devcies -->
+      <!-- nav mobile -->
 
       <div class="block md:hidden w-full mt-5" @click="handleNavbar()">
         <div
@@ -66,6 +67,11 @@
               class="px-4 py-3 text-gray-600 bg-gray-50 border border-gray-50 focus:outline-none focus:bg-gray-100 hover:bg-gray-100 duration-100 cursor-pointer text-xs leading-3 font-normal focus:text-black"
               v-if="showCreator">
               <router-link to="/creator">Quản lý khóa học</router-link>
+            </li>
+            <li class="px-4 py-3 text-gray-600 bg-gray-50 border border-gray-50 focus:outline-none focus:bg-gray-100 hover:bg-gray-100 duration-100 cursor-pointer text-xs leading-3 font-normal focus:text-black" >
+          <input type="text" name="search_query" placeholder="Tìm kiếm" minlength="1"
+            class="w-full px-4 py-1 text-gray-800 rounded-full focus:outline-none cursor-pointer" readonly @click="openSearch"
+            >
             </li>
           </ul>
         </div>
@@ -109,6 +115,7 @@
     </div>
   </div>
 
+  <!--add blog-->
   <div class=" fixed w-full h-full top-0 left-0 flex items-center justify-center z-50 overflow-auto " v-if="showaddblog">
     <div class="absolute w-full h-full bg-gray-900 opacity-50"></div>
 
@@ -157,6 +164,7 @@
     </div>
   </div>
 
+  <!--tim kiem-->
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-x-hidden overflow-y-auto"
     v-if="showResults">
 
@@ -225,6 +233,7 @@
       </div>
     </div>
   </div>
+
   <changePass v-if="showChange" @cancel="onShowChange" />
   <toast ref="toast"></toast>
 </template>

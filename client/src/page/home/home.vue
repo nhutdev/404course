@@ -1,6 +1,6 @@
 <template>
     <banner/>
-    <course/>
+    <course />
     <blog filter=""/>
     <footerv/>
 </template>

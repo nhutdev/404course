@@ -99,9 +99,9 @@ const router = createRouter({
         component: () => import('../page/admin/banner.vue')
       },
       {
-        path: 'demo',
-        name: 'demo',
-        component: () => import('../page/admin/demo.vue')
+        path: 'static',
+        name: 'static',
+        component: () => import('../page/admin/static.vue')
       }
     ]
   },

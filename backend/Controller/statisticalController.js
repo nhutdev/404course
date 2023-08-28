@@ -60,41 +60,25 @@ const chartBlog = async (req, res) => {
     try {
         const Blogger = await Blog.findAll({
             attributes: [
-                'id',
-                [sequelize.fn('COUNT', sequelize.col('like_blogs.id')), 'like_count'],
-                [sequelize.fn('COUNT', sequelize.col('comment_blogs.id')), 'comment_count'],
-                [sequelize.fn('COUNT', sequelize.col('save_blogs.id')), 'save_count']
-            ],
-            include: [
-                {
-                    model: Like,
-                    attributes: []
-                },
-                {
-                    model: Comment,
-                    attributes: []
-                },
-                {
-                    model: Save,
-                    attributes: []
-                }
+                'id','title_blog',
+                [sequelize.literal('(SELECT COUNT(*) FROM like_blogs WHERE like_blogs.id_blog = blog.id)'), 'like_count'],
+                [sequelize.literal('(SELECT COUNT(*) FROM comment_blogs WHERE comment_blogs.id_blog = blog.id)'), 'comment_count'],
+                [sequelize.literal('(SELECT COUNT(*) FROM save_blogs WHERE save_blogs.id_blog = blog.id)'), 'save_count']
             ],
             group: ['blog.id']
-
         });
-        res.json(Blogger)
-
+        res.json(Blogger);
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
-}
+};
 
 // thong ke blog tung user
 const chartBlogByUser = async (req, res) => {
     try {
         const getUserBlog = await Blog.findAll({
-            attributes: ['id_user', [sequelize.fn('COUNT', "User.id"), 'cc']],
-            order: [["cc", "DESC"]],
+            attributes: ['id_user', [sequelize.fn('COUNT', "User.id"), 'point']],
+            order: [["point", "DESC"]],
             include: {
                 model: User,
                 attributes: ['fullname']
@@ -131,25 +115,6 @@ const chartUserByRole = async (req, res) => {
     }
 }
 
-//top blog
-const topBlog = async (req, res) => {
-    try {
-
-        const result = await Blog.findAll({
-            attributes: ['id'],
-            include: [
-                {
-                    model: Like,
-                    attributes: [[sequelize.fn('COUNT', sequelize.col('like_blogs.id_blog')), 'likeCount']],
-                },
-            ],
-            group: ['blog.id'],
-        });
-        res.json(result)
-    } catch (error) {
-        console.log(error)
-    }
-}
 
 module.exports = {
     chartCoursePoint,
@@ -157,5 +122,4 @@ module.exports = {
     chartBlogByUser,
     chartCourseBySave,
     chartUserByRole,
-    topBlog
 }

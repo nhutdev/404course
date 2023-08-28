@@ -1,35 +1,34 @@
 <template>
-    <body class="bg-white">
-        <main class="container mx-auto px-6 md:px-0">
+    <body class="">
+        <main class="container">
             <section>
-                <h1 class="text-3xl font-bold text-gray-600 mb-10">Danh sách khóa học</h1>
                 <!--khóa học-->
                 <div class="mt-2 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-x-6 gap-y-8 ">
                     <!-- chi tiet -->
                     <div v-for="course in courses">
                         <div class="relative w-full h-64 bg-cover bg-center group rounded-lg overflow-hidden shadow-lg hover:shadow-3xl  transition duration-300 ease-in-out "
-                            v-bind:style="{ 'background-image': 'url(' + course.img_course + ')' }">
+                            v-bind:style="{ 'background-image': 'url(' + course.course.img_course + ')' }">
                             <div
                                 class="absolute inset-0 bg-black bg-opacity-50 group-hover:opacity-75 transition duration-300 ease-in-out">
                             </div>
                             <div class="relative w-full h-full flex flex-col justify-center items-center">
                                 <h3 class="text-center">
                                     <a class="text-white text-2xl font-bold text-center">
-                                        {{ course.title_course }}
+                                        {{ course.course.title_course }}
                                     </a>
                                 </h3>
-                                <div class="flex">
-                                    <button type="button" @click="gotoCourse(course.id)"
+                              
+                                    <button type="button" @click="gotoCourse(course.course.id)"
                                         class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Xem
                                         khóa học</button>
 
-                                    <div class="ml-2">
+                                    <div class="">
                                         <span
-                                            v-if="saves.some(item => item.id_course === course.id && item.id_user === user.id)">
+                                            v-if="saves.some(item => item.id_course === course.course.id && item.id_user === user.id)">
                                             <!-- Sử dụng v-for để lặp lại các sản phẩm trong danh sách thích -->
                                             <span
-                                                v-for="save in saves.filter(item => item.id_course === course.id && item.id_user === user.id)">
-                                                <button type="button" @click="savecourse(course.id)"
+                                                v-for="save in saves.filter(item => item.id_course === course.course.id && item.id_user === user.id)">
+                                                <button type="button" @click="savecourse(course.course.id)"
                                                    
                                                     class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">
                                                 {{ save.id ? 'Đã lưu' : 'Lưu' }}
@@ -38,11 +37,11 @@
                                         </span>
                                         <!-- Nếu không có sản phẩm nào trong danh sách thích, hiển thị chữ màu #ccc -->
                                         <span v-else>
-                                            <button type="button" @click="savecourse(course.id)"
+                                            <button type="button" @click="savecourse(course.course.id)"
                                                 class=" cursor-pointer py-2.5 px-5 my-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 hidden group-hover:block">Lưu</button>
                                         </span>
                                     </div>
-                                </div>
+                               
                             </div>
                         </div>
                     </div>
@@ -106,9 +105,9 @@ export default {
             window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/course_detail/${id}`;
         },
         getcourse(){
-            courseService.getCourse(this.page, this.status).then((data) => {        
+            courseService.getCourseSave(this.page, this.status,this.user.id).then((data) => {        
                     this.courses = data.courses 
-                     this.indexs = data.totalPages
+                    this.indexs = data.totalPages
         });
         },
         async getSave() {
@@ -133,6 +132,7 @@ export default {
                 {
                     this.$refs.toast.showToast(result.data.message)
                     this.getSave()
+                    this.getcourse()
                 }
                 else
                 {

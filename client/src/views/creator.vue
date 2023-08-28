@@ -3,7 +3,8 @@
         <header>
             <nav class="p-6">
                 <div class="flex justify-between items-center">
-                    <h1 class="pr-6 border-r-2 text-2xl font-bold text-gray-500">404Learn</h1>
+                    <router-link to="/creator">
+          <h2 class="font-normal text-2xl leading-6 text-gray-800 dark:text-white">404Learn</h2></router-link>
                     <div class="flex justify-between flex-grow">
                         <div class="flex ml-6 items-center">
                             <span>

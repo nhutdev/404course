@@ -10,6 +10,14 @@ class courseService {
             console.log(error)
         }
     }
+    async getCourseSave(query,status,id) {
+        try {
+            const result = await axios.get(`${this.url}course/getbysave?page=${query}&&status=${status}&&id=${id}`);
+            return result.data;
+        } catch (error) {
+            console.log(error)
+        }
+    }
     async getCourseByID(id) {
         try {
             const result = await axios.get(`${this.url}course/get/${id}`);

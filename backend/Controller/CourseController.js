@@ -16,6 +16,7 @@ const getAll = async (req, res) => {
     const courses = await Course.findAndCountAll({
       attributes: [
         "id",
+        "id_user",
         "title_course",
         "description_course",
         "img_course",
@@ -85,6 +86,48 @@ const getByid = async (req,res)=>{
     console.log(error)
   }
 }
+
+
+const getAllSave = async (req, res) => {
+  try {
+    const status = req.query.status;
+    const page = parseInt(req.query.page) || 1; // Trang hiện tại từ query string, mặc định là trang 1
+    const id =  parseInt(req.query.id)
+
+    const offset = (page - 1) * ITEMS_PER_PAGE;
+
+    const courses = await Save.findAndCountAll({
+      attributes: [
+        "id","id_user","id_course"
+      ],
+      order: [["id", "DESC"]],
+      include: [
+        { model: User, attributes: ["id", "fullname"] ,where:{id:id}}, 
+        { model: Course,attributes:[ "id",
+        "id_user",
+        "title_course",
+        "description_course",
+        "img_course",
+        "status",
+        "createdAt",
+        "updatedAt",]}
+      ],
+      offset: offset,
+      limit: ITEMS_PER_PAGE,
+    });
+
+    const totalItems = courses.count;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+    res.json({
+      courses: courses.rows,
+      currentPage: page,
+      totalPages: totalPages,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 const addCourse = async (req, res) => {
   try {
     const { id_user, title_course, description_course, img_course } = req.body;
@@ -385,5 +428,6 @@ module.exports = {
   getByid,
   getbyIndex,
   getSave,handleSave,
-  getComment,addQuestion
+  getComment,addQuestion,
+  getAllSave
 };
