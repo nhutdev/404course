@@ -9,7 +9,8 @@ const {
   handleFollow,
   createNotification,
   deleteNotification,
-  newAvatar
+  newAvatar,
+  getFollowbyMe
 } =require("../Controller/userController.js") ;
 const routerUser = express.Router();
 routerUser.get('/api/user/get',get_allUser);
@@ -18,11 +19,11 @@ routerUser.put('/api/user/updateInfo/:id',updateInfo);
 routerUser.put('/api/user/updatePassword/:id',updatePassword);
 routerUser.put('/api/user/newAvatar/:id',newAvatar)
 routerUser.delete('/api/user/delete',deleteUser)
-routerUser.post('/api/follow/get',getFollow);
+routerUser.get('/api/follow/get',getFollow);
 routerUser.post('/api/follow/handle',handleFollow);
 routerUser.post('/api/user/noti/create',createNotification);
 routerUser.delete('/api/user/noti/delete/:id',deleteNotification);
-
+routerUser.get('/api/follow/getbyme',getFollowbyMe)
 module.exports = { 
     routerUser,
 };

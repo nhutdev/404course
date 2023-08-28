@@ -53,8 +53,7 @@ const get_byID = async (req, res) => {
     // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
     const id = req.params.id;
     const exitID = await User.findByPk(id);
-    if(exitID)
-    {
+    if (exitID) {
       return res.status(200).json(exitID);
     }
   } catch (error) {
@@ -68,13 +67,12 @@ const updateInfo = async (req, res) => {
   try {
     // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
     const id = req.params.id;
- 
+
     // Thực hiện kiểm tra xem user có không
     const exists = await User.findByPk(id)
-    if(exists)
-    {
+    if (exists) {
       upload.single("avatar")(req, res, async function (err) {
-        const {fullname}=req.body
+        const { fullname } = req.body
         if (err instanceof multer.MulterError) {
           return res.status(400).json({ message: err.message });
         } else if (err) {
@@ -89,18 +87,18 @@ const updateInfo = async (req, res) => {
           exists.fullname = fullname
           await exists.save();
           console.log(fullname)
-          res.status(200).json({message:"Cập nhập thành công",exists})
-        } else{
+          res.status(200).json({ message: "Cập nhập thành công", exists })
+        } else {
           exists.fullname = fullname
-          res.status(200).json({message:"Cập nhập thành công",exists})
+          res.status(200).json({ message: "Cập nhập thành công", exists })
           await exists.save();
         }
       });
-       
+
     }
   } catch (error) {
-     // xuất lỗi ra trên console
-     console.log(error)
+    // xuất lỗi ra trên console
+    console.log(error)
   }
 }
 
@@ -108,25 +106,24 @@ const updateInfo = async (req, res) => {
 const updatePassword = async (req, res) => {
   try {
     // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
-    const {password,newpassword} = req.body;
+    const { password, newpassword } = req.body;
     const id = req.params.id
-        const existUser = await User.findByPk(id)
-        if (existUser){
-            const isMatch = await bcrypt.compare(password, existUser.password)
-            if (!isMatch) {
-                return res.status(201).json({ message: "Mật khẩu cũ không đúng." })
-            }
-            else{
-                const salt = await bcrypt.genSalt(10);
-                const hashedPassword = await bcrypt.hash(newpassword, salt);
-                await existUser.update({password:hashedPassword})
-                return res.status(200).json({ message: "Thành công" })
-            }
-        }
-        else
-        {
-          res.status(202).json({message:'Không tồn tại user này'})
-        }
+    const existUser = await User.findByPk(id)
+    if (existUser) {
+      const isMatch = await bcrypt.compare(password, existUser.password)
+      if (!isMatch) {
+        return res.status(201).json({ message: "Mật khẩu cũ không đúng." })
+      }
+      else {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newpassword, salt);
+        await existUser.update({ password: hashedPassword })
+        return res.status(200).json({ message: "Thành công" })
+      }
+    }
+    else {
+      res.status(202).json({ message: 'Không tồn tại user này' })
+    }
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)
@@ -135,14 +132,13 @@ const updatePassword = async (req, res) => {
 
 
 // Thực hiện thêm mới ảnh avatar
-const newAvatar = async (req,res)=>{
+const newAvatar = async (req, res) => {
   try {
     // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
     const id = req.params.id;
     // Thực hiện kiểm tra xem user có không
     const exists = await User.findByPk(id)
-    if(exists)
-    {
+    if (exists) {
       upload.single("avatar")(req, res, async function (err) {
         if (err instanceof multer.MulterError) {
           return res.status(400).json({ message: err.message });
@@ -156,12 +152,13 @@ const newAvatar = async (req,res)=>{
           exists.avatar_name = req.file.filename
           exists.avatar = imageUrl;
           await exists.save();
-          res.status(200).json({message:"Cập nhập ảnh thành công"})
-        }});
+          res.status(200).json({ message: "Cập nhập ảnh thành công" })
+        }
+      });
     }
   } catch (error) {
-     // xuất lỗi ra trên console
-     console.log(error)
+    // xuất lỗi ra trên console
+    console.log(error)
   }
 }
 // Thực hiện việc xóa 1 user khỏi DB
@@ -170,8 +167,7 @@ const deleteUser = async (req, res) => {
     // hàm sẽ nhận 1 đối số id của user từ params của đường dẫn api
     const id = req.params.id;
     const existUser = await User.findByPk(id)
-    if(existUser)
-    {
+    if (existUser) {
 
     }
   } catch (error) {
@@ -182,9 +178,22 @@ const deleteUser = async (req, res) => {
 // GET danh sách follow 
 const getFollow = async (req, res) => {
   try {
-    const { from_user } = req.body
-    const getList = FollowUser.findAll({where:{from_user}});
-    return res.status(200).json(getList);
+    const id = parseInt(req.query.id)
+    const getList = await FollowUser.findAll({ where: { from_user: id } });
+      return res.json(getList);
+  } catch (error) {
+    // xuất lỗi ra trên console
+    console.log(error)
+  }
+}
+const getFollowbyMe = async(req,res)=>{
+  try {
+    const id = parseInt(req.query.id)
+    const getList = await User.findAll({
+      attributes:['id','fullname','avatar'],
+      include:[{model:FollowUser,where:{from_user:id},attributes:['id']}]
+    })
+      return res.json(getList);
   } catch (error) {
     // xuất lỗi ra trên console
     console.log(error)
@@ -193,19 +202,19 @@ const getFollow = async (req, res) => {
 // Thêm hoặc xóa 1 follow
 const handleFollow = async (req, res) => {
   try {
-    const {to_user,from_user} = req.body
-    const UserFollow = await FollowUser.findOne({where:{to_user:to_user,from_user:from_user}})
-    console.log(UserFollow)
-    if(UserFollow)
-    {
-      const followed = await FollowUser.destroy({where:{to_user,from_user}})
-      return res.status(200).json({message:"Huỷ follow thành công"})
-
+    const { to_user, from_user } = req.body
+    const UserFollow = await FollowUser.findOne({ where: { to_user: to_user, from_user: from_user } })
+   
+    if (UserFollow) {
+      const followed = await FollowUser.destroy({ where: { to_user, from_user } }) 
+      
+      return res.status(200).json({ message: "Huỷ follow thành công" })
+     
     }
-    else
-    {
-      const followent = await FollowUser.create({to_user,from_user})
-      return res.status(200).json({message:"Follow thành công"})
+    else {
+      const followent = await FollowUser.create({ to_user, from_user })
+      
+      return res.status(200).json({ message: "Follow thành công" })
     }
   } catch (error) {
     // xuất lỗi ra trên console
@@ -217,20 +226,21 @@ const handleFollow = async (req, res) => {
 // Thực hiện việc thêm thông báo cho user
 const createNotification = async (req, res) => {
   try {
-    const {title_notification,content_notification,id_role} = req.body
+    const { title_notification, content_notification, id_role } = req.body
     const existRole = await Role.findByPk(id_role)
-    if(existRole)
-    {
+    if (existRole) {
       //join user vs user_role
-      const getUser = await User.findAll({attribute:["id"],
+      const getUser = await User.findAll({
+        attribute: ["id"],
         include: [{
-        model: User_role, 
-        where: { id_role: id_role }
-      }]})
+          model: User_role,
+          where: { id_role: id_role }
+        }]
+      })
       getUser.forEach(async element => {
-      const noti = await Noti.create({id_user:element.id,title_notification:title_notification,content_notification:content_notification,status_seen:false})
-    });
-    return res.status(200).json({message:"Gửi thành công!"})
+        const noti = await Noti.create({ id_user: element.id, title_notification: title_notification, content_notification: content_notification, status_seen: false })
+      });
+      return res.status(200).json({ message: "Gửi thành công!" })
     }
   } catch (error) {
     // xuất lỗi ra trên console
@@ -243,10 +253,9 @@ const deleteNotification = async (req, res) => {
   try {
     const id = req.params.id // goi. ve`
     const existNoti = await Noti.findByPk(id)
-    if(existNoti)
-    {
+    if (existNoti) {
       await existNoti.destroy()
-      return res.status(200).json({message:"Xoá thành công!"})
+      return res.status(200).json({ message: "Xoá thành công!" })
     }
   } catch (error) {
     // xuất lỗi ra trên console
@@ -263,5 +272,6 @@ module.exports = {
   handleFollow,
   createNotification,
   deleteNotification,
-  newAvatar
+  newAvatar,
+  getFollowbyMe
 }

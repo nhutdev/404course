@@ -11,7 +11,7 @@
                     {{ blog.title_blog }}
                 </h2>
                 <div class="flex mt-3">
-                    <img :src="blog.user.avatar" class="h-10 w-10 rounded-full mr-2 object-cover" />
+                    <img :src="blog.user.avatar" class="h-10 w-10 rounded-full mr-2 object-cover cursor-pointer" @click="goIn4(blog.user.id)"/>
                     <div>
                         <p class="font-semibold text-gray-200 text-sm"> {{ blog.user.fullname }} </p>
                         <p class="font-semibold text-gray-400 text-xs"> {{ formatDate(blog.createdAt) }} </p>
@@ -164,6 +164,9 @@ export default {
                 this.$refs.toast.showToast(result.data.message)
             }
         },
+        goIn4(id) {
+      window.location.href = `${import.meta.env.VITE_API_BASE_FE}/home/information/${id}`;
+    },
         
     }
 

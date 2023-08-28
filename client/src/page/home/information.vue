@@ -8,9 +8,25 @@
                 <div
                     class=" mt-2 w-full mb-6 lg:mb-0 mx-auto relative bg-gray-800 bg-opacity-50  backdrop-blur-md text-center  px-6 rounded-[20px]  md:mt-[220px] lg:mt-0 ">
                     <img alt="avatar" :src="avatar"
-                        class="w-[240px] md:block absolute left-[50%] transform -translate-x-[50%] h-[240px] drop-shadow-xl mx-auto rounded-[20px] -mt-[140px] hidden"
+                        class="w-[240px] md:block absolute left-[50%] transform -translate-x-[50%] h-[240px] drop-shadow-xl mx-auto rounded-full -mt-[140px] hidden"
                         loading="lazy" style="color: transparent;">
+
                     <div class="pt-[100px] pb-8">
+                        <div class="" v-if="this.$route.params.id != user.id">
+                            <span v-if="follows.some(item => item.to_user == this.$route.params.id)">
+                        <span v-for="followuser in follows.filter(item => item.to_user == this.$route.params.id)">
+                            <button @click="followUser()"
+                                class=" inline-flex items-center mx-auto bg-gradient-to-r from-[#FA5252] to-[#DD2476] duration-200 transition ease-linear hover:bg-gradient-to-l  px-8 py-3 text-lg text-white rounded-[35px] mt-6">
+                                Đang theo dõi</button>
+                        </span>
+                    </span>
+
+                    <span v-else>
+                        <button @click="followUser()"
+                            class=" inline-flex items-center mx-auto bg-gradient-to-r from-[#FA5252] to-[#DD2476] duration-200 transition ease-linear hover:bg-gradient-to-l  px-8 py-3 text-lg text-white rounded-[35px] mt-6">
+                            Theo dõi</button>
+                    </span>
+                        </div>
                         <h1 class="mt-6 mb-1 text-5xl font-semibold text-white">{{ username }}</h1>
                         <h3 class="mb-4 text-white inline-block  px-5 py-1.5 rounded-lg  ">
                             {{ role }}</h3>
@@ -25,8 +41,8 @@
                                     </svg></span>
                                 <div class="text-left ml-2.5">
                                     <p class="text-xs text-[#44566C] dark:text-[#A6A6A6]">Họ và tên: </p>
-                                    <p class="text-white break-all"><a
-                                            class="hover:text-[#FA5252] duration-300 transition " href="tel:+1234567890">{{
+                                    <p class=" break-all"><a class="hover:text-[#FA5252] duration-300 transition "
+                                            href="tel:+1234567890">{{
                                                 fullname }}</a></p>
                                 </div>
                             </div>
@@ -86,7 +102,7 @@
                                     </svg></span>Trang chủ</a>
 
                             <!--khoa học-->
-                            <a @click="openCourse()"
+                            <a @click="openCourse()" v-if="this.$route.params.id == user.id"
                                 :class="active == 'course' ? ' lg:bg-gradient-to-r from-[#FA5252] to-[#DD2476]' : ''"
                                 class="w-full h-20 rounded-[10px]  cursor-pointer  font-poppins  bg-[#F3F6F6]  font-medium mx-2.5  text-xtiny text-gray-lite dark:text-[#A6A6A6]    justify-center flex flex-col items-center   transition-all duration-300 ease-in-out dark:hover:text-white dark:bg-[#212425] hover:text-white   hover:bg-gradient-to-r from-[#FA5252] to-[#DD2476] "><span
                                     class="text-xl mb-1"><svg stroke="currentColor" fill="none" stroke-width="0"
@@ -109,7 +125,7 @@
                                     </svg></span>Khóa học</a>
 
                             <!--user follow-->
-                            <a @click="openFollow()"
+                            <a @click="openFollow()" v-if="this.$route.params.id == user.id"
                                 :class="active == 'follow' ? ' lg:bg-gradient-to-r from-[#FA5252] to-[#DD2476]' : ''"
                                 class="w-full h-20 rounded-[10px]  cursor-pointer  font-poppins  bg-[#F3F6F6]  font-medium mx-2.5  text-xtiny text-gray-lite dark:text-[#A6A6A6]    justify-center flex flex-col items-center   transition-all duration-300 ease-in-out dark:hover:text-white dark:bg-[#212425] hover:text-white   hover:bg-gradient-to-r from-[#FA5252] to-[#DD2476] "><span
                                     class="text-xl mb-1"><svg stroke="currentColor" fill="currentColor" stroke-width="0"
@@ -127,7 +143,8 @@
                         <!--view home-->
                         <div class="pt-12 md:py-12 px-2 sm:px-5 md:px-10 lg:px-14">
                             <div class="home" v-if="showhome">
-                                <h2 class="after-effect after:left-52 border-b-2 border-gray-300 pb-2 text-white">Bài đăng</h2>
+                                <h2 class="after-effect after:left-52 border-b-2 border-gray-300 pb-2 text-white">Bài đăng
+                                </h2>
                                 <div class="lg:grid grid-cols-12 md:gap-10  items-center ">
                                     <div class="col-span-12 space-y-2.5">
                                         <div class="">
@@ -138,8 +155,9 @@
                             </div>
 
                             <!--view course-->
-                            <div class="course" v-if="showcourse">
-                                <h2 class="after-effect after:left-52 border-b-2 border-gray-300 pb-2 text-white" >Khóa học đã đăng ký</h2>
+                            <div class="course" v-if="showcourse && this.$route.params.id == user.id">
+                                <h2 class="after-effect after:left-52 border-b-2 border-gray-300 pb-2 text-white">Khóa học
+                                    đã đăng ký</h2>
                                 <div class="lg:grid grid-cols-12 md:gap-10  items-center ">
                                     <div class="col-span-12 space-y-2.5">
                                         <div class="">
@@ -150,7 +168,16 @@
                             </div>
 
                             <!--view follow-->
-                            <div class="follow" v-if="showfollow">follow</div>
+                            <div class="follow" v-if="showfollow && this.$route.params.id == user.id">
+                                <h2 class="after-effect after:left-52 border-b-2 border-gray-300 pb-2 text-white">Theo dõi</h2>
+                                <div class="lg:grid grid-cols-12 md:gap-10  items-center ">
+                                    <div class="col-span-12 space-y-2.5">
+                                        <div class="">
+                                            <follow />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -226,13 +253,14 @@ import userServices from '../../plugins/userServices';
 import toast from '../../components/toast/toast.vue';
 import blog from '../../components/blog.vue';
 import courseSave from '../../components/courseSave.vue'
+import follow from '../../components/follow.vue';
 export default {
 
     data() {
         return {
             user: '',
             username: '', fullname: '', email: '', avatar: '', role: '', id: '',
-            updateInfo: false, showimg: true, active: 'home', currentImgIndex: 0,
+            updateInfo: false, showimg: true, active: 'home', currentImgIndex: 0, follows: [],
             showhome: true, showcourse: false, showfollow: false,
             imgs: [`${import.meta.env.VITE_API_BASE_FE}/src/assets/1.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/2.jpg`,
             `${import.meta.env.VITE_API_BASE_FE}/src/assets/3.jpg`, `${import.meta.env.VITE_API_BASE_FE}/src/assets/4.jpg`,
@@ -247,7 +275,7 @@ export default {
             ]
         }
     },
-    components: { toast, blog, courseSave },
+    components: { toast, blog, courseSave ,follow},
     computed: {
         backgroundStyle() {
             return {
@@ -262,12 +290,13 @@ export default {
     },
     mounted() {
         this.user = userServices.getUserToken()
+        this.getFollow()
         this.id = this.user.id
         this.username = this.user.username
         this.fullname = this.user.fullname
         this.email = this.user.email
         this.avatar = this.user.avatar
-        this.role = this.user.role
+        this.role = this.user.role      
     },
     methods: {
         onFileSelected(event) {
@@ -317,6 +346,28 @@ export default {
             this.showfollow = true
             this.showcourse = false
             this.showhome = false
+        },
+        async getFollow() {
+            try {
+                const result = await this.$axios.get(`follow/get?id=${this.user.id}`)
+                this.follows = result.data
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async followUser()
+        { 
+            try {
+                const result = await this.$axios.post('follow/handle',
+                    {
+                        from_user: this.user.id,
+                        to_user: this.$route.params.id
+                    })
+                this.getFollow()
+            } catch (error) {
+                console.log(error)
+            }
+
         }
     }
 
